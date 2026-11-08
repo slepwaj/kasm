@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Kasm Settings
+Name[zh_CN]=KASM设置
+Comment=Settings for the Kasm input method
+Comment[zh_CN]=KASM输入法的设置
+Exec=kasm-settings
+Icon=kasm
+Categories=Settings;
+Terminal=false

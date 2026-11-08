@@ -1,0 +1,31 @@
+[package]
+name = "kasm-linux-server"
+description = "Linux Fcitx5 输入法的 Rust Server"
+version = "0.3.3-dev"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "kasm-linux-server"
+path = "src/main.rs"
+
+[dependencies]
+kasm-core.workspace = true
+kasm-dictionary.workspace = true
+kasm-learning.workspace = true
+kasm-lm.workspace = true
+kasm-neural.workspace = true
+kasm-platform.workspace = true
+kasm-translate.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-appender.workspace = true
+libc = "0.2.189"
+kasm-predict.workspace = true
+
+[lints]
+workspace = true

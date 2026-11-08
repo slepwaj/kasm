@@ -1,0 +1,12 @@
+﻿build/
+entry/build/
+entry/.cxx/
+entry/oh_modules/
+oh_modules/
+.hvigor/
+.local/
+*.hap
+*.app
+entry/libs/**/*.a
+entry/src/main/resources/rawfile/*.tsv
+entry/src/main/resources/rawfile/lexicon/

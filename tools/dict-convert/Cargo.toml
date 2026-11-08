@@ -1,0 +1,27 @@
+[package]
+name = "kasm-dict-convert"
+description = "产品数据生成：词库、语言模型、英文词表、语料挖词与 .kasm 打包"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+clap.workspace = true
+jiff.workspace = true
+kasm-core.workspace = true
+kasm-dictionary.workspace = true
+kasm-format.workspace = true
+kasm-lm.workspace = true
+kasm-neural.workspace = true
+kasm-translate.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+skrifa = "0.44"
+thiserror.workspace = true
+tiny-skia.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true

@@ -1,0 +1,35 @@
+﻿/target
+**/*.rs.bk
+.DS_Store
+*.app
+.env
+/logs
+/data
+.playwright-mcp/
+__pycache__/
+
+# Android / HarmonyOS 构建产物与本地工具链
+/apps/android/.gradle/
+/apps/android/local.properties
+/apps/android/**/build/
+/apps/android/**/.cxx/
+/apps/android/**/oh_modules/
+/apps/harmony/**/build/
+/apps/harmony/**/.cxx/
+/apps/harmony/**/oh_modules/
+/apps/harmony/**/.hvigor/
+/apps/harmony/entry/libs/
+/apps/harmony/entry/src/main/resources/rawfile/
+**/*.apk
+**/*.hap
+**/*.app
+**/*.aab
+**/*.idsig
+
+# 本机发布物、密钥
+/dist/
+*.jks
+*.keystore
+*.p12
+*.cer
+*.p7b

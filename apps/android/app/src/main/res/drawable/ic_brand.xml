@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 品牌标：深蓝圆角底衬琥珀箭头与白点，与 assets/icon/kasm-mark.svg 同一套。键盘工具栏与设置页用。 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:fillColor="#1B2A4A"
+        android:pathData="M236,16H788A220,220 0 0 1 1008,236V788A220,220 0 0 1 788,1008H236A220,220 0 0 1 16,788V236A220,220 0 0 1 236,16Z" />
+    <group
+        android:scaleX="0.86923"
+        android:scaleY="0.86923"
+        android:translateX="66.95"
+        android:translateY="66.95">
+        <path
+            android:pathData="M307,737 L563,512 L307,287"
+            android:strokeColor="#F4B860"
+            android:strokeWidth="118"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M630,512 a87,87 0 1,0 174,0 a87,87 0 1,0 -174,0"
+            android:fillColor="#FFFFFF" />
+    </group>
+</vector>
