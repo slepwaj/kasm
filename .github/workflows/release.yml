@@ -1,7 +1,7 @@
 # 推 v<版本> 标签发桌面三平台（macOS / Windows / Linux，共用一个 GitHub Release）；Android 版本号分轨，推 android-v<版本> 单独发。
 # 单平台补丁推 macos-v / windows-v / linux-v / android-v<版本>，只打那一个平台。
-# 版本号读各平台壳：macOS apps/macos/Cargo.toml、Windows apps/windows/server/Cargo.toml、Linux apps/linux/server/Cargo.toml、Android apps/android/core/Cargo.toml，要打的平台都得与标签一致。
-# 流程：prepare 核对版本、建草稿 Release → 各平台 job 并行打包，把安装包与摘要 / 构建信息片段传到草稿上
+# 版本号读各平台壳：macOS apps/macos/Cargo.toml、Windows apps/windows/server/Cargo.toml、Linux apps/linux/server/Cargo.toml、Android apps/android/core/Cargo.toml；CI 不再校验与标签一致，发版前自己核对。
+# 流程：prepare 检查标签与分支、建草稿 Release → 各平台 job 并行打包，把安装包与摘要 / 构建信息片段传到草稿上
 # → publish 合并片段、转正、生成并签名 releases.json、触发官网构建。任何平台失败都停在草稿，不会发出缺平台的版本。
 # 流程见 docs/notes/release.md。macOS 的签名与公证可选，下面的 Secrets 配齐才签，否则出 ad-hoc 包；
 # Windows 现在没有代码签名（KASM_UIACCESS=0 关掉 uiAccess，否则没签名的 Server 起不来），证书办下来再加 signtool。
@@ -53,7 +53,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Check versions match tag and tag is on main
+      - name: Check tag and branch
         id: gate
         env:
           INDEX_KEY_SET: ${{ secrets.KASM_INDEX_SIGNING_KEY != '' }}
@@ -67,14 +67,7 @@ jobs:
             v*) PLATFORMS="macos windows linux"; VERSION="${GITHUB_REF_NAME#v}" ;;
             *-v*) PLATFORMS="${GITHUB_REF_NAME%%-v*}"; VERSION="${GITHUB_REF_NAME#*-v}" ;;
           esac
-          declare -A MANIFEST=([macos]=apps/macos/Cargo.toml [windows]=apps/windows/server/Cargo.toml [linux]=apps/linux/server/Cargo.toml [android]=apps/android/core/Cargo.toml)
-          for platform in $PLATFORMS; do
-            found="$(sed -n 's/^version = "\(.*\)"/\1/p' "${MANIFEST[$platform]}" | head -1)"
-            if [[ "$found" != "$VERSION" ]]; then
-              echo "${MANIFEST[$platform]} 是 $found，标签是 $GITHUB_REF_NAME，先改版本号再打标签" >&2
-              exit 1
-            fi
-          done
+          # 版本号按平台分轨，不再校验各平台 Cargo.toml 与标签一致；发版前自己确认要发的版本。
           if [[ "$VERSION" == *-dev ]]; then
             echo "$VERSION 还是开发版号，发版提交要先去掉 -dev（docs/notes/release.md）" >&2
             exit 1

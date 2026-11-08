@@ -1,6 +1,4 @@
-| `.github/workflows/ci.yml` | push main、PR | `core`（Linux）fmt / clippy / 全 workspace 测试（排除 IMK 壳）；`macos` 编 IMK 壳并跑它的测试；`windows` 编 Server / TSF DLL / Settings 并跑测试；`android` 用样例数据编 debug APK。仓库公开，Actions 不计费 |
-| `.github/workflows/audit.yml` | 每周一、Cargo.lock 变动 | `cargo audit`（RustSec 已知漏洞） |
-| `.github/dependabot.yml` | 每周一 | Cargo 依赖与钉 commit 的 actions 的更新 PR |# 发版流程
+# 发版流程
 
 2026-09-07 搭起来的：GitHub Actions 按标签打包、建 Release、生成官网下载页用的 `releases.json`。
 这里记怎么发一版、各环节的依赖，以及官网怎么消费产物。
@@ -8,12 +6,13 @@
 ## 一次发版做什么
 
 0.1.4 到 0.3.x 各平台共用版本号、共用一个 GitHub Release（标签 `v<版本>`）：同一个版本号、同一份更新日志只出现一次，各平台的安装包都挂在上面。0.3.0 起 Android 也在里面。
-2026-11 起有意分轨：Android 单独一条 0.4.x 线，桌面端继续 0.3.x，两边按各自的节奏发。Android 用 `android-v<版本>` 单平台标签；桌面端用 `v<版本>`，`release.yml` 的 `v*` 只查桌面三平台，Android 不再参与。
+2026-11 起有意分轨：Android 单独一条 0.4.x 线，桌面端继续 0.3.x，两边按各自的节奏发。Android 用 `android-v<版本>` 单平台标签；桌面端用 `v<版本>`，`release.yml` 的 `v*` 不再校验各平台版本，只按标签发桌面三平台，Android 不参与。
 
 1. 改版本号，把 `-dev` 去掉：桌面端改 `apps/macos/Cargo.toml`（Info.plist 与 pkg 文件名从这里取）、`apps/windows/{server,tsf,settings}/Cargo.toml`（三个一起改，打包读 `server`）、`apps/linux/server/Cargo.toml`；Android 改 `apps/android/core/Cargo.toml`（APK 的 versionName 与 versionCode 从这里算）。只发 Android 时只改 Android 那份，不发 Android 时不要动它；改完 `cargo update --workspace --offline` 同步 `Cargo.lock`。
    **发版之间版本号一直带 `-dev`**（Rust nightly / Firefox Nightly 那套）：Cargo.toml 写 `<下一个版本>-dev`，打包脚本再接上 git 短哈希，
    本地装的、CI 中间构建的都显示 `<下一个版本>-dev-1a2b3c4`（工作区有改动加 `+`），测试时一眼知道装的是哪个提交；版本号干净的一定是线上包；带 `-dev` 的标签 CI 直接拒绝。
    pkg 的 `--version`、Inno 的 `VersionInfoVersion` 只认数字点号，`bundle.sh` / `build.ps1` 去掉后缀再传，文件名保留完整版本。
+   CI 不再校验 `Cargo.toml` 与标签一致，发版前自己核对。
 2. `CHANGELOG.md` 顶上那一节把「未发布」换成日期：`## <版本> · <日期> · <渠道>`，一行一条、面向用户的措辞；只属于一个平台的条目加「macOS：」「Windows：」「Linux：」「Android：」前缀。
    渠道是**更新渠道**（2026-09-17 定）：定期发的版本标 `stable`、版本号干净（`0.1.4`）；中间放给测试者的版本标 `alpha` / `beta` / `rc`，
    版本号带同名预发布后缀（`0.1.5-beta.1`），`release.yml` 见到后缀就把 GitHub Release 标成预发布、不抢 latest。
@@ -30,8 +29,8 @@
 
 `release.yml` 的流程：
 
-- `prepare`（`ubuntu-26.04`）：门禁（要打的平台版本号都与标签一致、不带 `-dev`、标签在 main 上、配了索引签名密钥）→ 用 CHANGELOG 那一节加各平台未签名提示建**草稿** Release。
-- `macos`（`macos-26`）、`windows`（`windows-latest`）、`linux`（`ubuntu-26.04`）、`android`（`ubuntu-26.04`）并行：下载产品数据 → 打包 → `tools/release/upload-build.sh` 把安装包和
+- `prepare`（`ubuntu-26.04`）：门禁（标签不带 `-dev`、标签在 main 上、配了索引签名密钥）→ 用 CHANGELOG 那一节加各平台未签名提示建**草稿** Release。
+- `macos`（`macos-26`）、`windows`（`windows-latest`）、`linux`（`ubuntu-26.04`）、`android`（`ubuntu-26.04`）按标签并行（`v*` 不含 Android）：下载产品数据 → 打包 → `tools/release/upload-build.sh` 把安装包和
   这个平台的 `SHA256SUMS-<平台>`、`build-info-<平台>.json` 片段传到草稿上。
 - `linux-packages`（`ubuntu-26.04`）与它们并行：在容器里打 deb / rpm（`apps/linux/packaging/build.sh`，见 [linux-packaging.md](linux-packaging.md)），在 Debian 13、Ubuntu 26.04、Fedora 42 的干净容器里装一遍自检，
   再同样传到草稿上（片段名 `linux-packages`）。它们不进 `releases.json`：每种格式两个包，检查更新与官网下载页仍按 tar.gz 认 Linux。
@@ -74,7 +73,8 @@ Rust 工具链由 `rust-toolchain.toml` 钉版本（现在 1.96.0），各 workf
 供应链：workflow 里的 actions 一律钉到 commit（注释写对应标签），`.github/dependabot.yml` 每周一提 Cargo 与 actions 的更新 PR；`audit.yml` 每周与 Cargo.lock 变动时跑 `cargo audit`；
 cargo 命令全 `--locked`（含 `bundle.sh` 与 `build.ps1`）。普通 CI 只有 `contents: read`，checkout 不留凭据；release 的 secrets 不放顶层 env，只注入用它的那一步。
 
-发版门禁（`release.yml` 第一步）：版本号与标签一致且不带 `-dev`；标签指向的提交必须在 `main` 上（`git merge-base --is-ancestor`）；产品数据下载后按 `data` Release 的 `SHA256SUMS` 校验，摘要写进 `build-info.json` 的 `data_sha256`。
+发版门禁（`release.yml` 第一步）：标签不带 `-dev`；标签指向的提交必须在 `main` 上（`git merge-base --is-ancestor`）；产品数据下载后按 `data` Release 的 `SHA256SUMS` 校验，摘要写进 `build-info.json` 的 `data_sha256`。
+**不再校验各平台 `Cargo.toml` 与标签一致**，发版前自己核对。
 **正式版前还欠**：产品数据改成不可变 tag 并在仓库里锁定版本（现在滚动覆盖，同一源码 tag 重跑可能拿到不同数据）、安装包内容验证（词库 / 模型 / 许可齐不齐、签名校验）。
 
 ## 几个 workflow
@@ -84,6 +84,8 @@ cargo 命令全 `--locked`（含 `bundle.sh` 与 `build.ps1`）。普通 CI 只�
 | `.github/workflows/ci.yml` | push main、PR | Linux 上 `cargo fmt --check` / clippy / test，排除 `kasm-macos`（IMK 外壳只能在 macOS 编译，macOS runner 计费是 Linux 的 10 倍） |
 | `.github/workflows/clipboard-release.yml` | 推 `clipboard-v*` 标签 | 打KASM剪贴板的独立安装包，发到 kasm-clipboard 的 Release（见下文「KASM剪贴板」） |
 | `.github/workflows/release.yml` | 推 `v*`（桌面三平台）或 `macos-v*` / `windows-v*` / `linux-v*` / `android-v*`（单平台）标签 | `prepare` 门禁并建草稿 Release → 按标签并行打包对应平台 → `publish` 合并摘要、转正、生成 `releases.json`、触发官网构建（见上文） |
+| `.github/workflows/audit.yml` | 每周一、Cargo.lock 变动 | `cargo audit`（RustSec 已知漏洞） |
+| `.github/dependabot.yml` | 每周一 | Cargo 依赖与钉 commit 的 actions 的更新 PR |
 
 ## 产品数据从哪来
 
