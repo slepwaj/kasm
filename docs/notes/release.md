@@ -8,7 +8,7 @@
 ## 一次发版做什么
 
 0.1.4 到 0.3.x 各平台共用版本号、共用一个 GitHub Release（标签 `v<版本>`）：同一个版本号、同一份更新日志只出现一次，各平台的安装包都挂在上面。0.3.0 起 Android 也在里面。
-2026-11 起有意分轨：Android 单独一条 0.4.x 线，桌面端继续 0.3.x，两边按各自的节奏发。Android 用 `android-v<版本>` 单平台标签；桌面端仍用 `v<版本>`，但 `release.yml` 的 `v*` 目前会检查四个平台的版本号，分轨后桌面发版要么把 `v*` 改成只查桌面三平台，要么临时用 `macos-v*` / `windows-v*` / `linux-v*` 分三次发。
+2026-11 起有意分轨：Android 单独一条 0.4.x 线，桌面端继续 0.3.x，两边按各自的节奏发。Android 用 `android-v<版本>` 单平台标签；桌面端用 `v<版本>`，`release.yml` 的 `v*` 只查桌面三平台，Android 不再参与。
 
 1. 改版本号，把 `-dev` 去掉：桌面端改 `apps/macos/Cargo.toml`（Info.plist 与 pkg 文件名从这里取）、`apps/windows/{server,tsf,settings}/Cargo.toml`（三个一起改，打包读 `server`）、`apps/linux/server/Cargo.toml`；Android 改 `apps/android/core/Cargo.toml`（APK 的 versionName 与 versionCode 从这里算）。只发 Android 时只改 Android 那份，不发 Android 时不要动它；改完 `cargo update --workspace --offline` 同步 `Cargo.lock`。
    **发版之间版本号一直带 `-dev`**（Rust nightly / Firefox Nightly 那套）：Cargo.toml 写 `<下一个版本>-dev`，打包脚本再接上 git 短哈希，
@@ -39,9 +39,10 @@
   → `publish-releases-json.sh` 生成并签名 `releases.json` → `bump-website.sh` 触发官网构建。
   任何平台失败，Release 就停在草稿、用户看不到；修好后删掉草稿与标签重推，或在 Actions 页重跑失败的 job。
 
-**单平台补丁**（只修一个平台的急事）：只改那个平台的版本号，打 `macos-v<版本>` / `windows-v<版本>` / `linux-v<版本>` / `android-v<版本>`，同一套流程只打那一个平台，Release 标题带平台名。
+**单平台补丁**（只修一个平台的急事）：只改那个平台的版本号，打 `macos-v<版本>` / `windows-v<版本>` / `linux-v<版本>` / `android-v<版本>`，同一套流程只打那一个平台，Release 标题带平台名。Android 的常规版本也走 `android-v<版本>`，不跟桌面共用 `v<版本>`。
 
-发版后 GitHub Release 上有：`kasm-<版本>-macos-arm64.pkg`、`-macos-x86_64.pkg`、`-windows-x86_64-setup.exe`、`-linux-x86_64.tar.gz`、`-android-arm64.apk`，deb / rpm 各两个（`kasm`、`kasm-fcitx5`），`SHA256SUMS`、`build-info.json`、`releases.json` 与 `.sig`。
+发版后桌面 `v<版本>` 的 Release 上有：`kasm-<版本>-macos-arm64.pkg`、`-macos-x86_64.pkg`、`-windows-x86_64-setup.exe`、`-linux-x86_64.tar.gz`，deb / rpm 各两个（`kasm`、`kasm-fcitx5`），以及 `SHA256SUMS`、`build-info.json`、`releases.json` 与 `.sig`。
+Android `android-v<版本>` 的 Release 上只有 `kasm-<版本>-android-arm64.apk` 与对应摘要。
 
 官网由 Cloudflare Workers Builds 按官网仓库的提交自动构建，没有可调用的构建钩子，所以主仓库靠**往官网仓库推一个小提交**来触发：
 `tools/release/bump-website.sh` 把版本标签与文档提交号写进官网的 `src/content/upstream.json` 并提交推送（提交者 kasm-ci）。
@@ -82,7 +83,7 @@ cargo 命令全 `--locked`（含 `bundle.sh` 与 `build.ps1`）。普通 CI 只�
 |---|---|---|
 | `.github/workflows/ci.yml` | push main、PR | Linux 上 `cargo fmt --check` / clippy / test，排除 `kasm-macos`（IMK 外壳只能在 macOS 编译，macOS runner 计费是 Linux 的 10 倍） |
 | `.github/workflows/clipboard-release.yml` | 推 `clipboard-v*` 标签 | 打KASM剪贴板的独立安装包，发到 kasm-clipboard 的 Release（见下文「KASM剪贴板」） |
-| `.github/workflows/release.yml` | 推 `v*`（全部平台）或 `macos-v*` / `windows-v*` / `linux-v*` / `android-v*`（单平台）标签 | `prepare` 门禁并建草稿 Release → `macos` / `windows` / `linux` / `android` 并行打包上传 → `publish` 合并摘要、转正、生成 `releases.json`、触发官网构建（见上文） |
+| `.github/workflows/release.yml` | 推 `v*`（桌面三平台）或 `macos-v*` / `windows-v*` / `linux-v*` / `android-v*`（单平台）标签 | `prepare` 门禁并建草稿 Release → 按标签并行打包对应平台 → `publish` 合并摘要、转正、生成 `releases.json`、触发官网构建（见上文） |
 
 ## 产品数据从哪来
 

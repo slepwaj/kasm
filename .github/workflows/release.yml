@@ -1,4 +1,5 @@
-# 推 v<版本> 标签发四个平台（共用一个 GitHub Release）；单平台补丁推 macos-v / windows-v / linux-v / android-v<版本>，只打那一个平台。
+# 推 v<版本> 标签发桌面三平台（macOS / Windows / Linux，共用一个 GitHub Release）；Android 版本号分轨，推 android-v<版本> 单独发。
+# 单平台补丁推 macos-v / windows-v / linux-v / android-v<版本>，只打那一个平台。
 # 版本号读各平台壳：macOS apps/macos/Cargo.toml、Windows apps/windows/server/Cargo.toml、Linux apps/linux/server/Cargo.toml、Android apps/android/core/Cargo.toml，要打的平台都得与标签一致。
 # 流程：prepare 核对版本、建草稿 Release → 各平台 job 并行打包，把安装包与摘要 / 构建信息片段传到草稿上
 # → publish 合并片段、转正、生成并签名 releases.json、触发官网构建。任何平台失败都停在草稿，不会发出缺平台的版本。
@@ -61,8 +62,9 @@ jobs:
             echo "没配 KASM_INDEX_SIGNING_KEY：releases.json 签不了名，已装的KASM都不认这份索引、收不到更新提示（docs/notes/release.md）" >&2
             exit 1
           fi
+          # v* 是桌面发版；Android 版本号分轨，走 android-v*
           case "$GITHUB_REF_NAME" in
-            v*) PLATFORMS="macos windows linux android"; VERSION="${GITHUB_REF_NAME#v}" ;;
+            v*) PLATFORMS="macos windows linux"; VERSION="${GITHUB_REF_NAME#v}" ;;
             *-v*) PLATFORMS="${GITHUB_REF_NAME%%-v*}"; VERSION="${GITHUB_REF_NAME#*-v}" ;;
           esac
           declare -A MANIFEST=([macos]=apps/macos/Cargo.toml [windows]=apps/windows/server/Cargo.toml [linux]=apps/linux/server/Cargo.toml [android]=apps/android/core/Cargo.toml)
