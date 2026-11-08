@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-跨平台输入法，Core 平台无关，各平台只做壳。已发版 0.1.3（macOS 与 Windows 共用版本号，2026-09-17）；Linux 提供 Rust Server + Fcitx5 默认候选面板（源码安装，0.1.4 起另有 Ubuntu 26.04 预编译包），另有 Ubuntu 22.04 的 Fcitx4 源码适配。
+跨平台输入法，Core 平台无关，各平台只做壳。桌面端当前 0.3.3-dev（最后正式版 0.3.2，2026-10-30），Android 0.4.2（2026-11-07）；macOS 用 IMK，Windows 用 TSF + 独立 Server，Linux 用 Rust Server + Fcitx5 / Fcitx4 / IBus 前端（默认候选面板，源码安装，另有 Ubuntu 26.04 预编译包），HarmonyOS 有可构建的 PoC 壳。
 阶段与已完成项见 `docs/plan/roadmap.md`，待办见 `docs/plan/todo.md`。
 
 ## 目录地图
 
 一行一个，只说它是什么、入口在哪；实现要点（数据文件、常数、生成命令）在 `docs/notes/crate-notes.md`，改了实现要同步那里。
 
-- `crates/kasm-core`：引擎。`Engine` 是对外唯一门面，`Translator` / `Learner` 等 trait 在 `engine` 模块；拼音解析、纠错、候选、排序、整句、双拼、九宫格（`nine_key`）、英文模式、繁体输出、emoji 与符号都在这里。
+- `crates/kasm-core`：引擎。`Engine` 是对外唯一门面，`Translator` / `Learner` 等 trait 在 `engine` 模块；拼音解析、纠错、候选、排序、整句、双拼、九宫格（`nine_key`）、英文模式、繁体输出、形码与辅码、粤拼与古音方案、emoji 与符号都在这里。
 - `crates/kasm-dictionary`：词库（TSV 或 `.kasm` mmap），按音节位置二分查询。
 - `crates/kasm-translate`：释义表 `Glossary`、词汇等级表 `LevelTable`。
 - `crates/kasm-learning`：用户侧落盘：词频 / 用户词 / 个人 n-gram / 敲错表（`FrequencyLearner`）、输入日志（`InputLog`）、输入统计（`UsageStats`）、词汇记录（`VocabularyBook`）。
@@ -35,7 +35,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `apps/windows`：`server`（Server 进程：Engine + IPC + 自绘候选窗与状态条）+ `tsf`（TSF DLL）+ `settings`（旧版设置，WinUI 3，只作兜底，新版 `apps/settings` 为主）+ `installer`（Inno）。DLL 不能带 Engine 的依赖树，所以是两个 package。
 - `apps/linux`：`server`（Engine + Unix socket）+ `fcitx5` / `fcitx4`（框架事件、默认面板）+ `ibus`（第二个前端：IBus，按键 / 焦点 / 面板已通，对着真 daemon 验过）+ `scripts`（用户级安装卸载、`package.sh` 打 Fcitx5 预编译包）+ `packaging`（`build.sh` 在容器里打 deb / rpm，见 `docs/notes/linux-packaging.md`）；Server 手动启动或装成 systemd 用户服务，见 `docs/notes/linux-fcitx5.md` 和 `docs/notes/linux-fcitx4.md`。
 - `apps/android`：`core`（Rust crate：Engine 装配 + `Session` + JNI，编成 `libkasm_android.so`）+ `app`（Kotlin `InputMethodService` 壳，自绘键盘，候选条贴渲染器位图）；Gradle 构建时自动跑 `cargo ndk`，见 `apps/android/README.md`。
-- `tools/dict-convert`、`tools/gloss-gen`、`tools/corpus`：产品数据生成（词库 / 语言模型 / 释义表 / emoji / 英文词表），输出到 `data/generated/`（gitignore）。
+- `apps/harmony`：HarmonyOS NEXT 的 PoC 壳：ArkTS 输入法扩展 + ArkUI 键盘 + NAPI 调 Rust 引擎（`core`），能构建 HAP；未签名、未真机，五套词库随包解到沙箱，见 `apps/harmony/README.md`。
+- `tools/dict-convert`、`tools/gloss-gen`、`tools/corpus`：产品数据生成（词库 / 语言模型 / 释义表 / emoji / 英文词表），输出到 `data/generated/`（gitignore）；`tools/release` / `tools/release-sign` 负责发版与更新签名，`tools/eval` 放评测脚本。
 - `assets/`：随包数据源与样例，各目录有 README 写来源与许可。雾凇拼音（GPL）已彻底移除，不要再引入。
 
 `docs/` 分四类（索引在 `docs/README.md`）：`design/` 设计与决定、`plan/` 路线与待办、`notes/` 工程记录（性能、复盘、踩坑、crate 实现要点）、

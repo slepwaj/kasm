@@ -171,9 +171,10 @@
   - [ ] 发版：Certum 开源代码签名证书、`windows-v<版本>` 标签与 CI
 - [x] Linux Fcitx5 第一阶段：Rust Server、默认候选面板、用户目录安装与手动启动（2026-09-18）；未改系统 Fcitx5 的 GTK4 / Qt6 X11 输入已验证
 - [ ] Linux 后续：Server 自绘 X11 窗口、Server 向 GNOME 扩展发送位图、神经重排、自动启动与 Debian 包；各自独立 PR，IBus 暂缓
-- [~] Android（`apps/android`，`feat/android` 分支）：输入核心、学习与统计、词库与繁体、高级、云联想已与 PC 对齐，外观（主题）进行中；
+- [~] Android（`apps/android`）：输入核心、学习与统计、词库与繁体、高级、云联想已与 PC 对齐，九宫格、语音、滑行、剪贴板已有，0.4.x 独立发版；外观（主题）进行中；
   实现要点见 `docs/notes/android.md`
 - [ ] 移动端与平板：iOS、iPadOS、HarmonyOS
+  - [~] HarmonyOS：`apps/harmony` 的 PoC 可构建 HAP（ArkTS 输入法扩展 + ArkUI 键盘 + NAPI 调 Rust 引擎），五套词库随包；未签名、未真机
   - 分工：候选条（显示面）由 `kasm-render` 出位图，Android 现在的键盘与面板（输入面）由 Kotlin 自绘。
     只有 Android 一个移动端时这种分法可以接受；做第二个移动平台时，键盘与面板统一移到 Rust，各平台只接输入框连接、触摸转发、震动与无障碍
   - 统一之前先做：主题推导只留渲染器一份（键盘配色也从主题算出，壳只读）；键位表与尺寸计算挪进共享 crate、按宽度出布局；

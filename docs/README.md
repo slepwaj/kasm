@@ -17,12 +17,18 @@ README.md 只介绍项目（各语言译本在 [i18n/](i18n/)），所有技术�
 | [design/candidate-ui.md](design/candidate-ui.md) | 候选窗口、按键约定与翻译 annotation 的设计 |
 | [design/landscape.md](design/landscape.md) | 同类项目（水杉、Rime）、可用数据源及其许可 |
 | [design/rendering.md](design/rendering.md) | 跨平台 UI 与自绘渲染器（2026-09-13）：显示面与控件面的区分、Flutter / Avalonia / WebView 的调研结论、主题的两条路、tiny-skia + cosmic-text 的 spike 结果与两平台接入 |
+| [design/theme.md](design/theme.md) | 主题（预览版）：`theme.json` 格式、内置与用户主题、图片与字体、实现与限制 |
+| [design/settings.md](design/settings.md) | 设置程序的页面与设置项：分页原则、每页放什么、控件与平台差异、实施顺序 |
 | [design/aux-code.md](design/aux-code.md) | 辅码（2026-09-14）：触发键与过滤语义、Rime 码表导入、笔画原生表与大陆序覆盖、候选注记与设置界面 |
+| [design/nine-key.md](design/nine-key.md) | 九宫格拼音：为什么能复用全拼管线、数字串切分、`Engine::query_nine_key`、上屏与学习 |
 | [design/core-internals.md](design/core-internals.md) | Core 与显示层拆解（2026-09-23）：`Engine` 的字段分组与线程归属、一次按键的数据流、三条异步旁路、上屏写回、缓存，三个平台的显示层与还各写一份的地方 |
 | [design/voice-and-swipe.md](design/voice-and-swipe.md) | 语音与滑行输入（2026-10-20）：Rust 与平台壳的分工、语音结果怎么经 Core 上屏、识别方式接口 `Transcriber`、火山引擎豆包流式识别、入口与面板交互；滑行的范围、解码接口 `SwipeDecoder`、按词表打分的 `ShapeDecoder` 与判定 |
+| [design/update.md](design/update.md) | 检查更新（2026-09-17）：`releases.json`、ed25519 签名、渠道与调度、密钥 |
 | [plan/roadmap.md](plan/roadmap.md) | 分阶段路线图、各阶段的依赖关系与已完成项 |
 | [plan/zh_tw_support_plan.md](plan/zh_tw_support_plan.md) | 繁体输出与台湾注音支持的分析与方案（贡献者 pinchiu，#22）：读音标准差异、台湾用语、简转繁一对多；两条路线 |
 | [plan/todo.md](plan/todo.md) | 待办清单，按「从自用到能给别人用」排 |
+| [plan/model-eval.md](plan/model-eval.md) | 模型假设与验证尺子：输入日志 v1 的字段、回放指标、冻结日志与基线 |
+| [plan/german_support_plan.md](plan/german_support_plan.md) | 德语学习语言支持的设计 note（2026-10-08，已废弃，保留存档） |
 | [plan/wubi.md](plan/wubi.md) | 五笔（形码）支持方案（2026-09-15）：为什么不能按双拼的方式接、两条平行管线、码表与词频、`[general] scheme` 收敛、分期 |
 | [notes/crate-notes.md](notes/crate-notes.md) | 各 crate / app / tool 的实现要点：入口类型、数据文件、常数、生成命令 |
 | [notes/linux-fcitx5.md](notes/linux-fcitx5.md) | Linux 默认面板构建、协议、安装与排错 |
@@ -32,6 +38,8 @@ README.md 只介绍项目（各语言译本在 [i18n/](i18n/)），所有技术�
 | [notes/linux-fcitx4.md](notes/linux-fcitx4.md) | Ubuntu 22.04 的 Fcitx4 源码适配、安装与验证 |
 | [notes/android.md](notes/android.md) | Android 输入法：键盘、候选条、面板、剪贴板、快捷翻译怎么接到 Core，取舍与踩坑 |
 | [notes/performance.md](notes/performance.md) | 历次性能优化：起因、定位方法、改法、数字前后对比与经验 |
+| [notes/neural-rescoring.md](notes/neural-rescoring.md) | 字级 Transformer 重打分评测（2026-09-08）：模型与推理、接法、回放数字与门槛 |
+| [notes/p2c-latency-spike.md](notes/p2c-latency-spike.md) | 神经 P2C 的延迟 spike（2026-09-20）：为什么先量延迟、怎么量、结论 |
 | [notes/release.md](notes/release.md) | 发版流程：CHANGELOG、标签触发的 CI 打包、产品数据包、签名公证的 Secrets、官网用的 `releases.json` |
 | [notes/model-identities.md](notes/model-identities.md) | 含章·通变与含章·知微的正式名称和检查点编号 |
 | [notes/phrase-layer.md](notes/phrase-layer.md) | 短语层（2026-09-12）：常用词表收不到的 我的 / 不知道 怎么从语料挖、怎么进语言模型而不伤整句、两把尺子的前后数字 |
