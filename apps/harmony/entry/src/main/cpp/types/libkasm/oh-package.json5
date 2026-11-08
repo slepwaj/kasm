@@ -1,0 +1,6 @@
+{
+  "name": "libkasm.so",
+  "types": "./index.d.ts",
+  "version": "1.0.0",
+  "description": "KASM 引擎 NAPI 绑定。"
+}

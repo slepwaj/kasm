@@ -1,0 +1,40 @@
+[package]
+name = "kasm-android"
+description = "Android 输入法的 Rust 侧：Engine 装配 + JNI 接口，编成 libkasm_android.so"
+version = "0.4.2"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "kasm_android"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+jiff.workspace = true
+jni = "0.21"
+kasm-clipboard-sync.workspace = true
+kasm-core.workspace = true
+kasm-dictionary.workspace = true
+kasm-learning.workspace = true
+kasm-lm.workspace = true
+# 安卓没有可链的系统 TLS，走 rustls；工作区那份默认开着 native-tls，这里直接引路径才关得掉
+kasm-predict = { path = "../../../crates/kasm-predict", default-features = false, features = ["rustls"] }
+kasm-render.workspace = true
+kasm-translate.workspace = true
+kasm-voice.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+# 测试里固定界面语言，比对中文选项名
+bamboo-slip-i18n.workspace = true
+
+[lints]
+workspace = true
+
+[target.'cfg(target_os = "android")'.dependencies]
+tracing-android = "0.2.0"
+tracing-subscriber.workspace = true
