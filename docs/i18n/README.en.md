@@ -23,8 +23,6 @@
 
 Kasm is an input method. You type the way you normally would: enter pinyin, choose a candidate, write a whole sentence. A gloss beside each candidate lets language learning happen naturally while you type. The gloss is always auxiliary information; it never takes the place of the text you are entering.
 
-
-
 ## Download and get started
 
 - **macOS, Windows**: [Download Kasm](https://kasm.app/download); for installation steps see the [user docs](https://kasm.app/docs/getting-started/install).

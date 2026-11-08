@@ -23,8 +23,6 @@
 
 kasm是一款輸入法。你可以像平常一樣打字：輸入拼音、選擇候選字詞、寫完整句；候選字旁的一條譯詞，讓語言學習自然發生在日常打字之中。譯詞始終只是輔助資訊，不會蓋過你要輸入的文字。
 
-
-
 ## 下載與開始使用
 
 - **macOS、Windows**：[下載kasm](https://kasm.app/download)；安裝步驟請見[使用說明](https://kasm.app/docs/getting-started/install)。

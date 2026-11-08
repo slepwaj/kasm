@@ -23,8 +23,6 @@
 
 KASM是一款输入法。你可以像平常一样打字：输入拼音、选择候选、写完整句；候选旁的一条译词，让语言学习自然发生在日常输入里。译词始终只是辅助信息，不会盖过你要输入的文字。
 
-
-
 ## 下载与开始使用
 
 - **macOS、Windows**：[下载KASM](https://kasm.app/download)；安装步骤见[使用文档](https://kasm.app/docs/getting-started/install)。
