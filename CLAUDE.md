@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 仓库现状
 
 跨平台输入法，Core 平台无关，各平台只做壳。桌面端当前 0.3.3-dev（最后正式版 0.3.2，2026-10-30），Android 0.4.2（2026-11-07）；macOS 用 IMK，Windows 用 TSF + 独立 Server，Linux 用 Rust Server + Fcitx5 / Fcitx4 / IBus 前端（默认候选面板，源码安装，另有 Ubuntu 26.04 预编译包），HarmonyOS 有可构建的 PoC 壳。
+版本号按平台分轨：桌面端与 Android 各自维护一条线，发版时分别打标签，以各平台 `Cargo.toml` 为准。
 阶段与已完成项见 `docs/plan/roadmap.md`，待办见 `docs/plan/todo.md`。
 
 ## 目录地图

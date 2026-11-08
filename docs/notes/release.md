@@ -7,12 +7,12 @@
 
 ## 一次发版做什么
 
-0.1.4 起各平台共用版本号、共用一个 GitHub Release（标签 `v<版本>`）：同一个版本号、同一份更新日志只出现一次，各平台的安装包都挂在上面。0.3.0 起 Android 也在里面（之前没发过包，版本号从 0.1.0-dev 直接跳到 0.3.0）。
+0.1.4 到 0.3.x 各平台共用版本号、共用一个 GitHub Release（标签 `v<版本>`）：同一个版本号、同一份更新日志只出现一次，各平台的安装包都挂在上面。0.3.0 起 Android 也在里面。
+2026-11 起有意分轨：Android 单独一条 0.4.x 线，桌面端继续 0.3.x，两边按各自的节奏发。Android 用 `android-v<版本>` 单平台标签；桌面端仍用 `v<版本>`，但 `release.yml` 的 `v*` 目前会检查四个平台的版本号，分轨后桌面发版要么把 `v*` 改成只查桌面三平台，要么临时用 `macos-v*` / `windows-v*` / `linux-v*` 分三次发。
 
-1. 改版本号，把 `-dev` 去掉：`apps/macos/Cargo.toml`（Info.plist 与 pkg 文件名从这里取）、`apps/windows/{server,tsf,settings}/Cargo.toml`（三个一起改，打包读 `server`）、
-   `apps/linux/server/Cargo.toml`、`apps/android/core/Cargo.toml`（APK 的 versionName 与 versionCode 从这里算），然后 `cargo update --workspace --offline` 同步 `Cargo.lock`。
-   **发版之间版本号一直带 `-dev`**（Rust nightly / Firefox Nightly 那套）：Cargo.toml 写 `0.1.5-dev`，打包脚本再接上 git 短哈希，
-   本地装的、CI 中间构建的都显示 `0.1.5-dev-1a2b3c4`（工作区有改动加 `+`），测试时一眼知道装的是哪个提交；版本号干净的一定是线上包；带 `-dev` 的标签 CI 直接拒绝。
+1. 改版本号，把 `-dev` 去掉：桌面端改 `apps/macos/Cargo.toml`（Info.plist 与 pkg 文件名从这里取）、`apps/windows/{server,tsf,settings}/Cargo.toml`（三个一起改，打包读 `server`）、`apps/linux/server/Cargo.toml`；Android 改 `apps/android/core/Cargo.toml`（APK 的 versionName 与 versionCode 从这里算）。只发 Android 时只改 Android 那份，不发 Android 时不要动它；改完 `cargo update --workspace --offline` 同步 `Cargo.lock`。
+   **发版之间版本号一直带 `-dev`**（Rust nightly / Firefox Nightly 那套）：Cargo.toml 写 `<下一个版本>-dev`，打包脚本再接上 git 短哈希，
+   本地装的、CI 中间构建的都显示 `<下一个版本>-dev-1a2b3c4`（工作区有改动加 `+`），测试时一眼知道装的是哪个提交；版本号干净的一定是线上包；带 `-dev` 的标签 CI 直接拒绝。
    pkg 的 `--version`、Inno 的 `VersionInfoVersion` 只认数字点号，`bundle.sh` / `build.ps1` 去掉后缀再传，文件名保留完整版本。
 2. `CHANGELOG.md` 顶上那一节把「未发布」换成日期：`## <版本> · <日期> · <渠道>`，一行一条、面向用户的措辞；只属于一个平台的条目加「macOS：」「Windows：」「Linux：」「Android：」前缀。
    渠道是**更新渠道**（2026-09-17 定）：定期发的版本标 `stable`、版本号干净（`0.1.4`）；中间放给测试者的版本标 `alpha` / `beta` / `rc`，
@@ -21,12 +21,12 @@
    **更新日志手写，不由提交自动生成**：发版前按上个标签以来的 `git log` 起草几条，人审一遍再定稿。
    标题下可以写一行 `网盘：[夸克网盘](链接)`（GitHub 下载不方便的用户用）：它不算更新条目，Release 说明把它放在最前面，`releases.json` 单独输出成 `mirrors`，官网显示成按钮。
    网盘文件在 CI 跑完后手动上传。
-3. 提交，打注释标签并推：`git tag -a v0.1.4 -m "KASM 0.1.4" && git push origin main v0.1.4`。
+3. 提交，打注释标签并推：桌面端 `git tag -a v<版本> -m "KASM <版本>" && git push origin main v<版本>`；Android `git tag -a android-v<版本> -m "KASM Android <版本>" && git push origin main android-v<版本>`。
 4. 标签推出去之后，给历代配置回归测试补一份这一版的模板：`python3 crates/kasm-platform/tests/config_history/extract.py v<版本> v<版本>`，
    新文件随下一个提交进库（`tests/config_history.rs` 要求以后的版本都读得进它）。
-5. CI 跑完、GitHub Release 转正后，`tools/release/gitee-release.sh v<版本>` 在 Gitee 镜像上建同名发行版（官网下载页有它的链接）：
+5. CI 跑完、GitHub Release 转正后，`tools/release/gitee-release.sh <标签>` 在 Gitee 镜像上建同名发行版（官网下载页有它的链接）：
    标题、说明、预发布照搬 GitHub Release，不传安装包。要对 Gitee 仓库有推送权限的 `GITEE_TOKEN`；标签由镜像同步过去，还没到就先在 Gitee 仓库页点同步。
-6. 紧接一个普通提交把版本号改成下一个开发版（`0.1.5-dev`），CHANGELOG 顶上加 `## 0.1.5 · 未发布 · stable`；-dev 版本永远没有标签与 Release。
+6. 紧接一个普通提交把版本号改成下一个开发版（`<下一个版本>-dev`），CHANGELOG 顶上加 `## <下一个版本> · 未发布 · stable`；-dev 版本永远没有标签与 Release。
 
 `release.yml` 的流程：
 
