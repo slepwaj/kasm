@@ -404,7 +404,9 @@ class PracticeActivity : PageActivity() {
     }
 
     private fun buildTarget(): Target {
-        val pool = lineCache
+        val all = lineCache
+        val covered = all.filter(::covered)
+        val pool = covered.ifEmpty { all }
         if (pool.isEmpty()) return fallbackTarget()
         val goal = 30 + random.nextInt(31)
         val picked = StringBuilder()
@@ -419,6 +421,15 @@ class PracticeActivity : PageActivity() {
             if (picked.length >= goal) break
         }
         return Target(picked.toString(), readings)
+    }
+
+    /** 当前方案对这句每个汉字都有读音，练习时才不会出现空白注音和打不出的字。 */
+    private fun covered(line: PracticeLine): Boolean {
+        val readings = line.readings[annotationScheme] ?: return false
+        return line.text.indices.all { index ->
+            val char = line.text[index]
+            char !in '\u4e00'..'\u9fff' || readings.getOrNull(index)?.isNotEmpty() == true
+        }
     }
 
     private fun fallbackTarget(): Target {

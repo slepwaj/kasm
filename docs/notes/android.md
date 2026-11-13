@@ -122,7 +122,7 @@ PC 上只对实体键盘有意义的项（Shift + 字母、切换键、翻页键
 启动页底部 tab 切 首页 / 生词本 / 我的，配色 `AppColors` 与键盘分开。首页是没切到KASM时的切换卡、输入统计看板（`Native.statsDetail` 传 `off` 不读生词本：今天 / 近 7 天 / 累计、最近 30 天柱状图、四个比例）、常用功能与试打框；
 二级页「键盘设置」「输入统计」（点看板进，「我的」里不再单列入口）「关于」。「我的」页的累计卡仍用 `Native.usageStats`。
 
-- 打字练习（`PracticeActivity`）：首页入口；从 `assets/practice/readings.tsv` 随机抽几句拼段，EditText 接收当前输入法的上屏文本。每个字上方按当前键盘拼音方案（`Settings.romanization`）显示注音，练通字时显示通字；顶栏简 / 繁切换用 `readings.tsv` 的繁体列，并同步写 `KEY_TRADITIONAL` 让键盘输出跟着换。比较时去掉 composing span（组句中的拼音不算已打），按字染对 / 错 / 当前位置，算用时、速度、准确率与进度；换段、重开只重置状态，不重建整页。注音由 `tools/build-practice-readings.py` 从各方案词库生成，拼音用 pypinyin 带调，其他方案按词库最长词切分；`PracticeText` 用明黄色画读音，按读音宽度换行。
+- 打字练习（`PracticeActivity`）：首页入口；从 `assets/practice/readings.tsv` 随机抽几句拼段，只抽当前方案每个汉字都有读音的句子，避免空注音和打不出的字；EditText 接收当前输入法的上屏文本。每个字上方按当前键盘拼音方案（`Settings.romanization`）显示注音，练通字时显示通字；顶栏简 / 繁切换用 `readings.tsv` 的繁体列，并同步写 `KEY_TRADITIONAL` 让键盘输出跟着换。比较时去掉 composing span（组句中的拼音不算已打），按字染对 / 错 / 当前位置，算用时、速度、准确率与进度；换段、重开只重置状态，不重建整页。注音由 `tools/build-practice-readings.py` 从各方案词库生成，拼音用 pypinyin 带调，其他方案按词库最长词切分；`PracticeText` 用明黄色画读音，按读音宽度换行。
 
 - 生词本页（`Native.vocabulary`）一次交 `{language, filter, level, change}`：Rust 侧先改（标认识 / 删除，写回 `user-vocab.tsv`）再按筛选与等级列，最多 500 条，另给符合的总数。
   输入法进程里的生词本落盘前会合并文件（`VocabularyBook::refresh`），App 这边的改动不会被盖掉。搜索同 PC（`search`：不分大小写，词、带它上屏的中文、例句里有就算），在 Rust 侧筛；搜索框常驻，打字停 250 ms 后只重填下面的词表，不丢焦点。PC 生词本的时间线、导出不做。
