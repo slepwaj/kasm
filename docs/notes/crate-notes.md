@@ -1,4 +1,4 @@
-﻿# 各 crate 的实现要点
+# 各 crate 的实现要点
 
 CLAUDE.md 只保留目录地图与规则，每个 crate / app / tool 的实现细节收在这里：入口类型、数据文件、常数、生成命令。
 改了实现要同步改这里；与代码冲突时以代码为准。
@@ -801,7 +801,8 @@ macOS 的 row 构建同理；不填时右侧留给译词。词库无调，所以
 并用常用词表反向补了 53,510 个通字词条（逐字取码；2026-11 按修订版重算，歧义多音词保留旧读），词频借用普通话词表。通字单字母音节多（`u` 乌、`a` 啊），
 同一串输入常有多种切法（`uea` = `u ea` 乌鸦 / `ue a` 委啊）：`query_tungdzih` 遍历全部切法查词、整句取最高分的一条；
 词级已有词完整覆盖输入时不再插整句。粤拼 / 通字下字母模式键（缺省 `u` 问字、`v` 表达式）会让位，只留 `?`。
-主词库热切换与粤拼共用一条三选一逻辑（拼 / 粤 / 通）。单字读音的人工例外在 `tools/source/tungdzih-keep-old.tsv`；她、它保持原表的 `i` / `te`。
+主词库热切换与粤拼共用一条三选一逻辑（拼 / 粤 / 通）。单字读音的人工例外在 `tools/source/tungdzih-keep-old.tsv`；单字排序用
+`tools/source/tungdzih-priority.tsv`（《通字（以ABC排序）.xlsx》转简体），表内字按行序优先，表外生僻字频率压到 100 以下；她、它保持原表的 `i` / `te`。
 
 简繁两套（2026-11）：`assets/lexicon/tungdzih-traditional.tsv`（80,038 条）与 `tungdzih-script.tsv`（37,203 对繁→简）
 由 `tools/build-tungdzih-traditional.py` 生成；平台启动时把简体词库给 `Engine::new`，再用 `set_traditional_dictionary` 装备用词库、

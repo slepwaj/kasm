@@ -1,8 +1,9 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """用《通字.xlsx》重建通字词库与音节表。
 
 默认读 `tools/source/tongzi.xlsx`（2026-11 起是《通字_合并.xlsx》的副本）。
 `tools/source/tungdzih-keep-old.tsv` 里的字强制保留旧读（人工确认不做改动的例外）。
+`tools/source/tungdzih-priority.tsv` 是常用字优先级表：表内字排在生僻字前，同音按表里的行序。
 - 单字：以 xlsx 为准（繁体先转简体），旧表里 xlsx 没有的生僻字保持原样；
 - 词：按字拆分读音，某个字的旧读被删掉且新读只剩一个时替换；
   新读不止一个（多音字）时保留旧词读音，避免改错；
@@ -24,6 +25,26 @@ XLSX = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "tools/source/tongzi.x
 TSV = ROOT / "assets/lexicon/tungdzih.tsv"
 SYLLABLES = ROOT / "crates/kasm-core/data/tungdzih-syllables.txt"
 KEEP_OLD = ROOT / "tools/source/tungdzih-keep-old.tsv"
+PRIORITY = ROOT / "tools/source/tungdzih-priority.tsv"
+PRIORITY_BASE = 1_000_000
+UNLISTED_CAP = 1_000
+
+
+def read_priority():
+    """常用字优先级：字<TAB>通字，行序越靠前越优先；多音字取第一次出现的位置。"""
+    if not PRIORITY.is_file():
+        return {}
+    ranking = {}
+    index = 0
+    for line in PRIORITY.read_text(encoding="utf-8-sig").splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        ranking.setdefault(parts[0], index)
+        index += 1
+    return ranking
 
 
 def read_keep_old():
@@ -99,6 +120,18 @@ def rebuild():
     for hanzi, readings in xlsx.items():
         if hanzi not in rebuilt_singles:
             rebuilt_singles[hanzi] = [(reading, 100) for reading in readings]
+
+    # 优先字表里的单字排到前面：同音下按表里的行序，表外的生僻字压到后面。
+    priority = read_priority()
+    if priority:
+        for hanzi, rows in list(rebuilt_singles.items()):
+            adjusted = {}
+            for reading, frequency in rows:
+                if hanzi in priority:
+                    adjusted[reading] = PRIORITY_BASE - priority[hanzi]
+                else:
+                    adjusted[reading] = min(frequency, UNLISTED_CAP)
+            rebuilt_singles[hanzi] = list(adjusted.items())
 
     old_readings = {hanzi: {r for r, _ in rows} for hanzi, rows in singles.items()}
 

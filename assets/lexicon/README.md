@@ -82,6 +82,8 @@
 
 由 `tools/build-tungdzih-traditional.py` 从简体词库与《通字_合并.xlsx》生成；引擎按「输出字形」整份换词库，台湾 / 香港字形在繁体词库上再换。
 
+单字排序用 `tools/source/tungdzih-priority.tsv`：由《通字（以ABC排序）.xlsx》转简体生成，表内字按行序排在生僻字前。
+
 ### 中古音罗马字（tupa.tsv）
 
 来自 `D:\文言拼音\参考项目\古籍字頻統計_注音.xlsx` 的 tupa 列，23k 余条单字读音（含多音字），
