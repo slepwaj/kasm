@@ -35,6 +35,7 @@ class PracticeActivity : PageActivity() {
     override val title = R.string.practice_title
 
     private data class PracticeLine(
+        val corpus: String,
         val text: String,
         val traditional: String,
         val readings: Map<String, List<String>>,
@@ -405,8 +406,10 @@ class PracticeActivity : PageActivity() {
 
     private fun buildTarget(): Target {
         val all = lineCache
-        val covered = all.filter(::covered)
-        val pool = covered.ifEmpty { all }
+        val preferred = all.filter { it.corpus == preferredCorpus() }
+        val base = preferred.ifEmpty { all }
+        val covered = base.filter(::covered)
+        val pool = covered.ifEmpty { base }
         if (pool.isEmpty()) return fallbackTarget()
         val goal = 30 + random.nextInt(31)
         val picked = StringBuilder()
@@ -421,6 +424,13 @@ class PracticeActivity : PageActivity() {
             if (picked.length >= goal) break
         }
         return Target(picked.toString(), readings)
+    }
+
+    /** 粤拼用粤语语料；上古音 / 中古音等用文言文；全拼 / 通字用现代文。 */
+    private fun preferredCorpus(): String = when (annotationScheme) {
+        "jyutping" -> "cantonese"
+        "tupa", "shanggu", "unt", "gcr" -> "classical"
+        else -> "modern"
     }
 
     /** 当前方案对这句每个汉字都有读音，练习时才不会出现空白注音和打不出的字。 */
@@ -457,13 +467,14 @@ class PracticeActivity : PageActivity() {
                 lines.filter { it.isNotBlank() && !it.startsWith("#") }
                     .mapNotNull { line ->
                         val fields = line.split('\t')
-                        val text = fields.firstOrNull()?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-                        val traditional = fields.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: text
+                        val corpus = fields.getOrNull(0)?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                        val text = fields.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                        val traditional = fields.getOrNull(2)?.takeIf { it.isNotEmpty() } ?: text
                         val readings = SCHEMES.mapIndexed { index, scheme ->
-                            val values = fields.getOrNull(index + 2)?.split('|').orEmpty()
+                            val values = fields.getOrNull(index + 3)?.split('|').orEmpty()
                             scheme to List(text.length) { values.getOrElse(it) { "" } }
                         }.toMap()
-                        PracticeLine(text, traditional, readings)
+                        PracticeLine(corpus, text, traditional, readings)
                     }
                     .toList()
             }
@@ -475,7 +486,7 @@ class PracticeActivity : PageActivity() {
             assets.open("data/practice/sentences.txt").bufferedReader().useLines { lines ->
                 lines.map { it.trim() }
                     .filter { it.isNotEmpty() && !it.startsWith("#") }
-                    .map { PracticeLine(it, it, emptyMap()) }
+                    .map { PracticeLine("modern", it, it, emptyMap()) }
                     .toList()
             }
         } catch (_: IOException) {

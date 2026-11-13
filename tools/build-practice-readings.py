@@ -16,6 +16,11 @@ from pypinyin import Style, lazy_pinyin
 
 ROOT = Path(r"D:\kasm")
 SENTENCES = ROOT / "assets/practice/sentences.txt"
+CORPORA = {
+    "modern": SENTENCES,
+    "cantonese": ROOT / "assets/practice/sentences-cantonese.txt",
+    "classical": ROOT / "assets/practice/sentences-classical.txt",
+}
 OUT = ROOT / "assets/practice/readings.tsv"
 SCHEMES = {
     "pinyin": "dict.tsv",
@@ -91,11 +96,14 @@ def annotate(sentence: str, words, chars) -> list[str]:
 
 
 def main():
-    sentences = [
-        line.strip()
-        for line in SENTENCES.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.startswith("#")
-    ]
+    corpora = {
+        name: [
+            line.strip()
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.startswith("#")
+        ]
+        for name, path in CORPORA.items()
+    }
     dictionaries = {
         scheme: load_dictionary(
             ROOT / "assets/lexicon" / name,
@@ -104,28 +112,30 @@ def main():
         for scheme, name in SCHEMES.items()
     }
     s2t = OpenCC("s2t")
+    t2s = OpenCC("t2s")
     with OUT.open("w", encoding="utf-8", newline="\n") as output:
-        output.write(
-            "# 练习文段逐字注音：简体\t繁体 + "
-            + "".join(f"\t{scheme}" for scheme in SCHEMES)
-            + "\n"
-        )
-        output.write("# 读音之间用 | 分隔，空串表示词库里没有这个字的读音。\n")
-        for sentence in sentences:
-            traditional = s2t.convert(sentence)
-            if len(traditional) != len(sentence):
-                raise ValueError(f"简繁转换改变了字数：{sentence} -> {traditional}")
-            output.write(sentence)
-            output.write("\t" + traditional)
-            for scheme, (words, chars) in dictionaries.items():
-                readings = (
-                    annotate_pinyin(sentence)
-                    if scheme == "pinyin"
-                    else annotate(sentence, words, chars)
-                )
-                output.write("\t" + "|".join(readings))
-            output.write("\n")
-    print("sentences", len(sentences), "wrote", OUT)
+        output.write("# 练习文段逐字注音：语料\t简体\t繁体 + " + "".join(f"\t{scheme}" for scheme in SCHEMES) + "\n")
+        output.write("# 语料：modern / cantonese / classical；读音之间用 | 分隔，空串表示词库里没有这个字的读音。\n")
+        for corpus, sentences in corpora.items():
+            for source in sentences:
+                simplified = t2s.convert(source)
+                traditional = s2t.convert(simplified)
+                if len(simplified) != len(traditional):
+                    raise ValueError(f"简繁转换改变了字数：{source} -> {traditional}")
+                output.write(corpus)
+                output.write("\t" + simplified)
+                output.write("\t" + traditional)
+                for scheme, (words, chars) in dictionaries.items():
+                    # 粤拼词库收的是传统字形（佢、哋、嘅），按原文注；其余方案按简体注。
+                    annotation = source if scheme == "jyutping" else simplified
+                    readings = (
+                        annotate_pinyin(annotation)
+                        if scheme == "pinyin"
+                        else annotate(annotation, words, chars)
+                    )
+                    output.write("\t" + "|".join(readings))
+                output.write("\n")
+    print("corpora", {name: len(lines) for name, lines in corpora.items()}, "wrote", OUT)
 
 
 if __name__ == "__main__":
