@@ -3,6 +3,7 @@
 
 默认读 `tools/source/tongzi.xlsx`（2026-11 起是《通字_合并.xlsx》的副本）。
 `tools/source/tungdzih-keep-old.tsv` 里的字强制保留旧读（人工确认不做改动的例外）。
+`tools/source/tungdzih-overrides.tsv` 里的字强制改成指定读音（优先于前两者）。
 - 单字：以 xlsx 为准（繁体先转简体），旧表里 xlsx 没有的生僻字保持原样；
 - 词：按字拆分读音，某个字的旧读被删掉且新读只剩一个时替换；
   新读不止一个（多音字）时保留旧词读音，避免改错；
@@ -24,6 +25,22 @@ XLSX = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "tools/source/tongzi.x
 TSV = ROOT / "assets/lexicon/tungdzih.tsv"
 SYLLABLES = ROOT / "crates/kasm-core/data/tungdzih-syllables.txt"
 KEEP_OLD = ROOT / "tools/source/tungdzih-keep-old.tsv"
+OVERRIDES = ROOT / "tools/source/tungdzih-overrides.tsv"
+
+
+def read_overrides():
+    """人工指定的读音覆盖：字<TAB>读音（空格分隔），优先于 xlsx 与 keep-old。"""
+    if not OVERRIDES.is_file():
+        return {}
+    readings = {}
+    for line in OVERRIDES.read_text(encoding="utf-8-sig").splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        readings[parts[0]] = parts[1].split()
+    return readings
 
 
 def read_keep_old():
@@ -64,6 +81,8 @@ def read_xlsx():
     for hanzi, old in read_keep_old().items():
         if hanzi in readings:
             readings[hanzi] = old
+    for hanzi, override in read_overrides().items():
+        readings[hanzi] = override
     return readings
 
 

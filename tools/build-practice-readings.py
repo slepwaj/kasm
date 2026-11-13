@@ -11,6 +11,7 @@ from pathlib import Path
 
 import re
 
+from opencc import OpenCC
 from pypinyin import Style, lazy_pinyin
 
 ROOT = Path(r"D:\kasm")
@@ -102,11 +103,20 @@ def main():
         )
         for scheme, name in SCHEMES.items()
     }
+    s2t = OpenCC("s2t")
     with OUT.open("w", encoding="utf-8", newline="\n") as output:
-        output.write("# 练习文段逐字注音：句子+" + "".join(f"\t{scheme}" for scheme in SCHEMES) + "\n")
+        output.write(
+            "# 练习文段逐字注音：简体\t繁体 + "
+            + "".join(f"\t{scheme}" for scheme in SCHEMES)
+            + "\n"
+        )
         output.write("# 读音之间用 | 分隔，空串表示词库里没有这个字的读音。\n")
         for sentence in sentences:
+            traditional = s2t.convert(sentence)
+            if len(traditional) != len(sentence):
+                raise ValueError(f"简繁转换改变了字数：{sentence} -> {traditional}")
             output.write(sentence)
+            output.write("\t" + traditional)
             for scheme, (words, chars) in dictionaries.items():
                 readings = (
                     annotate_pinyin(sentence)

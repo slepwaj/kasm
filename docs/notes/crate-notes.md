@@ -801,7 +801,8 @@ macOS 的 row 构建同理；不填时右侧留给译词。词库无调，所以
 并用常用词表反向补了 53,510 个通字词条（逐字取码；2026-11 按修订版重算，歧义多音词保留旧读），词频借用普通话词表。通字单字母音节多（`u` 乌、`a` 啊），
 同一串输入常有多种切法（`uea` = `u ea` 乌鸦 / `ue a` 委啊）：`query_tungdzih` 遍历全部切法查词、整句取最高分的一条；
 词级已有词完整覆盖输入时不再插整句。粤拼 / 通字下字母模式键（缺省 `u` 问字、`v` 表达式）会让位，只留 `?`。
-主词库热切换与粤拼共用一条三选一逻辑（拼 / 粤 / 通）。
+主词库热切换与粤拼共用一条三选一逻辑（拼 / 粤 / 通）。单字读音的人工覆盖在 `tools/source/tungdzih-keep-old.tsv` 与
+`tungdzih-overrides.tsv`（后者优先）；她、它在原表是 `i` / `te`，现按普通话同音统一为 `ta`。
 
 简繁两套（2026-11）：`assets/lexicon/tungdzih-traditional.tsv`（80,038 条）与 `tungdzih-script.tsv`（37,203 对繁→简）
 由 `tools/build-tungdzih-traditional.py` 生成；平台启动时把简体词库给 `Engine::new`，再用 `set_traditional_dictionary` 装备用词库、
