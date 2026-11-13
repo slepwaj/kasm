@@ -82,8 +82,6 @@
 
 由 `tools/build-tungdzih-traditional.py` 从简体词库与《通字_合并.xlsx》生成；引擎按「输出字形」整份换词库，台湾 / 香港字形在繁体词库上再换。
 
-单字读音可用 `tools/source/tungdzih-keep-old.tsv`（保留旧读）与 `tools/source/tungdzih-overrides.tsv`（强制覆盖）调整；她、它在原表里是 `i` / `te`，现按普通话同音统一为 `ta`。
-
 ### 中古音罗马字（tupa.tsv）
 
 来自 `D:\文言拼音\参考项目\古籍字頻統計_注音.xlsx` 的 tupa 列，23k 余条单字读音（含多音字），
