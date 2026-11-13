@@ -197,6 +197,7 @@ class PracticeActivity : PageActivity() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
                 override fun afterTextChanged(s: Editable?) = render()
             })
+            setOnClickListener { showKeyboard() }
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         }
         return ui.card(input)
@@ -224,6 +225,13 @@ class PracticeActivity : PageActivity() {
             setPadding(ui.dp(4), ui.dp(2), ui.dp(4), 0)
         }
         return resultView
+    }
+
+    private fun showKeyboard() {
+        if (finished) return
+        input.requestFocus()
+        getSystemService(InputMethodManager::class.java)
+            .showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun newPassage() {
