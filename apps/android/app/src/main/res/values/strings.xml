@@ -61,6 +61,14 @@
     <string name="practice_new">换一段</string>
     <string name="practice_restart">重新开始</string>
     <string name="practice_target_label">照着这段打</string>
+    <string name="practice_scheme">注音：%1$s</string>
+    <string name="practice_scheme_pinyin">拼音</string>
+    <string name="practice_scheme_tungdzih">通字</string>
+    <string name="practice_scheme_tupa">中古音</string>
+    <string name="practice_scheme_shanggu">上古音</string>
+    <string name="practice_scheme_unt">unt</string>
+    <string name="practice_scheme_gcr">中文通用羅馬字</string>
+    <string name="practice_scheme_jyutping">粤拼</string>
     <string name="practice_input_hint">在这里跟着上文打字</string>
     <string name="practice_time">用时</string>
     <string name="practice_speed">速度</string>

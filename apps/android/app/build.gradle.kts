@@ -123,7 +123,7 @@ val stageData by tasks.registering(Sync::class) {
     from(repoRoot.resolve("assets/emoji")) { include("emoji-zh.tsv", "emoji-en.tsv") }
     // 打字练习文段：随机抽句组成练习段
     from(repoRoot.resolve("assets/practice")) {
-        include("sentences.txt")
+        include("sentences.txt", "readings.tsv")
         into("practice")
     }
     // 粤拼 / 通字 / tupa / 上古音：安卓的「拼音方案」选择用

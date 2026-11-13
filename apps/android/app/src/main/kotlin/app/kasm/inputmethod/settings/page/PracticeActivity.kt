@@ -6,11 +6,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.text.Editable
 import android.text.InputType
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -23,7 +19,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import app.kasm.inputmethod.R
 import app.kasm.inputmethod.panel.base.PanelIcons.Icon
+import app.kasm.inputmethod.settings.Settings
 import app.kasm.inputmethod.settings.home.ImeState
+import app.kasm.inputmethod.settings.widget.PracticeText
 import app.kasm.inputmethod.settings.widget.SettingsWidgets
 import app.kasm.inputmethod.theme.AppColors
 import java.io.IOException
@@ -36,10 +34,18 @@ import java.util.Random
 class PracticeActivity : PageActivity() {
     override val title = R.string.practice_title
 
+    private data class PracticeLine(
+        val text: String,
+        val readings: Map<String, List<String>>,
+    )
+
+    private data class Target(val text: String, val readings: List<String>)
+
     private val colors get() = ui.colors
 
     private lateinit var targetText: String
-    private lateinit var targetView: TextView
+    private lateinit var targetReadings: List<String>
+    private lateinit var targetView: PracticeText
     private lateinit var input: EditText
     private lateinit var timeValue: TextView
     private lateinit var speedValue: TextView
@@ -51,6 +57,15 @@ class PracticeActivity : PageActivity() {
     private var finishedAt = 0L
     private var finished = false
     private var lastTarget = ""
+
+    /** 注音跟随键盘当前的拼音方案；练习通字时上面显示通字，练全拼时显示拼音。 */
+    private val annotationScheme by lazy {
+        when (Settings.load(this).romanization) {
+            "tungdzih", "tupa", "shanggu", "unt", "gcr", "jyutping" ->
+                Settings.load(this).romanization
+            else -> "pinyin"
+        }
+    }
 
     private val random = Random()
     private val handler = Handler(Looper.getMainLooper())
@@ -65,9 +80,16 @@ class PracticeActivity : PageActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val savedTarget = savedInstanceState?.getString(KEY_TARGET)
+        val savedReadings = savedInstanceState?.getString(KEY_READINGS)
         targetText = savedTarget ?: FALLBACK_TARGET
+        targetReadings = savedReadings?.split(READING_SEPARATOR)
+            ?: List(targetText.length) { "" }
         super.onCreate(savedInstanceState)
-        if (savedTarget == null) targetText = newTargetText()
+        if (savedTarget == null) {
+            val target = newTarget()
+            targetText = target.text
+            targetReadings = target.readings
+        }
         savedInstanceState?.let { saved ->
             startedAt = saved.getLong(KEY_STARTED, 0L)
             finishedAt = saved.getLong(KEY_FINISHED_AT, 0L)
@@ -101,6 +123,7 @@ class PracticeActivity : PageActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(KEY_TARGET, targetText)
+        outState.putString(KEY_READINGS, targetReadings.joinToString(READING_SEPARATOR))
         if (::input.isInitialized) outState.putString(KEY_TYPED, committedText())
         outState.putLong(KEY_STARTED, startedAt)
         outState.putLong(KEY_FINISHED_AT, finishedAt)
@@ -135,15 +158,17 @@ class PracticeActivity : PageActivity() {
     )
 
     private fun targetCard(): View {
-        targetView = ui.text("", 20f, colors.text).apply {
-            setLineSpacing(ui.dp(8).toFloat(), 1.15f)
-            setPadding(0, ui.dp(10), 0, 0)
-        }
+        targetView = PracticeText(this, colors)
         return ui.card(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(ui.dp(20), ui.dp(16), ui.dp(20), ui.dp(18))
             addView(ui.text(getString(R.string.practice_target_label), 12.5f, colors.secondary))
-            addView(targetView)
+            addView(ui.text(getString(R.string.practice_scheme, schemeLabel()), 11.5f, colors.faint).apply {
+                setPadding(0, ui.dp(4), 0, 0)
+            })
+            addView(targetView, LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+                topMargin = ui.dp(8)
+            })
         })
     }
 
@@ -235,7 +260,9 @@ class PracticeActivity : PageActivity() {
     }
 
     private fun newPassage() {
-        targetText = newTargetText()
+        val target = newTarget()
+        targetText = target.text
+        targetReadings = target.readings
         startedAt = 0L
         finishedAt = 0L
         finished = false
@@ -269,7 +296,7 @@ class PracticeActivity : PageActivity() {
             handler.removeCallbacks(ticker)
             resultView.visibility = View.VISIBLE
         }
-        targetView.text = highlighted(typed)
+        targetView.update(targetText, targetReadings, typed)
         renderStats()
     }
 
@@ -316,71 +343,76 @@ class PracticeActivity : PageActivity() {
         }
     }
 
-    private fun highlighted(typed: String): CharSequence {
-        val span = SpannableString(targetText)
-        for (index in targetText.indices) {
-            val color = when {
-                index < typed.length && typed[index] == targetText[index] -> correctColor()
-                index < typed.length -> wrongColor()
-                index == typed.length -> colors.brand
-                else -> colors.text
-            }
-            span.setSpan(
-                ForegroundColorSpan(color),
-                index,
-                index + 1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-            )
-            if (index == typed.length) {
-                span.setSpan(
-                    BackgroundColorSpan(colors.brandSoft),
-                    index,
-                    index + 1,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
-                )
-            }
-        }
-        return span
-    }
-
-    private fun correctColor() = if (colors.dark) 0xFF63D69A.toInt() else 0xFF2E9E5B.toInt()
-
-    private fun wrongColor() = if (colors.dark) 0xFFFF8A8A.toInt() else 0xFFD93F3F.toInt()
-
     private fun scheduleTicker() {
         handler.removeCallbacks(ticker)
         handler.post(ticker)
     }
 
-    private fun newTargetText(): String {
-        var result = ""
+    private fun newTarget(): Target {
+        var result = Target(FALLBACK_TARGET, List(FALLBACK_TARGET.length) { "" })
         for (attempt in 0 until 4) {
             result = buildTarget()
-            if (result != lastTarget) break
+            if (result.text != lastTarget) break
         }
-        lastTarget = result
+        lastTarget = result.text
         return result
     }
 
-    private fun buildTarget(): String {
-        val pool = sentenceCache
-        if (pool.isEmpty()) return FALLBACK_TARGET
+    private fun buildTarget(): Target {
+        val pool = lineCache
+        if (pool.isEmpty()) return Target(FALLBACK_TARGET, List(FALLBACK_TARGET.length) { "" })
         val goal = 30 + random.nextInt(31)
         val picked = StringBuilder()
-        for (sentence in pool.shuffled(random)) {
-            picked.append(sentence)
+        val readings = mutableListOf<String>()
+        for (line in pool.shuffled(random)) {
+            picked.append(line.text)
+            val lineReadings = line.readings[annotationScheme].orEmpty()
+            for (index in line.text.indices) {
+                readings += lineReadings.getOrElse(index) { "" }
+            }
             if (picked.length >= goal) break
         }
-        return picked.toString()
+        return Target(picked.toString(), readings)
     }
 
-    private val sentenceCache by lazy { loadSentences() }
+    private fun schemeLabel(): String = getString(
+        when (annotationScheme) {
+            "tungdzih" -> R.string.practice_scheme_tungdzih
+            "tupa" -> R.string.practice_scheme_tupa
+            "shanggu" -> R.string.practice_scheme_shanggu
+            "unt" -> R.string.practice_scheme_unt
+            "gcr" -> R.string.practice_scheme_gcr
+            "jyutping" -> R.string.practice_scheme_jyutping
+            else -> R.string.practice_scheme_pinyin
+        },
+    )
 
-    private fun loadSentences(): List<String> {
+    private val lineCache by lazy { loadLines() }
+
+    private fun loadLines(): List<PracticeLine> {
+        val table = try {
+            assets.open("data/practice/readings.tsv").bufferedReader().useLines { lines ->
+                lines.filter { it.isNotBlank() && !it.startsWith("#") }
+                    .mapNotNull { line ->
+                        val fields = line.split('\t')
+                        val text = fields.firstOrNull()?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                        val readings = SCHEMES.mapIndexed { index, scheme ->
+                            val values = fields.getOrNull(index + 1)?.split('|').orEmpty()
+                            scheme to List(text.length) { values.getOrElse(it) { "" } }
+                        }.toMap()
+                        PracticeLine(text, readings)
+                    }
+                    .toList()
+            }
+        } catch (_: IOException) {
+            emptyList()
+        }
+        if (table.isNotEmpty()) return table
         return try {
             assets.open("data/practice/sentences.txt").bufferedReader().useLines { lines ->
                 lines.map { it.trim() }
                     .filter { it.isNotEmpty() && !it.startsWith("#") }
+                    .map { PracticeLine(it, emptyMap()) }
                     .toList()
             }
         } catch (_: IOException) {
@@ -390,10 +422,21 @@ class PracticeActivity : PageActivity() {
 
     companion object {
         private const val KEY_TARGET = "practice_target"
+        private const val KEY_READINGS = "practice_readings"
         private const val KEY_TYPED = "practice_typed"
         private const val KEY_STARTED = "practice_started"
         private const val KEY_FINISHED_AT = "practice_finished_at"
         private const val KEY_FINISHED = "practice_finished"
+        private const val READING_SEPARATOR = "\u001f"
         private const val FALLBACK_TARGET = "今天的天气很好，适合出去走走。"
+        private val SCHEMES = listOf(
+            "pinyin",
+            "tungdzih",
+            "tupa",
+            "shanggu",
+            "unt",
+            "gcr",
+            "jyutping",
+        )
     }
 }
