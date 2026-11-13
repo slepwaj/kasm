@@ -5,10 +5,12 @@ mod paths;
 #[cfg(any(target_os = "linux", target_os = "freebsd"))]
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     use kasm_core::Language;
+    use kasm_dictionary::Dictionary;
     use kasm_linux_server::{
         AssemblySpec, LanguageModelFiles, Router, RouterConfig, assembly, find_model,
     };
     use kasm_platform::Config;
+    use std::collections::HashMap;
     use std::path::PathBuf;
     if std::env::args().any(|arg| arg == "--version") {
         println!("kasm-linux-server {}", env!("CARGO_PKG_VERSION"));
@@ -90,6 +92,41 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     engine.set_tungdzih(tungdzih);
     engine.set_tupa(tupa);
     engine.set_shanggu(shanggu);
+    // 通字：繁体词库与简繁对照一起装；set_traditional 负责按输出字形整份换。
+    if tungdzih {
+        if let Some(path) = paths::generated(&root, "tungdzih-traditional.kasm")
+            .or_else(|| paths::asset(&root, "lexicon/tungdzih-traditional.tsv"))
+        {
+            match Dictionary::from_path(&path) {
+                Ok(dictionary) => {
+                    tracing::info!(path = %path.display(), entries = dictionary.len(), "通字繁体词库已加载");
+                    engine.set_traditional_dictionary(dictionary);
+                }
+                Err(error) => {
+                    tracing::warn!(%error, path = %path.display(), "通字繁体词库加载失败")
+                }
+            }
+        }
+        if let Some(path) = paths::asset(&root, "lexicon/tungdzih-script.tsv") {
+            match std::fs::read_to_string(&path) {
+                Ok(text) => {
+                    let mut map = HashMap::new();
+                    for line in text.lines() {
+                        if line.starts_with('#') || line.trim().is_empty() {
+                            continue;
+                        }
+                        if let Some((traditional, simplified)) = line.split_once('\t') {
+                            map.insert(traditional.to_owned(), simplified.to_owned());
+                        }
+                    }
+                    engine.set_traditional_seed(map);
+                }
+                Err(error) => {
+                    tracing::warn!(%error, path = %path.display(), "通字简繁对照加载失败")
+                }
+            }
+        }
+    }
     engine.set_fuzzy(config.fuzzy);
     engine.set_shuangpin(config.general.shuangpin());
     engine.set_shuangpin_raw_preedit(config.general.shuangpin_raw_preedit);

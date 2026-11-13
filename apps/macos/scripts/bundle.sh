@@ -138,6 +138,15 @@ if [[ "$SAMPLE_DATA" == 0 ]]; then
       --license "CC-BY-SA-4.0 AND MIT" --attribution "中文维基百科（CC BY-SA 4.0）；LCCC（清华大学 CoAI，MIT）"
   fi
   cp data/generated/dict.kasm "$APP/Contents/Resources/"
+  # 通字简 / 繁两套词库 + 繁体→简体对照：有 .kasm 用 .kasm，开发/样例包回落到 TSV
+  if [[ -f data/generated/tungdzih-traditional.kasm ]]; then
+    cp data/generated/tungdzih-traditional.kasm "$APP/Contents/Resources/"
+  elif [[ -f assets/lexicon/tungdzih-traditional.tsv ]]; then
+    cp assets/lexicon/tungdzih-traditional.tsv "$APP/Contents/Resources/"
+  fi
+  if [[ -f assets/lexicon/tungdzih-script.tsv ]]; then
+    cp assets/lexicon/tungdzih-script.tsv "$APP/Contents/Resources/"
+  fi
   # 领域词库（lexicon 拆出的 dicts/*.kasm）随包放 Resources/dicts/，缺省只开成语，偏好设置「词库」页可勾选
   if ls data/generated/dicts/*.kasm >/dev/null 2>&1; then
     mkdir -p "$APP/Contents/Resources/dicts"

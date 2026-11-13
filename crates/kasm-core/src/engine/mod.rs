@@ -92,6 +92,15 @@ pub struct Engine {
     /// 静态词库。
     dictionary: Dictionary,
 
+    /// 备用词库（通字的繁体词库）：`set_traditional` 在简繁两套之间整份换。
+    alternate_dictionary: Option<Dictionary>,
+
+    /// 当前主词库是不是备用词库（繁体）。学习、日志仍按 `traditional_seed` 落简体。
+    alternate_active: bool,
+
+    /// 备用词库的繁体 → 简体对照，换词库时交给 [`Traditional`]。
+    traditional_seed: Arc<HashMap<String, String>>,
+
     /// 译文提供方，缺省为 [`NoTranslator`]。
     translator: Box<dyn Translator>,
 
@@ -522,6 +531,9 @@ impl Engine {
     pub fn new(dictionary: Dictionary) -> Self {
         Self {
             dictionary,
+            alternate_dictionary: None,
+            alternate_active: false,
+            traditional_seed: Arc::new(HashMap::new()),
             extra_dictionaries: Vec::new(),
             model_words: None,
             companion_words: None,

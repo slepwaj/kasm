@@ -41,7 +41,9 @@ $data = @(
     'data\generated\lm.kasm',
     'data\generated\english.tsv',
     'data\generated\dicts\*.kasm',
-    'data\generated\codes\*.kasm'
+    'data\generated\codes\*.kasm',
+    'assets\lexicon\tungdzih-traditional.tsv',
+    'assets\lexicon\tungdzih-script.tsv'
 ) + ('en', 'ja', 'zh', 'es', 'vi', 'de' | ForEach-Object { "data\generated\glossary-$_.kasm" })
 $absent = @($data | Where-Object { -not (Test-Path (Join-Path $Repo $_)) })
 if ($absent.Count -gt 0) {

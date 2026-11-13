@@ -20,6 +20,7 @@ use crate::traditional::{Traditional, TraditionalVariant};
 use kasm_dictionary::{AuxCodeLookup, CodeTable, Dictionary, WordList};
 
 use crate::code_scheme::CodeScheme;
+use std::collections::HashMap;
 use std::sync::Arc;
 
 impl Engine {
@@ -148,10 +149,43 @@ impl Engine {
 
     /// 设繁体输出：候选与上屏文本在出 Core 时换成繁体，词库与学习数据仍是简体（见 [`crate::traditional`]）。
     /// 变体没变就不重建，建一次要把 OpenCC 的字典装起来。
+    ///
+    /// 装了备用词库（通字繁体）时，这里还会整份换词库：简 / 繁两套词库都按简体学习，
+    /// 靠 `traditional_seed` 把繁体候选还原成简体再写回。
     pub fn set_traditional(&mut self, variant: TraditionalVariant) {
-        if variant != self.traditional.variant() {
-            self.traditional = Traditional::new(variant);
+        if self.alternate_dictionary.is_some() {
+            self.activate_alternate(variant != TraditionalVariant::Off);
         }
+        if variant != self.traditional.variant() {
+            self.traditional = Traditional::with_seed(variant, self.traditional_seed.clone());
+        }
+    }
+
+    /// 装通字的备用词库（繁体）。平台层在启动时把简体词库给 [`Engine::new`]，
+    /// 再在这里把繁体词库装进来；当前输出字形已经是繁体时立即换上。
+    pub fn set_traditional_dictionary(&mut self, dictionary: Dictionary) {
+        self.alternate_dictionary = Some(dictionary);
+        self.alternate_active = false;
+        self.activate_alternate(self.traditional.variant() != TraditionalVariant::Off);
+    }
+
+    /// 装备用词库的「繁体 → 简体」对照表；通字加载繁体词库时由平台层提供。
+    pub fn set_traditional_seed(&mut self, seed: HashMap<String, String>) {
+        self.traditional_seed = Arc::new(seed);
+        self.traditional.set_seed(self.traditional_seed.clone());
+    }
+
+    fn activate_alternate(&mut self, on: bool) {
+        if on == self.alternate_active {
+            return;
+        }
+        let Some(mut alternate) = self.alternate_dictionary.take() else {
+            return;
+        };
+        std::mem::swap(&mut self.dictionary, &mut alternate);
+        self.alternate_dictionary = Some(alternate);
+        self.alternate_active = on;
+        self.forget_dictionary_caches();
     }
 
     /// 当前的繁体输出变体。

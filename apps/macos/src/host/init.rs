@@ -65,6 +65,26 @@ pub fn init(mtm: MainThreadMarker, info: &BundleInfo) -> Result<(), HostError> {
     engine.set_tungdzih(tungdzih);
     engine.set_tupa(tupa);
     engine.set_shanggu(shanggu);
+    // 通字：同时装繁体词库与简繁对照；apply_config 里的输出字形开关负责整份换词库。
+    if tungdzih {
+        if let Ok(path) = paths::resource("tungdzih-traditional.kasm")
+            .or_else(|_| paths::resource("tungdzih-traditional.tsv"))
+        {
+            engine.set_traditional_dictionary(Dictionary::from_path(&path)?);
+        }
+        if let Ok(path) = paths::resource("tungdzih-script.tsv") {
+            let mut map = std::collections::HashMap::new();
+            for line in std::fs::read_to_string(&path)?.lines() {
+                if line.starts_with('#') || line.trim().is_empty() {
+                    continue;
+                }
+                if let Some((traditional, simplified)) = line.split_once('\t') {
+                    map.insert(traditional.to_owned(), simplified.to_owned());
+                }
+            }
+            engine.set_traditional_seed(map);
+        }
+    }
     if let Some(glossary) = glossary {
         engine = engine.with_translator(Box::new(glossary));
     }

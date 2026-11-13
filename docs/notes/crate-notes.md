@@ -803,6 +803,11 @@ macOS 的 row 构建同理；不填时右侧留给译词。词库无调，所以
 词级已有词完整覆盖输入时不再插整句。粤拼 / 通字下字母模式键（缺省 `u` 问字、`v` 表达式）会让位，只留 `?`。
 主词库热切换与粤拼共用一条三选一逻辑（拼 / 粤 / 通）。
 
+简繁两套（2026-11）：`assets/lexicon/tungdzih-traditional.tsv`（80,038 条）与 `tungdzih-script.tsv`（37,203 对繁→简）
+由 `tools/build-tungdzih-traditional.py` 生成；平台启动时把简体词库给 `Engine::new`，再用 `set_traditional_dictionary` 装备用词库、
+`set_traditional_seed` 装对照表。`set_traditional` 在简体 / 繁体之间整份换词库并清缓存；`Traditional` 的动态表只到词库繁体原文，
+最后经 seed 落到简体，整句等不在表里的文本用 T2S 兜底，学习 / 日志始终记简体。台湾 / 香港字形在繁体词库之上再换一层。
+
 中古音罗马字（`core/src/romanization/`、`tupa/`）：`Table` 放与方案无关的音节表与 DP 切分，
 通字与 tupa 各自把 `data/*-syllables.txt` 编译进去；`Engine::romanization_table()` 按标志选表，
 `query_romanized` 一套查询通吃（切法全部遍历、整句取最高分）。tupa 的 `Scheme`（`scheme = "tupa"`）

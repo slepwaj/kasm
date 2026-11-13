@@ -33,6 +33,10 @@ impl Engine {
             let text = self
                 .traditional
                 .restore(&candidate.text)
+                .or_else(|| {
+                    self.alternate_active
+                        .then(|| self.traditional.to_simplified(&candidate.text))
+                })
                 .unwrap_or_else(|| candidate.text.clone());
             candidate.translation = match candidate.kind {
                 CandidateKind::Custom(_) => None,
@@ -111,6 +115,10 @@ impl Engine {
         let restored = self
             .traditional
             .restore(&candidate.text)
+            .or_else(|| {
+                self.alternate_active
+                    .then(|| self.traditional.to_simplified(&candidate.text))
+            })
             .map(|text| Candidate {
                 text,
                 ..candidate.clone()

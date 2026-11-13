@@ -2,6 +2,7 @@
 
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use ferrous_opencc::OpenCC;
 use ferrous_opencc::config::BuiltinConfig;
@@ -26,6 +27,13 @@ pub struct Traditional {
 
     /// 上一次 [`Self::apply`] 换过的候选：繁体文本 → 简体原文，只记两者不同的。
     restore: RefCell<HashMap<String, String>>,
+
+    /// 词库自带的简繁对照（繁体 → 简体）：通字加载繁体词库时由壳装进来。
+    /// 候选本来就是繁体、[`Self::apply`] 不会改它，学习/日志仍要按简体记。
+    seed: Arc<HashMap<String, String>>,
+
+    /// 繁 → 简的兜底转换：整句等不在对照表里的文本用它还原成简体。
+    simplifier: Option<OpenCC>,
 }
 
 impl Default for Traditional {
@@ -54,7 +62,26 @@ impl Traditional {
             variant,
             converter,
             restore: RefCell::new(HashMap::new()),
+            seed: Arc::new(HashMap::new()),
+            simplifier: None,
         }
+    }
+
+    /// 同 [`Self::new`]，额外带一份词库自带的简繁对照（繁体 → 简体）。
+    pub fn with_seed(variant: TraditionalVariant, seed: Arc<HashMap<String, String>>) -> Self {
+        let mut traditional = Self::new(variant);
+        traditional.set_seed(seed);
+        traditional
+    }
+
+    /// 换掉词库自带的简繁对照；换词库时调用。
+    pub fn set_seed(&mut self, seed: Arc<HashMap<String, String>>) {
+        self.simplifier = if seed.is_empty() {
+            None
+        } else {
+            OpenCC::from_config(BuiltinConfig::T2s).ok()
+        };
+        self.seed = seed;
     }
 
     /// 配置里选的变体。
@@ -129,8 +156,22 @@ impl Traditional {
     }
 
     /// 繁体候选对应的简体原文；这一轮没换过它（或压根没开转换）时为 `None`。
+    ///
+    /// 先查 [`Self::apply`] 记下的动态表，再查词库自带的对照表：台湾 / 香港字形是
+    /// 在繁体词库之上再换一层，动态表只到词库的繁体原文，最后还要落到简体。
     pub fn restore(&self, text: &str) -> Option<String> {
-        self.restore.borrow().get(text).cloned()
+        let dynamic = self.restore.borrow();
+        if let Some(base) = dynamic.get(text) {
+            return Some(self.seed.get(base).cloned().unwrap_or_else(|| base.clone()));
+        }
+        self.seed.get(text).cloned()
+    }
+
+    /// 繁 → 简的兜底转换：对照表里没有的整句 / 新词用它还原。
+    pub fn to_simplified(&self, text: &str) -> String {
+        self.simplifier
+            .as_ref()
+            .map_or_else(|| text.to_owned(), |converter| converter.convert(text))
     }
 
     /// 单独转一段文本。没开转换时原样返回。
@@ -308,5 +349,26 @@ mod tests {
         traditional.apply(&mut candidates);
         assert_eq!(candidates.items[0].text, "软件园");
         assert_eq!(traditional.restore("軟件園"), None);
+    }
+
+    /// 词库自带繁体原文时，`apply` 不会改它；学习仍要按对照表还原成简体。
+    #[test]
+    fn seeded_restore_maps_traditional_dictionary_text() {
+        let seed = std::sync::Arc::new(HashMap::from([("什麼".to_owned(), "什么".to_owned())]));
+        let traditional = Traditional::with_seed(TraditionalVariant::Taiwan, seed);
+        assert_eq!(traditional.restore("什麼").as_deref(), Some("什么"));
+        assert_eq!(traditional.restore("什么"), None);
+        assert_eq!(traditional.to_simplified("謝謝你"), "谢谢你");
+    }
+
+    /// 台湾字形在词库繁体之上再换一层：动态表落到词库原文，再经对照表落到简体。
+    #[test]
+    fn variant_restore_chains_through_the_seed() {
+        let seed = std::sync::Arc::new(HashMap::from([("這裏".to_owned(), "这里".to_owned())]));
+        let traditional = Traditional::with_seed(TraditionalVariant::Taiwan, seed);
+        let mut candidates = list(&["這裏"]);
+        traditional.apply(&mut candidates);
+        assert_eq!(candidates.items[0].text, "這裡");
+        assert_eq!(traditional.restore("這裡").as_deref(), Some("这里"));
     }
 }

@@ -84,6 +84,11 @@ def resource_files(root, resources, sample):
         for source in (root / 'assets' / kind).rglob('*'):
             if source.is_file():
                 files[resources / source.relative_to(root)] = source
+    # 通字简 / 繁两套词库与繁→简对照：随包放 assets/lexicon，Server 按资源根找
+    for name in ('tungdzih-traditional.tsv', 'tungdzih-script.tsv'):
+        source = root / 'assets' / 'lexicon' / name
+        if source.is_file():
+            files[resources / source.relative_to(root)] = source
     if not sample:
         product_data(root, resources, files)
     return files

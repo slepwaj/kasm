@@ -29,6 +29,7 @@ mod shuangpin;
 mod spacing;
 mod spelling;
 mod traditional;
+mod traditional_script;
 mod tungdzih;
 mod umlaut;
 mod vocabulary;

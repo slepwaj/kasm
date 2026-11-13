@@ -4,10 +4,12 @@
 
 mod panic_log;
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use kasm_core::{Engine, Language};
+use kasm_dictionary::Dictionary;
 use kasm_platform::{Config, ConfigError, LogLevel, Scheme, resources};
 use kasm_windows_server::assembly::{glossary_file, learning_language};
 use kasm_windows_server::{
@@ -82,6 +84,12 @@ fn tungdzih_dict(root: &Path) -> PathBuf {
     generated(root, "tungdzih.kasm")
         .or_else(|| asset(root, "lexicon/tungdzih.tsv"))
         .unwrap_or_else(|| sample_dict(root))
+}
+
+/// 通字繁体词库：优先打包过的 `.kasm`，开发布局回落到 `assets/lexicon/`。
+fn tungdzih_traditional_dict(root: &Path) -> Option<PathBuf> {
+    generated(root, "tungdzih-traditional.kasm")
+        .or_else(|| asset(root, "lexicon/tungdzih-traditional.tsv"))
 }
 
 fn tupa_dict(root: &Path) -> PathBuf {
@@ -282,6 +290,39 @@ fn main() -> ExitCode {
     // Windows 端此前漏装 custom_phrases（macOS 端 apply_config 有）；失败只记日志不阻塞启动
     if let Err(error) = engine.set_custom_phrases(config.custom_phrases.clone()) {
         tracing::warn!(%error, "自定义短语配置未应用");
+    }
+    // 通字：繁体词库与简繁对照一起装；set_traditional 负责按输出字形整份换。
+    if tungdzih {
+        if let Some(path) = tungdzih_traditional_dict(&root) {
+            match Dictionary::from_path(&path) {
+                Ok(dictionary) => {
+                    tracing::info!(path = %path.display(), entries = dictionary.len(), "通字繁体词库已加载");
+                    engine.set_traditional_dictionary(dictionary);
+                }
+                Err(error) => {
+                    tracing::warn!(%error, path = %path.display(), "通字繁体词库加载失败")
+                }
+            }
+        }
+        if let Some(path) = asset(&root, "lexicon/tungdzih-script.tsv") {
+            match std::fs::read_to_string(&path) {
+                Ok(text) => {
+                    let mut map = HashMap::new();
+                    for line in text.lines() {
+                        if line.starts_with('#') || line.trim().is_empty() {
+                            continue;
+                        }
+                        if let Some((traditional, simplified)) = line.split_once('\t') {
+                            map.insert(traditional.to_owned(), simplified.to_owned());
+                        }
+                    }
+                    engine.set_traditional_seed(map);
+                }
+                Err(error) => {
+                    tracing::warn!(%error, path = %path.display(), "通字简繁对照加载失败")
+                }
+            }
+        }
     }
     // 拼音侧与形码侧在 `configure_schemes` 里一起装配（双拼 / 混输都在那）
     engine.set_traditional(config.general.traditional());

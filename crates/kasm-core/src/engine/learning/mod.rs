@@ -294,6 +294,15 @@ impl Engine {
     pub(super) fn forget_span_cache(&self) {
         self.span_cache.borrow_mut().clear();
     }
+
+    /// 整份换词库（通字简 / 繁）时清掉所有与词库内容有关的缓存。
+    pub(super) fn forget_dictionary_caches(&self) {
+        self.forget_span_cache();
+        *self.correction_cache.borrow_mut() = None;
+        *self.last_query.borrow_mut() = None;
+        *self.neural_cache.borrow_mut() = super::rescoring::NeuralCache::default();
+        self.traditional.forget();
+    }
 }
 
 /// 至少两个汉字才记相遇。

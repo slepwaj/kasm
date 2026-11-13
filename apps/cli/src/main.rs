@@ -20,6 +20,7 @@ mod userwords;
 mod wordlist;
 mod zhiyi;
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Instant;
@@ -546,6 +547,28 @@ fn build_engine(args: &Args) -> Result<Engine, CliError> {
     if config.predict.enabled {
         let predictor = CloudPredictor::new(&config.predict)?;
         engine = engine.with_predictor(Box::new(predictor));
+    }
+    // 通字：同时装载繁体词库与简繁对照，输出字形为繁体时由 Engine 整份换。
+    if args.tungdzih && args.dict.is_none() {
+        let traditional_path = args::default_data_file("tungdzih-traditional.tsv");
+        if traditional_path.is_file() {
+            let dictionary = Dictionary::from_path(&traditional_path)?;
+            tracing::info!(path = %traditional_path.display(), entries = dictionary.len(), "通字繁体词库已加载");
+            engine.set_traditional_dictionary(dictionary);
+        }
+        let script_path = args::default_data_file("tungdzih-script.tsv");
+        if script_path.is_file() {
+            let mut map = HashMap::new();
+            for line in std::fs::read_to_string(&script_path)?.lines() {
+                if line.starts_with('#') || line.trim().is_empty() {
+                    continue;
+                }
+                if let Some((traditional, simplified)) = line.split_once('\t') {
+                    map.insert(traditional.to_owned(), simplified.to_owned());
+                }
+            }
+            engine.set_traditional_seed(map);
+        }
     }
     Ok(engine)
 }
