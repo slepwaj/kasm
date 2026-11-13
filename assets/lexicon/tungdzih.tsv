@@ -44,7 +44,6 @@
 蝴	hu	100
 拽	jruay	121
 烤	kao	146
-卡	dzeap	575
 卡	keaa	575
 裉	kenn	100
 搇	kimm	100
@@ -117,6 +116,7 @@
 榕	yong	100
 砸	zap	241
 怎	zeem	331
+怎	zim	331
 尽	dziin	603
 尽	ziin	603
 做	zoh	12987
@@ -171,7 +171,6 @@
 格	ceac	278
 隔	ceac	469
 奸	cean	119
-奸	con	119
 缸	ceang	128
 够	cew	550
 吃	chic	5434
@@ -343,12 +342,10 @@
 她	i	40000
 呀	ia	730
 烟	ien	677
-烟	won	677
 樱	ieng	100
 酉	ieo	32
 悠	ieu	100
 乙	iut	201
-症	dyng	451
 症	jaeq	451
 这	jeh	142857
 衹	jii	100
@@ -361,7 +358,6 @@
 镯	jruoc	100
 嵌	keamm	113
 铅	kean	116
-铅	yuan	116
 咳	kec	235
 芡	kiemm	100
 迄	kit	100
@@ -526,12 +522,10 @@
 碗	uoon	440
 午	quu	92
 午	uu	92
-喂	nue	189
 喂	uy	189
 丸	won	87
 完	won	1197
 纬	wue	100
-哈	qop	329
 哈	xa	329
 哈	xaa	329
 酐	xang	100
@@ -549,7 +543,6 @@
 哄	huq	199
 哄	xug	199
 伙	xuoo	158
-样	sziaq	460
 样	yaq	460
 淆	yeau	100
 肴	heau	100
@@ -590,7 +583,6 @@
 赎	zhouc	66
 顺	zhunn	473
 述	zhut	100
-术	dhyut	188
 术	zhut	188
 缉	zip	100
 疽	ziu	38
@@ -726,7 +718,6 @@
 陂	bih	100
 随	szui	1029
 亏	kui	203
-亏	yu	203
 闚	kui	100
 奇	gi	279
 祇	gi	100
@@ -912,9 +903,9 @@
 㥪	liuu	100
 扶	fvu	310
 𫀬	jru	100
-㑇	dru	100
+㑇	dreu	100
+㑇	nop	100
 㑇	jrew	100
-㑇	nap	100
 敷	fu	69
 诹	ziu	100
 跗	fu	100
@@ -1063,7 +1054,6 @@
 因	in	6134
 新	sin	19607
 仁	ren	178
-亲	dren	773
 亲	tsin	773
 亲	tsinn	773
 礥	hieen	100
@@ -1074,7 +1064,6 @@
 𥎊	gin	100
 珍	dyen	100
 陈	dhyen	1068
-陈	dhyn	1068
 津	zin	175
 瞋	chen	100
 秦	dzin	254
@@ -1189,7 +1178,6 @@
 滩	tan	166
 𦙱	san	100
 坛	dhan	143
-坛	dhom	143
 残	dzan	269
 干	con	1526
 干	conn	1526
@@ -1214,7 +1202,6 @@
 銮	lon	100
 欢	xuon	245
 宽	kuon	599
-钻	giem	480
 钻	zon	480
 钻	zonn	480
 槃	bhan	100
@@ -1222,7 +1209,6 @@
 潘	pon	138
 𤳖	bon	100
 删	sran	68
-关	cuaa	1107
 关	cuan	1107
 弯	uan	241
 𣟴	sruan	100
@@ -1242,7 +1228,6 @@
 鳏	cuan	100
 间	cean	444
 间	ceann	444
-间	hean	444
 闲	hean	230
 悭	kean	100
 虥	jraan	100
@@ -1382,7 +1367,6 @@
 焦	ziau	154
 饶	rau	107
 烧	shau	574
-烧	siau	574
 遥	yau	100
 韶	zhau	100
 昭	jau	100
@@ -1457,7 +1441,6 @@
 醝	dzo	100
 莪	qo	100
 佗	to	100
-罗	lho	440
 罗	lo	440
 何	ho	925
 诃	xo	100
@@ -1659,7 +1642,6 @@
 轻	kieng	860
 名	mieng	9803
 跉	lieng	100
-并	bhaeq	22222
 并	bhieg	22222
 并	bieq	22222
 倾	kiueng	175
@@ -1833,7 +1815,6 @@
 𧡪	dhoom	100
 𧡪	dom	100
 覃	dhom	31
-参	sam	258
 参	srem	258
 参	trem	258
 参	tsom	258
@@ -1851,7 +1832,6 @@
 弇	ieem	100
 䜙	qom	100
 谈	dham	2427
-谈	dhom	2427
 甘	com	125
 担	daan	573
 担	dam	573
@@ -1970,7 +1950,6 @@
 动	dhug	1295
 菶	bhug	100
 菶	bug	100
-肿	djog	131
 肿	jog	131
 宠	tyog	135
 陇	liog	70
@@ -2450,7 +2429,6 @@
 眅	pan	100
 限	heaan	232
 𥇅	maan	100
-简	caeng	138
 简	ceaan	138
 刬	traan	100
 栈	jrann	100
@@ -2659,7 +2637,7 @@
 叵	poo	100
 祸	huoo	187
 火	xuoo	877
-颗	kuoo	836
+颗	koo	836
 马	maa	1751
 者	jee	3257
 雅	qeaa	207
@@ -3444,7 +3422,6 @@
 隘	eay	100
 邂	heay	100
 卖	may	1745
-画	hua	1494
 画	huah	1494
 睚	qeay	100
 謑	hee	100
@@ -3476,7 +3453,6 @@
 𢷎	bay	100
 湃	pay	100
 坏	huay	725
-坏	puei	725
 聩	quay	100
 𢞎	bhay	100
 𢞎	bhae	100
@@ -3566,7 +3542,6 @@
 晋	zinn	173
 衅	xinn	100
 镇	dyenn	1072
-镇	dynn	1072
 榇	trenn	100
 印	inn	758
 疢	tynn	100
@@ -3679,6 +3654,8 @@
 偄	ruaan	100
 攒	dzonn	112
 攒	zann	112
+攒	zaan	112
+攒	dzon	112
 𫔋	kuonn	100
 𫔋	kuoon	100
 谏	ceann	100
@@ -3924,8 +3901,6 @@
 亮	liaq	772
 状	jraq	218
 让	raq	14925
-饷	shag	106
-饷	shang	106
 饷	shaq	106
 帐	dyaq	231
 怅	tyaq	100
@@ -4022,7 +3997,6 @@
 摒	pin	100
 偋	bhieq	100
 净	dzieq	293
-净	traeng	293
 盛	zhaeq	315
 詺	mieq	100
 𣢝	xieq	100
@@ -4225,7 +4199,8 @@
 梵	fvamm	100
 泛	famm	196
 劒	ciemm	100
-俺	omm	373
+俺	iemm	373
+俺	oom	373
 屋	uc	428
 独	dhuc	420
 谷	cuc	255
@@ -4308,7 +4283,6 @@
 欲	youc	604
 躅	dhyouc	100
 录	liouc	238
-录	luc	238
 瘃	dyouc	100
 足	zuc	676
 幞	fvouc	100
@@ -4588,7 +4562,6 @@
 辍	dyot	69
 劣	liuet	117
 瞥	piet	126
-别	bey	2341
 别	bhiet	2341
 辙	dhyet	65
 䇷	biet	100
@@ -4672,7 +4645,6 @@
 郭	cuoc	158
 雘	uoc	100
 获	huaec	710
-获	huoc	710
 廓	kuoc	100
 瓁	quoc	100
 硦	luoc	100
@@ -4748,7 +4720,6 @@
 尺	chiec	294
 石	zhiec	774
 只	jiec	1170
-只	jii	1170
 掷	dhyec	131
 皵	tsiec	100
 皵	tsioc	100
@@ -5401,7 +5372,7 @@
 褙	buey	100
 𢠜	bhet	100
 辈	buey	159
-钡	buey	104
+钡	buy	104
 䰽	buey	100
 𤸶	bhay	100
 惫	bhay	100
@@ -5413,6 +5384,7 @@
 鐾	bhey	100
 鐾	bhih	100
 呗	bhay	107
+呗	buy	107
 逩	ben	100
 犇	ben	100
 锛	ben	27
@@ -5728,7 +5700,6 @@
 飑	biau	100
 飑	poc	100
 标	biau	251
-标	liim	251
 膘	bhiao	43
 膘	piao	43
 膘	ziao	43
@@ -5802,7 +5773,6 @@
 虨	ban	100
 虨	bin	100
 虨	pin	100
-滨	baeng	103
 滨	bin	103
 濵	baeng	100
 槟	bin	100
@@ -7407,7 +7377,6 @@
 铛	dang	25
 铛	tang	25
 铛	traeng	25
-档	dag	153
 档	dang	153
 䣣	dag	100
 𧅗	dag	100
@@ -7810,7 +7779,6 @@
 𪑧	dhiep	100
 𪑧	liep	100
 叠	dhiep	178
-叠	dhiet	178
 𧕊	siep	100
 𥷕	dhiep	100
 䴑	dhiep	100
@@ -9094,6 +9062,7 @@
 仠	coon	100
 扞	honn	100
 杆	conn	181
+杆	coon	181
 𤿊	coon	100
 秆	coon	100
 衦	coon	100
@@ -10162,7 +10131,7 @@
 齃	ot	100
 黒	xec	100
 嗨	xai	117
-嘿	mec	128
+嘿	xec	128
 潶	xec	100
 㱄	xec	100
 拫	hen	100
@@ -12664,7 +12633,9 @@
 蚵	koh	100
 萪	kuo	100
 棵	huoon	525
+棵	ko	525
 棵	kuoon	525
+棵	koo	525
 轲	ko	100
 嵙	ko	100
 搕	op	100
@@ -13551,7 +13522,6 @@
 粒	lip	280
 悷	ley	100
 𠞉	lit	100
-历	ley	159
 历	liec	159
 傈	lit	100
 凓	lit	100
@@ -13737,7 +13707,6 @@
 𣿊	lienn	100
 澰	lieem	100
 链	lien	197
-链	lienn	197
 链	tyan	197
 𣞰	lienn	100
 𫎨	liemm	100
@@ -16013,7 +15982,6 @@
 䫽	pau	100
 𣞈	bhiau	100
 刨	bhau	126
-刨	bhaw	126
 咆	bhau	100
 狍	bhau	100
 炰	bhau	100
@@ -17988,7 +17956,7 @@
 㰼	srep	100
 歃	srap	100
 歃	srep	100
-煞	sret	118
+煞	srat	118
 翜	srap	100
 翜	srep	100
 𧻵	srap	100
@@ -18236,7 +18204,7 @@
 鲹	srem	100
 䯂	jrep	100
 䯂	sren	100
-什	djep	100
+什	zhip	100
 䰠	shen	100
 邥	sheem	100
 抌	yao	100
@@ -18342,7 +18310,7 @@
 饣	djic	100
 𡚼	chii	100
 旹	zhi	100
-拾	djep	165
+拾	zhip	165
 峕	zhi	100
 炻	zhiec	100
 祏	djiec	100
@@ -19119,7 +19087,7 @@
 𧉟	tai	100
 𩬠	tai	100
 邰	tai	100
-抬	dhai	399
+抬	tyi	399
 苔	dhai	100
 炱	dhai	100
 菭	dhai	100
@@ -23480,6 +23448,7 @@
 鸆	qiu	100
 𩼪	qiu	100
 予	yu	171
+予	yuu	171
 𢌱	yuu	100
 宇	yuu	82
 雨	yuu	762
@@ -23825,7 +23794,6 @@
 黦	iut	100
 𤒀	yoc	100
 瀹	yoc	100
-跃	tiec	169
 跃	yoc	169
 爚	shoc	100
 爚	yoc	100
@@ -24494,7 +24462,6 @@
 侲	jenn	100
 㼉	dhymm	100
 阵	dhyenn	282
-阵	dhynn	282
 𨳌	dhyenn	100
 振	jenn	211
 栚	dhyym	100
@@ -27433,7 +27400,7 @@
 为何	wuy ho	280
 为了	wuy liao	7692
 为难	wui nan	151
-为什么	wuy djep mo	2439
+为什么	wuy zhip mo	2439
 为首	wui sheo	201
 为主	wui juu	711
 委蛇	ue zhe	1500
@@ -27734,7 +27701,7 @@
 已经	yii cieng	12658
 这些	jeh sie	11764
 起来	kii lai	10989
-什么	djep me	10638
+什么	zhip me	10638
 现在	hienn dzae	10416
 社会	zhee huey	10309
 关系	cuan hey	9900
@@ -27907,7 +27874,7 @@
 作用	zoc yoq	2475
 如此	ru tsii	2463
 困难	kunn nan	2457
-为什么	wui djep me	2439
+为什么	wui zhip me	2439
 随着	szui dyoc	2433
 农村	nong tsun	2403
 具有	giuh yeo	2398
@@ -29494,7 +29461,7 @@
 庆祝	kieq juc	362
 窗口	truang keo	362
 保留	bao lieu	362
-什么样	djep me yaq	362
+什么样	zhip me yaq	362
 专项	juan heag	361
 人民法院	ren min fap yuann	361
 收购	sheu cew	361
@@ -30452,7 +30419,7 @@
 杰出	giet chut	247
 手指	sheo jii	247
 不满	but moon	247
-抬头	dhai dheu	247
+抬头	tyi dheu	247
 逝世	zhey shey	247
 节能	ziet neng	247
 抗战	kaq jann	247
@@ -30583,7 +30550,7 @@
 此刻	tsii kec	236
 厨房	dhyu fvang	236
 自愿	dzih qiuann	236
-收拾	sheu djep	236
+收拾	sheu zhip	236
 椅子	ii z	236
 算了	sonn le	236
 代理	dhay lii	236
@@ -30735,7 +30702,7 @@
 融合	yung hop	226
 看待	kon dhae	226
 庄严	drang qiem	226
-没什么	met djep me	226
+没什么	met zhip me	226
 等级	deg cip	226
 延长	yen dhyang	226
 固然	cuh ran	226
@@ -32240,7 +32207,7 @@
 开阔	kai kuot	157
 粉碎	feen suy	157
 抱怨	bhao iuann	157
-什么的	djep me de	157
+什么的	zhip me de	157
 歧视	gi zhih	157
 下达	heah dhat	157
 保安	bao on	157
@@ -34782,7 +34749,7 @@
 万万	vann vann	106
 流向	lieu xiaq	106
 偏见	pien cienn	106
-颗粒	kuoo lip	106
+颗粒	koo lip	106
 反弹	faan dhan	106
 劳动生产率	lau dhug sraeng traan sruay	106
 确诊	keoc jeen	106
@@ -34979,7 +34946,7 @@
 瘫痪	tan toon	104
 商品经济	shang piim cieng zey	104
 央行	iang haeng	104
-嘿嘿	mec mec	104
+嘿嘿	xec xec	104
 患有	huann yeo	104
 铺子	pu z	104
 忘却	vaq kioc	104
@@ -43970,7 +43937,7 @@
 质变	jit bienn	52
 走投无路	zeo dheu vu luh	52
 笔法	bit fap	52
-不可收拾	but koo sheu djep	52
+不可收拾	but koo sheu zhip	52
 布衣	buh i	52
 车流	che lieu	52
 恩怨	en iuann	52
@@ -48128,7 +48095,7 @@
 窃窃	tsiet tsiet	42
 权钱交易	giuan dzien ceau yih	42
 软骨	ruaan cut	42
-煞有介事	sret yeo ceay zrih	42
+煞有介事	srat yeo ceay zrih	42
 山坳	sran au	42
 山势	sran shey	42
 深加工	shem cea cung	42
@@ -48178,7 +48145,7 @@
 清苦	tsieng kuu	42
 拳头产品	giuan dheu traan piim	42
 瑞雪	ruy siuet	42
-煞白	sret bhaec	42
+煞白	srat bhaec	42
 摄影机	shep ieg ci	42
 神经衰弱	zhen cieng sruai roc	42
 始发	shii fat	42
@@ -48239,7 +48206,7 @@
 受宠若惊	zheo tyog roc cieng	42
 瞬时	shunn zhi	42
 台式	dhai shic	42
-抬举	dhai ciuu	42
+抬举	tyi ciuu	42
 体罚	tee fvat	42
 天窗	tien truang	42
 天神	tien zhen	42
@@ -48443,7 +48410,7 @@
 上钩	zhag ceu	41
 舍生忘死	shee sraeng vaq sii	41
 省吃俭用	sraeg chic gieem yoq	41
-拾掇	djep dot	41
+拾掇	zhip dot	41
 手书	sheo shu	41
 售货	zhew xuoh	41
 顺水	zhunn shue	41
@@ -48928,7 +48895,7 @@
 归附	cui fvuh	41
 过眼	cuoh qeaan	41
 合围	hop wui	41
-哄抬	xug dhai	41
+哄抬	xug tyi	41
 还本	huan been	41
 给养	cip yag	41
 金钥匙	cim qiuet dji	41
@@ -49159,7 +49126,7 @@
 黑黝黝	xec ieo ieo	40
 恍若	xuag roc	40
 混合物	huun hop vut	40
-家什	cea djep	40
+家什	cea zhip	40
 剪发	zieen fat	40
 结余	ciet yu	40
 解聘	ceae pieq	40
@@ -49181,7 +49148,7 @@
 融会贯通	yung huey cuonn tung	40
 柔美	reu mue	40
 盛衰	zhaeq sruai	40
-拾遗	djep yi	40
+拾遗	zhip yi	40
 事由	zrih yeu	40
 受热	zheo ret	40
 受刑	zheo hieng	40
@@ -49304,7 +49271,7 @@
 球类	gieu luy	40
 热流	ret lieu	40
 软着陆	ruaan dyoc liuc	40
-煞费苦心	sret fuy kuu sim	40
+煞费苦心	srat fuy kuu sim	40
 肾病	zheen bhieq	40
 失措	shit tsuh	40
 诗坛	shi dhan	40
@@ -50112,7 +50079,7 @@
 巴望	ba vaq	39
 拔河	bhat ho	39
 薄雾	bhoh vuh	39
-布尔什维克	buh eer djep wui kec	39
+布尔什维克	buh eer zhip wui kec	39
 裁剪	dzai zieen	39
 丑角	tyeo ceoc	39
 出警	chut cieg	39
@@ -52314,7 +52281,7 @@
 沙盘	sra bhon	35
 哨声	tsiaw shaeng	35
 摄食	shep zhic	35
-什物	djep vut	35
+什物	zhip vut	35
 首富	sheo fuh	35
 书卷	shu ciuaan	35
 探路	tomm luh	35
@@ -53510,7 +53477,7 @@
 复试	fvew shih	34
 杆秤	conn cheq	34
 缸子	ceang z	34
-高抬	cau dhai	34
+高抬	cau tyi	34
 冠状动脉	cuon jraq dhug maec	34
 锅灶	cuo zaw	34
 孩提	hai dhei	34
@@ -53546,7 +53513,7 @@
 使不得	srii but dec	34
 殊死	zhu sii	34
 碎花	suy xua	34
-抬腿	dhai tue	34
+抬腿	tyi tue	34
 体征	tee dyng	34
 铁甲	tiet ceap	34
 停机坪	dhieng ci bhieng	34
@@ -54685,7 +54652,7 @@
 侍弄	zhii luq	33
 顺当	zhunn dang	33
 耸人听闻	siog ren tieng ven	33
-抬杠	dhai caq	33
+抬杠	tyi caq	33
 提纯	dhei zhun	33
 天南海北	tien nom xae bec	33
 万全	vann dziuan	33
@@ -55868,7 +55835,7 @@
 讳莫如深	xuy moc ru shem	31
 惑众	huec juq	31
 坚贞	cien dyeng	31
-捡拾	lieem djep	31
+捡拾	lieem zhip	31
 剑客	ciemm kaec	31
 健步	gienn bhuh	31
 僵直	ciang dhyc	31
@@ -57060,7 +57027,7 @@
 焚化	fven xuah	30
 抚爱	fuu ay	30
 干着急	con dyoc cip	30
-高抬贵手	cau dhai cuy sheo	30
+高抬贵手	cau tyi cuy sheo	30
 拱形	cog hieng	30
 供词	coq szi	30
 沟谷	ceu cuc	30
@@ -58797,7 +58764,7 @@
 筛糠	srai kang	29
 失修	shit sieu	29
 十字街头	zhip dzih ceai dheu	29
-拾级而上	djep cip er zhag	29
+拾级而上	zhip cip er zhag	29
 史略	srii lioc	29
 世系	shey hey	29
 守时	sheo zhi	29
@@ -59127,7 +59094,7 @@
 香粉	xiang feen	28
 消肿	siau jog	28
 写景	siee cieg	28
-凶神恶煞	xiong zhen oc sret	28
+凶神恶煞	xiong zhen oc srat	28
 雄师	hiung sri	28
 血本	xiuet been	28
 延揽	yen laam	28
@@ -60288,7 +60255,7 @@
 甚嚣尘上	zhem xiau dhyen zhag	27
 师友	sri yeo	27
 实数	zhit sruu	27
-拾零	djep lieng	27
+拾零	zhip lieng	27
 手雷	sheo lui	27
 售卖	zhew may	27
 秫秸	zhut ceat	27
@@ -61185,7 +61152,7 @@
 打呼噜	daa xu lu	27
 大课	dhah koh	27
 大排档	dhah bhai dang	27
-大煞风景	dhah sret fung cieg	27
+大煞风景	dhah srat fung cieg	27
 戴高帽	day cau maw	27
 担待	dam dhae	27
 淡妆	dhamm drang	27
@@ -61468,7 +61435,7 @@
 松松垮垮	siong siong kuaa kuaa	26
 酸涩	son srep	26
 蒜头	sonn dheu	26
-抬轿	dhai giaw	26
+抬轿	tyi giaw	26
 泰然自若	tay ran dzih roc	26
 探戈	tomm cuo	26
 探亲假	tomm tsin ceah	26
@@ -61623,7 +61590,7 @@
 塞子	sec z	26
 三不管	sam but cuoon	26
 散播	saan boh	26
-煞风景	sret fung cieg	26
+煞风景	srat fung cieg	26
 少见多怪	shao cienn do cuay	26
 神位	zhen wuy	26
 尸检	shi cieem	26
@@ -62803,7 +62770,7 @@
 闭关	bey cuan	26
 边幅	bien fuc	26
 贬损	drap suun	26
-不识抬举	but shic dhai ciuu	26
+不识抬举	but shic tyi ciuu	26
 不自量力	but dzih liang lic	26
 残本	dzan been	26
 蝉翼	djan yic	26
@@ -63335,7 +63302,7 @@
 散架	saan ceah	25
 丧钟	saq jong	25
 扫尾	sao vue	25
-煞住	sret dhyuh	25
+煞住	srat dhyuh	25
 上呼吸道	zhag xu xip dhaw	25
 蛇蝎	zhe xiet	25
 社队企业	zhee dhuy kii qiep	25
@@ -63739,7 +63706,7 @@
 失物	shit vut	25
 施主	shi juu	25
 石蕊	zhiec rue	25
-拾金不昧	djep cim but muey	25
+拾金不昧	zhip cim but muey	25
 适口	shiec keo	25
 耍猴儿	sruaa heu er	25
 栓塞	sruan sec	25
@@ -64148,7 +64115,7 @@
 十八般武艺	zhip bat bon vuu qey	25
 石拱桥	zhiec cog giau	25
 实像	zhit sziaq	25
-拾趣	djep tsiuh	25
+拾趣	zhip tsiuh	25
 收款机	sheu kuoon ci	25
 树阴	zhuh im	25
 漱洗	srew see	25
@@ -64366,7 +64333,7 @@
 笙歌	sraeng co	24
 石臼	zhiec gieo	24
 实职	zhit jic	24
-拾取	djep tsiuu	24
+拾取	zhip tsiuu	24
 史话	srii huah	24
 示爱	zhih ay	24
 事功	zrih cung	24
@@ -64574,8 +64541,8 @@
 摄影棚	shep ieg bhaeng	24
 绳套	zheng taw	24
 失计	shit cey	24
-什锦	djep ciim	24
-拾遗补缺	djep yi buu kiuet	24
+什锦	zhip ciim	24
+拾遗补缺	zhip yi buu kiuet	24
 世仇	shey gieu	24
 事到临头	zrih daw lim dheu	24
 收殓	sheu liemm	24
@@ -64709,7 +64676,7 @@
 粪车	fenn che	24
 风声鹤唳	fung shaeng hoc ley	24
 氟利昂	fut lih qang	24
-俯拾即是	fuu djep zic zh	24
+俯拾即是	fuu zhip zic zh	24
 概略	cay lioc	24
 敢是	coom zh	24
 刚正	cang jaeng	24
@@ -65002,7 +64969,7 @@
 社交圈	zhee ceau kiuan	24
 盛暑	zhaeq shuu	24
 实诚	zhit djaeng	24
-拾荒	djep xuang	24
+拾荒	zhip xuang	24
 示警	zhih cieg	24
 鼠类	shuu luy	24
 水绿	shue liouc	24
@@ -65684,7 +65651,7 @@
 私见	si cienn	24
 四环素	sih huan suh	24
 松明	siong ming	24
-抬价	dhai ceah	24
+抬价	tyi ceah	24
 谈天说地	dham tien shot dhih	24
 套管	taw cuoon	24
 提纲挈领	dhei cang kiet lieg	24
@@ -66529,7 +66496,7 @@
 奋笔疾书	fenn bit dzit shu	23
 风烛残年	fung jouc dzan nien	23
 拂拭	fvut shic	23
-俯拾皆是	fuu djep ceai zh	23
+俯拾皆是	fuu zhip ceai zh	23
 腐儒	fvuu ru	23
 腐竹	fvuu dyuc	23
 复诊	fvew jeen	23
@@ -69715,7 +69682,7 @@
 私商	si shang	22
 肃毒	siuc dhouc	22
 缩头缩脑	sruc dheu sruc nao	22
-抬轿子	dhai giaw z	22
+抬轿子	tyi giaw z	22
 坦露	taan luh	22
 疼惜	dheng siec	22
 挑头	tiau dheu	22
@@ -69752,7 +69719,7 @@
 星相	sieng siaq	22
 行李架	haeng lii ceah	22
 形骸	hieng heai	22
-凶煞	xiong sret	22
+凶煞	xiong srat	22
 虚与委蛇	xiu yuu ue zhe	22
 蓄势	xiuc shey	22
 选点	siuaan dieem	22
@@ -73863,7 +73830,7 @@
 丧门星	saq men sieng	20
 色带	sraec day	20
 杀青	srat tsieng	20
-煞尾	sret vue	20
+煞尾	srat vue	20
 膳宿	djann siew	20
 上代	zhag dhay	20
 十八罗汉	zhip bat lo xonn	20
@@ -74219,7 +74186,7 @@
 丧志	saq jih	20
 臊气	saw kih	20
 色厉内荏	sraec ley nuy reem	20
-煞车	sret che	20
+煞车	srat che	20
 山毛榉	sran mau ciuu	20
 删定	sran dhieq	20
 伤痕文学	shang hen ven heoc	20
@@ -75743,7 +75710,7 @@
 留鸟	lieu niao	19
 流量计	lieu liang cey	19
 卤菜	luu tsay	19
-路不拾遗	luh but djep yi	19
+路不拾遗	luh but zhip yi	19
 略逊一筹	lioc sunn it dhyeu	19
 螺丝帽	lo si maw	19
 麻纺	ma fag	19
@@ -75811,7 +75778,7 @@
 软骨病	ruaan cut bhieq	19
 软座	ruaan dzoh	19
 赛似	say szii	19
-煞气	sret kih	19
+煞气	srat kih	19
 闪电战	shoom dhienn jann	19
 扇面儿	shann mienn er	19
 上半月	zhag bonn qiuet	19
@@ -76241,7 +76208,7 @@
 石舫	zhiec baq	19
 石炭酸	zhiec tann son	19
 实词	zhit szi	19
-拾人牙慧	djep ren qea huey	19
+拾人牙慧	zhip ren qea huey	19
 食蚁兽	zhic qii shew	19
 试播	shih boh	19
 受胎	zheo tai	19
@@ -76249,7 +76216,7 @@
 水曲柳	shue kiuc lieo	19
 顺情	zhunn dzieng	19
 死面	sii mienn	19
-抬爱	dhai ay	19
+抬爱	tyi ay	19
 太平鼓	tay bhieng cuu	19
 弹簧锁	dhan huang soo	19
 檀香扇	dhan xiang shann	19
@@ -77679,7 +77646,7 @@
 随风倒	szui fung dao	18
 胎发	tai fat	18
 台鉴	dhai ceamm	18
-抬头纹	dhai dheu ven	18
+抬头纹	tyi dheu ven	18
 弹簧门	dhan huang men	18
 炭黑	tann xec	18
 天差地远	tien tsi dhih yuaan	18
@@ -78440,7 +78407,7 @@
 导尿	dhao niaw	18
 祷文	dao ven	18
 倒赔	dao bhuei	18
-道不拾遗	dhaw but djep yi	18
+道不拾遗	dhaw but zhip yi	18
 稻糠	dhao kang	18
 灯标	deng biau	18
 低湿	dei ship	18
@@ -78704,7 +78671,7 @@
 丧假	saq ceah	18
 杀熟	srat zhuc	18
 砂罐	sra cuonn	18
-煞费心机	sret fuy sim ci	18
+煞费心机	srat fuy sim ci	18
 色酒	sraec zieo	18
 珊瑚虫	san hu dhyung	18
 伤耗	shang xaw	18
@@ -78712,7 +78679,7 @@
 申讨	shen tao	18
 审校	sheem heaw	18
 实言相告	zhit qien siaq caw	18
-拾物	djep vut	18
+拾物	zhip vut	18
 食品街	zhic piim ceai	18
 是味儿	zh vuy er	18
 舐犊情深	zhii dhuc dzieng shem	18

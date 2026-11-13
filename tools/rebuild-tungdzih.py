@@ -2,6 +2,7 @@
 """用《通字.xlsx》重建通字词库与音节表。
 
 默认读 `tools/source/tongzi.xlsx`（2026-11 起是《通字_合并.xlsx》的副本）。
+`tools/source/tungdzih-keep-old.tsv` 里的字强制保留旧读（人工确认不做改动的例外）。
 - 单字：以 xlsx 为准（繁体先转简体），旧表里 xlsx 没有的生僻字保持原样；
 - 词：按字拆分读音，某个字的旧读被删掉且新读只剩一个时替换；
   新读不止一个（多音字）时保留旧词读音，避免改错；
@@ -22,6 +23,22 @@ ROOT = Path(__file__).resolve().parent.parent
 XLSX = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "tools/source/tongzi.xlsx"
 TSV = ROOT / "assets/lexicon/tungdzih.tsv"
 SYLLABLES = ROOT / "crates/kasm-core/data/tungdzih-syllables.txt"
+KEEP_OLD = ROOT / "tools/source/tungdzih-keep-old.tsv"
+
+
+def read_keep_old():
+    """人工确认保持旧读的字：字<TAB>旧读音（空格分隔）。"""
+    if not KEEP_OLD.is_file():
+        return {}
+    readings = {}
+    for line in KEEP_OLD.read_text(encoding="utf-8-sig").splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        readings[parts[0]] = parts[1].split()
+    return readings
 
 
 def read_xlsx():
@@ -44,6 +61,9 @@ def read_xlsx():
         bucket = readings.setdefault(hanzi, [])
         if reading not in bucket:
             bucket.append(reading)
+    for hanzi, old in read_keep_old().items():
+        if hanzi in readings:
+            readings[hanzi] = old
     return readings
 
 
