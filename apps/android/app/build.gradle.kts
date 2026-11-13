@@ -30,6 +30,7 @@ android {
         versionCode = appVersionCode
         versionName = appVersion
         ndk { abiFilters += "arm64-v8a" }
+        manifestPlaceholders["appLabel"] = "KASM"
     }
 
     if (releaseKeystore != null) {
@@ -51,6 +52,8 @@ android {
         debug {
             // 手机上装着发版签名的包时并排装调试版（-PsideBySide），不用卸载、不丢数据
             if (project.hasProperty("sideBySide")) applicationIdSuffix = ".dev"
+            // 与正式版并存时，系统设置和输入法列表里能分清两个 KASM
+            manifestPlaceholders["appLabel"] = "KASM 调试版"
         }
         release {
             isMinifyEnabled = true
