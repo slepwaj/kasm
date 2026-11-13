@@ -1,8 +1,9 @@
 //! 通字（Tungdzih / General Chinese）：赵元任《通字方案》的罗马字音节表与切分。
 //!
 //! 与粤拼一样是独立管线：音节表、切分、查询各走一条旁路，不进普通话音节表。
-//! 音节表由 `data/tungdzih-syllables.txt` 编译进二进制（来自 `参考项目/tungdzih` 的
-//! `tungdzih.dict.yaml`）；拼式本身带声调字母（`你 nii`、`好 xao/xaw`），与通字方案一致。
+//! 音节表由 `data/tungdzih-syllables.txt` 编译进二进制（`tools/rebuild-tungdzih.py`
+//! 从《通字_合并.xlsx》重建；更早来自 `参考项目/tungdzih` 的 `tungdzih.dict.yaml`）；
+//! 拼式本身带声调字母（`你 nii`、`好 xao/xaw`），与通字方案一致。
 
 use std::sync::LazyLock;
 

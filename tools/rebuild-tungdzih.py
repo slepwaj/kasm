@@ -1,6 +1,7 @@
 ﻿#!/usr/bin/env python3
 """用《通字.xlsx》重建通字词库与音节表。
 
+默认读 `tools/source/tongzi.xlsx`（2026-11 起是《通字_合并.xlsx》的副本）。
 - 单字：以 xlsx 为准（繁体先转简体），旧表里 xlsx 没有的生僻字保持原样；
 - 词：按字拆分读音，某个字的旧读被删掉且新读只剩一个时替换；
   新读不止一个（多音字）时保留旧词读音，避免改错；
@@ -25,7 +26,13 @@ SYLLABLES = ROOT / "crates/kasm-core/data/tungdzih-syllables.txt"
 
 def read_xlsx():
     wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
-    ws = wb["Sheet1"]
+    # 旧表是 Sheet1；2026-11 的《通字_合并.xlsx》把数据放在「通字」页。
+    for name in ("通字", "Sheet1"):
+        if name in wb.sheetnames:
+            ws = wb[name]
+            break
+    else:
+        ws = wb.worksheets[0]
     cc = OpenCC("t2s")
     readings = collections.OrderedDict()
     for row in ws.iter_rows(min_row=2, values_only=True):
@@ -119,7 +126,8 @@ def rebuild():
         syllables.update(reading for reading, _ in rows)
     for _, reading, _ in rebuilt_words:
         syllables.update(reading.split())
-    SYLLABLES.write_text("\n".join(sorted(syllables)) + "\n", encoding="utf-8")
+    with SYLLABLES.open("w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(sorted(syllables)) + "\n")
 
     print(
         f"单字 {len(rebuilt_singles)}，词 {len(rebuilt_words)}，"

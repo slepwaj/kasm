@@ -796,8 +796,8 @@ macOS 的 row 构建同理；不填时右侧留给译词。词库无调，所以
 状态写回 `[general] traditional_variant` 与 `last_traditional`。
 
 通字（`core/src/tungdzih/`、`engine/query/tungdzih.rs`）：`Scheme::Tungdzih`（`scheme = "tungdzih"`）走独立管线，
-音节表 2,933 个（`data/tungdzih-syllables.txt`，通字拼式本身带调，2026-11 按修订版《通字.xlsx》重建），切分与粤拼同构；词库
-`assets/lexicon/tungdzih.tsv`（79,190 条）由 `参考项目/tungdzih/tungdzih.dict.yaml` 按KASM约定转成简体后入库，
+音节表 2,992 个（`data/tungdzih-syllables.txt`，通字拼式本身带调，2026-11 按修订版《通字_合并.xlsx》重建），切分与粤拼同构；词库
+`assets/lexicon/tungdzih.tsv`（80,230 条）由 `参考项目/tungdzih/tungdzih.dict.yaml` 按KASM约定转成简体后入库，
 并用常用词表反向补了 53,510 个通字词条（逐字取码；2026-11 按修订版重算，歧义多音词保留旧读），词频借用普通话词表。通字单字母音节多（`u` 乌、`a` 啊），
 同一串输入常有多种切法（`uea` = `u ea` 乌鸦 / `ue a` 委啊）：`query_tungdzih` 遍历全部切法查词、整句取最高分的一条；
 词级已有词完整覆盖输入时不再插整句。粤拼 / 通字下字母模式键（缺省 `u` 问字、`v` 表达式）会让位，只留 `?`。

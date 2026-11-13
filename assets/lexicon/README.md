@@ -69,7 +69,7 @@
 
 ### 通字（tungdzih.tsv）
 
-80,677 条：来自 `baopaau/rime-tungdzih` 的 `tungdzih.dict.yaml`（整理自赵元任《通字方案》），
+80,230 条（2026-11 按《通字_合并.xlsx》更新）：来自 `baopaau/rime-tungdzih` 的 `tungdzih.dict.yaml`（整理自赵元任《通字方案》），
 按KASM约定转成简体后入库；另用常用词表反向补了 52,508 个繁体→简体的通字词条（逐字取通字码），
 词频借用普通话词表。源 README 注明「此码表大部分条目尚未校对，请勿作学习参考之用」。
 仓库未声明许可证；再分发前请与原作者确认。
