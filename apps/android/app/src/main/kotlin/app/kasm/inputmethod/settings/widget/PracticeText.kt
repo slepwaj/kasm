@@ -22,7 +22,8 @@ class PracticeText(context: Context, private val colors: AppColors) : View(conte
         resources.displayMetrics,
     )
     private val readingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = 9f * spScale
+        textSize = 10f * spScale
+        typeface = android.graphics.Typeface.DEFAULT_BOLD
     }
     private val charPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = 19f * spScale
@@ -123,11 +124,7 @@ class PracticeText(context: Context, private val colors: AppColors) : View(conte
                 )
             }
 
-            readingPaint.color = when {
-                current -> colors.brand
-                typedHere -> colors.secondary
-                else -> colors.faint
-            }
+            readingPaint.color = if (current) brightReadingColor() else readingColor()
             if (reading.isNotEmpty()) {
                 val width = readingPaint.measureText(reading)
                 canvas.drawText(
@@ -157,4 +154,8 @@ class PracticeText(context: Context, private val colors: AppColors) : View(conte
     private fun correctColor() = if (colors.dark) 0xFF63D69A.toInt() else 0xFF2E9E5B.toInt()
 
     private fun wrongColor() = if (colors.dark) 0xFFFF8A8A.toInt() else 0xFFD93F3F.toInt()
+
+    private fun readingColor() = if (colors.dark) 0xFFFFD54F.toInt() else 0xFFAD6800.toInt()
+
+    private fun brightReadingColor() = if (colors.dark) 0xFFFFF176.toInt() else 0xFF8A4B00.toInt()
 }

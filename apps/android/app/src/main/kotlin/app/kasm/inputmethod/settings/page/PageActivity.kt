@@ -3,10 +3,12 @@ package app.kasm.inputmethod.settings.page
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import app.kasm.inputmethod.settings.Settings
@@ -33,6 +35,9 @@ abstract class PageActivity : Activity() {
 
     protected abstract fun content(): List<View>
 
+    /** 顶栏右侧的固定操作（练习页的简繁切换）；没有就不加。 */
+    protected open fun topBarActions(): View? = null
+
     protected fun rebuild() {
         val scrolled = scroll?.scrollY ?: 0
         val column = LinearLayout(this).apply {
@@ -47,6 +52,14 @@ abstract class PageActivity : Activity() {
         }
         this.scroll = scroll
         val bar = ui.topBar(getString(title)) { finish() }
+        topBarActions()?.let { actions ->
+            bar.addView(
+                actions,
+                FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, Gravity.END or Gravity.CENTER_VERTICAL).apply {
+                    marginEnd = ui.dp(16)
+                },
+            )
+        }
         ui.liftOnScroll(bar, scroll)
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL

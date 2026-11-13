@@ -61,6 +61,8 @@
     <string name="practice_new">换一段</string>
     <string name="practice_restart">重新开始</string>
     <string name="practice_target_label">照着这段打</string>
+    <string name="practice_script_simplified">简体</string>
+    <string name="practice_script_traditional">繁体</string>
     <string name="practice_scheme">注音：%1$s</string>
     <string name="practice_scheme_pinyin">拼音</string>
     <string name="practice_scheme_tungdzih">通字</string>

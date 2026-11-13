@@ -36,6 +36,7 @@ class PracticeActivity : PageActivity() {
 
     private data class PracticeLine(
         val text: String,
+        val traditional: String,
         val readings: Map<String, List<String>>,
     )
 
@@ -52,11 +53,14 @@ class PracticeActivity : PageActivity() {
     private lateinit var accuracyValue: TextView
     private lateinit var progressValue: TextView
     private lateinit var resultView: TextView
+    private lateinit var simplifiedChip: TextView
+    private lateinit var traditionalChip: TextView
 
     private var startedAt = 0L
     private var finishedAt = 0L
     private var finished = false
     private var lastTarget = ""
+    private var scriptTraditional = false
 
     /** 注音跟随键盘当前的拼音方案；练习通字时上面显示通字，练全拼时显示拼音。 */
     private val annotationScheme by lazy {
@@ -81,6 +85,8 @@ class PracticeActivity : PageActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val savedTarget = savedInstanceState?.getString(KEY_TARGET)
         val savedReadings = savedInstanceState?.getString(KEY_READINGS)
+        scriptTraditional = savedInstanceState?.getBoolean(KEY_TRADITIONAL)
+            ?: Settings.load(this).traditional
         targetText = savedTarget ?: FALLBACK_TARGET
         targetReadings = savedReadings?.split(READING_SEPARATOR)
             ?: List(targetText.length) { "" }
@@ -128,6 +134,7 @@ class PracticeActivity : PageActivity() {
         outState.putLong(KEY_STARTED, startedAt)
         outState.putLong(KEY_FINISHED_AT, finishedAt)
         outState.putBoolean(KEY_FINISHED, finished)
+        outState.putBoolean(KEY_TRADITIONAL, scriptTraditional)
         super.onSaveInstanceState(outState)
     }
 
@@ -157,6 +164,18 @@ class PracticeActivity : PageActivity() {
         },
     )
 
+    override fun topBarActions(): View = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        simplifiedChip = scriptChip(R.string.practice_script_simplified, false)
+        traditionalChip = scriptChip(R.string.practice_script_traditional, true)
+        addView(simplifiedChip)
+        addView(traditionalChip, LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
+            marginStart = ui.dp(6)
+        })
+        styleScriptChips()
+    }
+
     private fun targetCard(): View {
         targetView = PracticeText(this, colors)
         return ui.card(LinearLayout(this).apply {
@@ -170,6 +189,32 @@ class PracticeActivity : PageActivity() {
                 topMargin = ui.dp(8)
             })
         })
+    }
+
+    private fun scriptChip(label: Int, traditional: Boolean) =
+        ui.text(getString(label), 12f, colors.secondary, bold = true).apply {
+            gravity = Gravity.CENTER
+            setPadding(ui.dp(12), ui.dp(6), ui.dp(12), ui.dp(6))
+            setOnClickListener { setScript(traditional) }
+        }
+
+    private fun styleScriptChips() {
+        if (!::simplifiedChip.isInitialized) return
+        for ((chip, traditional) in listOf(simplifiedChip to false, traditionalChip to true)) {
+            val selected = scriptTraditional == traditional
+            chip.background = ui.rounded(if (selected) colors.brand else colors.brandSoft, 14f)
+            chip.setTextColor(if (selected) colors.onBrand else colors.brand)
+        }
+    }
+
+    private fun setScript(traditional: Boolean) {
+        if (scriptTraditional == traditional) return
+        scriptTraditional = traditional
+        Settings.preferences(this).edit()
+            .putBoolean(Settings.KEY_TRADITIONAL, traditional)
+            .apply()
+        styleScriptChips()
+        newPassage()
     }
 
     private fun statsCard(): View {
@@ -349,7 +394,7 @@ class PracticeActivity : PageActivity() {
     }
 
     private fun newTarget(): Target {
-        var result = Target(FALLBACK_TARGET, List(FALLBACK_TARGET.length) { "" })
+        var result = fallbackTarget()
         for (attempt in 0 until 4) {
             result = buildTarget()
             if (result.text != lastTarget) break
@@ -360,19 +405,25 @@ class PracticeActivity : PageActivity() {
 
     private fun buildTarget(): Target {
         val pool = lineCache
-        if (pool.isEmpty()) return Target(FALLBACK_TARGET, List(FALLBACK_TARGET.length) { "" })
+        if (pool.isEmpty()) return fallbackTarget()
         val goal = 30 + random.nextInt(31)
         val picked = StringBuilder()
         val readings = mutableListOf<String>()
         for (line in pool.shuffled(random)) {
-            picked.append(line.text)
+            val text = if (scriptTraditional) line.traditional else line.text
+            picked.append(text)
             val lineReadings = line.readings[annotationScheme].orEmpty()
-            for (index in line.text.indices) {
+            for (index in text.indices) {
                 readings += lineReadings.getOrElse(index) { "" }
             }
             if (picked.length >= goal) break
         }
         return Target(picked.toString(), readings)
+    }
+
+    private fun fallbackTarget(): Target {
+        val text = if (scriptTraditional) FALLBACK_TRADITIONAL else FALLBACK_TARGET
+        return Target(text, List(text.length) { "" })
     }
 
     private fun schemeLabel(): String = getString(
@@ -396,11 +447,12 @@ class PracticeActivity : PageActivity() {
                     .mapNotNull { line ->
                         val fields = line.split('\t')
                         val text = fields.firstOrNull()?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                        val traditional = fields.getOrNull(1)?.takeIf { it.isNotEmpty() } ?: text
                         val readings = SCHEMES.mapIndexed { index, scheme ->
-                            val values = fields.getOrNull(index + 1)?.split('|').orEmpty()
+                            val values = fields.getOrNull(index + 2)?.split('|').orEmpty()
                             scheme to List(text.length) { values.getOrElse(it) { "" } }
                         }.toMap()
-                        PracticeLine(text, readings)
+                        PracticeLine(text, traditional, readings)
                     }
                     .toList()
             }
@@ -412,7 +464,7 @@ class PracticeActivity : PageActivity() {
             assets.open("data/practice/sentences.txt").bufferedReader().useLines { lines ->
                 lines.map { it.trim() }
                     .filter { it.isNotEmpty() && !it.startsWith("#") }
-                    .map { PracticeLine(it, emptyMap()) }
+                    .map { PracticeLine(it, it, emptyMap()) }
                     .toList()
             }
         } catch (_: IOException) {
@@ -423,12 +475,14 @@ class PracticeActivity : PageActivity() {
     companion object {
         private const val KEY_TARGET = "practice_target"
         private const val KEY_READINGS = "practice_readings"
+        private const val KEY_TRADITIONAL = "practice_traditional"
         private const val KEY_TYPED = "practice_typed"
         private const val KEY_STARTED = "practice_started"
         private const val KEY_FINISHED_AT = "practice_finished_at"
         private const val KEY_FINISHED = "practice_finished"
         private const val READING_SEPARATOR = "\u001f"
         private const val FALLBACK_TARGET = "今天的天气很好，适合出去走走。"
+        private const val FALLBACK_TRADITIONAL = "今天的天氣很好，適合出去走走。"
         private val SCHEMES = listOf(
             "pinyin",
             "tungdzih",
