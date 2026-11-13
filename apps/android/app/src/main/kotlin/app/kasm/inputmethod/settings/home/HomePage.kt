@@ -15,6 +15,7 @@ import app.kasm.inputmethod.core.store.UsageSummary
 import app.kasm.inputmethod.panel.base.PanelIcons.Icon
 import app.kasm.inputmethod.settings.page.AboutActivity
 import app.kasm.inputmethod.settings.page.KeyboardSettingsActivity
+import app.kasm.inputmethod.settings.page.PracticeActivity
 import app.kasm.inputmethod.settings.page.StatsActivity
 import app.kasm.inputmethod.settings.widget.BarChart
 import app.kasm.inputmethod.settings.widget.SettingsWidgets
@@ -48,6 +49,8 @@ class HomePage(
             }
             addView(ui.sectionTitle(R.string.section_shortcuts))
             addView(shortcuts())
+            addView(ui.sectionTitle(R.string.section_practice))
+            addView(practiceEntry())
             addView(ui.sectionTitle(R.string.section_try))
             addView(tryOutField())
         }
@@ -189,6 +192,15 @@ class HomePage(
                 ui.gridItem(Icon.INFO, AppColors.PURPLE, R.string.page_about) { open(AboutActivity::class.java) },
             ).forEach { addView(it, LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)) }
         },
+    )
+
+    private fun practiceEntry() = ui.card(
+        ui.entry(
+            Icon.PEN,
+            AppColors.ORANGE,
+            R.string.practice_title,
+            activity.getString(R.string.practice_summary),
+        ) { open(PracticeActivity::class.java) },
     )
 
     private fun tryOutField() = EditText(activity).apply {

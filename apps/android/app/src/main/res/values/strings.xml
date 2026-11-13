@@ -54,6 +54,25 @@
     <string name="shortcut_switch">切换输入法</string>
     <string name="section_try">试一试</string>
     <string name="try_hint">在这里试打</string>
+
+    <string name="section_practice">打字练习</string>
+    <string name="practice_title">打字练习</string>
+    <string name="practice_summary">随机文段，跟着打，练熟拼音</string>
+    <string name="practice_new">换一段</string>
+    <string name="practice_restart">重新开始</string>
+    <string name="practice_target_label">照着这段打</string>
+    <string name="practice_input_hint">在这里跟着上文打字</string>
+    <string name="practice_time">用时</string>
+    <string name="practice_speed">速度</string>
+    <string name="practice_accuracy">准确率</string>
+    <string name="practice_progress">进度</string>
+    <string name="practice_seconds">%1$.1f 秒</string>
+    <string name="practice_speed_value">%1$.0f 字/分</string>
+    <string name="practice_percent">%1$.0f%%</string>
+    <string name="practice_progress_value">%1$d / %2$d</string>
+    <string name="practice_done">完成！用时 %1$.1f 秒，速度 %2$.0f 字/分，准确率 %3$.0f%%</string>
+    <string name="practice_enable">先启用 KASM 输入法再练习</string>
+    <string name="practice_enable_note">点这里去系统设置启用，或切换输入法</string>
     <string name="voice_unavailable">语音输入还不能用，先在KASM的「语音识别」里选好识别服务</string>
     <string name="voice_no_permission">没有麦克风权限，到系统设置里允许KASM使用麦克风</string>
     <string name="voice_done">完成</string>
