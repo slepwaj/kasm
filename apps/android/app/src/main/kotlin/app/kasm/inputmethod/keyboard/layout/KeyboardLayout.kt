@@ -74,13 +74,6 @@ object KeyboardLayout {
     }
 
     /**
-     * Xina 拼音：独立的全键盘。新方案用拉丁拼式，声调符号 / 数字只用于书写，
-     * 输入时不要求打声调，所以不再加声调键。
-     */
-    fun xina(chinese: Boolean, fullWidth: Boolean = true): List<List<Key>> =
-        qwerty(chinese, fullWidth = fullWidth)
-
-    /**
      * 注音大千：四排注音照电脑大千键位排，首排 11 个键（含声调）略窄，
      * 末排右边是删除；底排与拼音全键盘一样。空格是一声（还缺声调时）。
      */

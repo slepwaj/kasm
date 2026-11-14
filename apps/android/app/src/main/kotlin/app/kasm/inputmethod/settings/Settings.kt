@@ -153,12 +153,9 @@ data class Settings(
             val savedLayout = Layout.entries.firstOrNull { it.name == prefs.getString(KEY_LAYOUT, null) }
                 ?: Layout.QWERTY
             val savedRomanization = prefs.getString(KEY_ROMANIZATION, null) ?: ""
-            // 旧版把 Xina 当全键盘的拼音方案；现在它是独立键盘，自动迁过去。
-            val layout = if (savedLayout == Layout.QWERTY && savedRomanization == "xina") {
-                Layout.XINA
-            } else {
-                savedLayout
-            }
+            // 旧版 Xina 曾是独立键盘；现在回到全键盘的拼音方案。
+            val layout = if (savedLayout == Layout.XINA) Layout.QWERTY else savedLayout
+            val romanization = if (savedLayout == Layout.XINA) "xina" else savedRomanization
             return Settings(
                 layout = layout,
                 heightPercent = prefs.getInt(KEY_HEIGHT, 100).coerceIn(HEIGHT_MIN, HEIGHT_MAX),
@@ -182,7 +179,7 @@ data class Settings(
                 shuangpinScheme = prefs.getString(KEY_SHUANGPIN, null) ?: DEFAULT_SHUANGPIN,
                 shuangpinRawPreedit = prefs.getBoolean(KEY_SHUANGPIN_RAW, false),
                 shuangpinHints = prefs.getBoolean(KEY_SHUANGPIN_HINTS, true),
-                romanization = savedRomanization,
+                romanization = romanization,
                 wubiMixed = prefs.getBoolean(KEY_WUBI_MIXED, false),
                 recordClipboard = prefs.getBoolean(KEY_RECORD_CLIPBOARD, true),
                 clipboardLimit = prefs.getInt(KEY_CLIPBOARD_LIMIT, SettingChoices.defaultClipboardLimit).coerceAtLeast(1),

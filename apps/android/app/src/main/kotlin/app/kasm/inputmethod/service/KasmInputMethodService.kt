@@ -313,7 +313,6 @@ class KasmInputMethodService :
             editor?.lettersOnly == true -> keyboard.setRows(KeyboardLayout.qwerty(chinese = false))
             composer.layout == Settings.Layout.IPA -> keyboard.setRows(KeyboardLayout.ipa(composer.ipaPage))
             composer.layout == Settings.Layout.ZHUYIN -> keyboard.setRows(KeyboardLayout.zhuyin(fullWidth))
-            composer.layout == Settings.Layout.XINA -> keyboard.setRows(KeyboardLayout.xina(composer.chinese, fullWidth))
             composer.layout == Settings.Layout.UNT -> keyboard.setRows(KeyboardLayout.unt())
             composer.layout == Settings.Layout.GCR -> keyboard.setRows(KeyboardLayout.gcr())
             composer.nineKey -> keyboard.setRows(KeyboardLayout.nineKey(fullWidth), side = true)
