@@ -113,6 +113,9 @@ class Composer(private val engine: Engine, private val host: Host) {
     /** 九宫格只管中文；英文模式退回全键盘。 */
     val nineKey: Boolean get() = layout == Settings.Layout.NINE_KEY && chinese
 
+    /** 注音（大千）同样只管中文，英文退回全键盘。 */
+    val zhuyin: Boolean get() = layout == Settings.Layout.ZHUYIN && chinese
+
     /** 双拼、五笔也只管中文；英文退回全键盘、英文模式。 */
     val shuangpin: Boolean get() = layout == Settings.Layout.SHUANGPIN && chinese
 
@@ -197,6 +200,10 @@ class Composer(private val engine: Engine, private val host: Host) {
                 key.digit != SEPARATOR_DIGIT -> apply(engine.push(key.digit.code))
                 // 分词键只在组句中有意义
                 composing -> apply(engine.push('\''.code))
+            }
+
+            is Key.Zhuyin -> {
+                if (engine.ready && !directInput) apply(engine.push(key.code.code))
             }
 
             is Key.Text -> {
@@ -454,6 +461,7 @@ class Composer(private val engine: Engine, private val host: Host) {
     fun applyScheme() {
         if (!engine.ready) return
         apply(engine.setNineKey(nineKey))
+        apply(engine.setZhuyin(zhuyin))
         apply(engine.setShuangpin(if (shuangpin) shuangpinScheme else "", shuangpinRawPreedit))
         apply(engine.setWubi(wubi, wubiMixed))
         // 换词库有开销，只在方案真的变了时调

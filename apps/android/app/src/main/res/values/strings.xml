@@ -111,6 +111,7 @@
     <string name="section_layout">中文键盘</string>
     <string name="layout_qwerty">全键盘（26 键）</string>
     <string name="layout_nine">九宫格（9 键）</string>
+    <string name="layout_zhuyin">注音（大千）</string>
     <string name="layout_shuangpin">双拼</string>
     <string name="section_romanization">拼音方案</string>
     <string name="romanization_scheme">方案</string>

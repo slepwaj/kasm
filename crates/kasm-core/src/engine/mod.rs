@@ -346,6 +346,9 @@ pub struct Engine {
     /// **两边都开 = 混输**（编码打全的形码候选在前，见 [`Engine::query_mixed`]）。两个都关着时按拼音走。
     phonetic: bool,
 
+    /// 注音（大千）方案：缓冲区里是大千键位的 ASCII，查词前先解成拼音（见 [`crate::zhuyin`]）。
+    zhuyin: bool,
+
     /// 粤拼方案：开着时整段输入按无调 Jyutping 切分，查词走独立的粤拼管线（见 [`Engine::query_jyutping`]），
     /// 普通话音节表、简拼、模糊音、拼写纠错与整句都不参与。与 `code` 互斥（形码优先）。
     jyutping: bool,
@@ -623,6 +626,7 @@ impl Engine {
             code: None,
             phonetic: true,
             jyutping: false,
+            zhuyin: false,
             tungdzih: false,
             tupa: false,
             shanggu: false,
@@ -653,10 +657,16 @@ impl Engine {
 
 /// 缓冲区是否是英文直输段：含拼音键与 `'` 以外的字符（`no-way`、`a.b`），且不是表达式 / 问字模式。
 /// 微软 / 搜狗双拼下 `;` 也是拼音键。
-fn is_raw(text: &str, modes: ModeKeys, shuangpin: Option<&Layout>) -> bool {
-    let is_key = |c: char| match shuangpin {
-        Some(scheme) => scheme.is_key(c),
-        None => c.is_ascii_lowercase(),
+fn is_raw(text: &str, modes: ModeKeys, shuangpin: Option<&Layout>, zhuyin: bool) -> bool {
+    let is_key = |c: char| {
+        if zhuyin {
+            crate::zhuyin::layout::map_key(c).is_some() || c == ' '
+        } else {
+            match shuangpin {
+                Some(scheme) => scheme.is_key(c),
+                None => c.is_ascii_lowercase(),
+            }
+        }
     };
     !text.is_empty()
         && !modes.is_expression(text)

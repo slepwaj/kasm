@@ -101,6 +101,8 @@ class Engine(context: Context, private val onReady: () -> Unit) {
 
     fun setNineKey(on: Boolean): Frame = Frame.parse(Native.setNineKey(handle, on))
 
+    fun setZhuyin(on: Boolean): Frame = Frame.parse(Native.setZhuyin(handle, on))
+
     fun pin(alternative: String): Frame = Frame.parse(Native.pin(handle, alternative))
 
     fun setEnglishMode(on: Boolean): Frame = Frame.parse(Native.setEnglishMode(handle, on))

@@ -16,6 +16,13 @@ impl Session {
         self.refresh(raw)
     }
 
+    /// 切换注音（大千）方案；组句中的输入先原样上屏。
+    pub fn set_zhuyin(&mut self, on: bool) -> Frame {
+        let raw = self.engine.take_raw();
+        self.engine.set_zhuyin_mode(on);
+        self.refresh(raw)
+    }
+
     /// 双拼方案（`scheme` 是 Core 的方案名，如 `xiaohe`；空串或认不出为全拼）与 preedit 写法
     /// （`raw_preedit` 显示敲的键，否则展开成全拼，同 PC 的 `shuangpin_raw_preedit`）：组句中的输入先原样上屏。
     pub fn set_shuangpin(&mut self, scheme: &str, raw_preedit: bool) -> Frame {

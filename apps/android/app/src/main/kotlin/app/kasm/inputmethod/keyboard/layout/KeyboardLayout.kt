@@ -96,6 +96,32 @@ object KeyboardLayout {
     }
 
     /**
+     * 注音大千：四排注音照电脑大千键位排，首排 11 个键（含声调）略窄，
+     * 末排右边是删除；底排与拼音全键盘一样。空格是一声（还缺声调时）。
+     */
+    fun zhuyin(fullWidth: Boolean = true): List<List<Key>> {
+        fun row(codes: String, symbols: String, weight: Float) =
+            codes.zip(symbols) { code, symbol -> Key.Zhuyin(code, symbol.toString(), weight) }
+        val (top, second, third, bottom) = ZHUYIN_ROWS
+        return listOf(
+            row(top.first, top.second, UNITS_PER_ROW / top.first.length),
+            row(second.first, second.second, 1f),
+            row(third.first, third.second, 1f),
+            row(bottom.first, bottom.second, ZHUYIN_BOTTOM_WIDTH) + Key.Backspace,
+            lettersBottom(chinese = true, fullWidth),
+        )
+    }
+
+    private val ZHUYIN_ROWS = listOf(
+        "1234567890-" to "ㄅㄉˇˋㄓˊ˙ㄚㄞㄢㄦ",
+        "qwertyuiop" to "ㄆㄊㄍㄐㄔㄗㄧㄛㄟㄣ",
+        "asdfghjkl;" to "ㄇㄋㄎㄑㄕㄘㄨㄜㄠㄤ",
+        "zxcvbnm,./" to "ㄈㄌㄏㄒㄖㄙㄩㄝㄡㄥ",
+    )
+
+    private const val ZHUYIN_BOTTOM_WIDTH = 0.85f
+
+    /**
      * 日语罗马音：二排末尾补一个长音「ー」（敲罗马音的 `-`）占满十格；
      * 底排与拼音同宽，标点是「、」「。」。
      */

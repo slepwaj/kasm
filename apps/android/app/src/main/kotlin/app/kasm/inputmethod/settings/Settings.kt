@@ -74,7 +74,7 @@ data class Settings(
     /** 工具栏中间那排放的工具，按勾的先后排（#777）。 */
     val toolbar: List<ToolbarTool>,
 ) {
-    enum class Layout { QWERTY, NINE_KEY, SHUANGPIN, WUBI, IPA, UNT, GCR, XINA }
+    enum class Layout { QWERTY, NINE_KEY, ZHUYIN, SHUANGPIN, WUBI, IPA, UNT, GCR, XINA }
 
     /**
      * 键位排法。改了按键位置的放进另一套，缺省那套一直不变（肌肉记忆）：

@@ -31,6 +31,9 @@ sealed class Key(val label: String, val weight: Float = 1f) {
         override val initialChoice: Int get() = 1
     }
 
+    /** 注音大千键：键面画注音符号 [symbol]，进引擎的是大千键位上的 ASCII [code]。 */
+    class Zhuyin(val code: Char, symbol: String, weight: Float = 1f) : Key(symbol, weight)
+
     /** 九宫格的数字键：[digit] 进引擎，键面画 [letters]；`1` 是分词键。 */
     class Digit(val digit: Char, val letters: String) : Key(letters, KeyboardLayout.NINE_KEY_WIDTH) {
         /** 长按气泡里的项：小写字母、数字、大写字母（`abc2ABC`）；`1` 键是数字和几个常用符号。 */

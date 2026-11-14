@@ -314,6 +314,7 @@ impl Engine {
             self.composition.text(),
             self.modes(),
             self.shuangpin.as_deref(),
+            self.zhuyin,
         )
     }
 

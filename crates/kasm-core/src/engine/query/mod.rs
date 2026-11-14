@@ -128,7 +128,7 @@ impl Engine {
                 Err(_) => Ok(self.query_raw(keys, rest, start)),
             };
         }
-        if is_raw(keys, self.modes(), self.shuangpin.as_deref()) {
+        if is_raw(keys, self.modes(), self.shuangpin.as_deref(), self.zhuyin) {
             return Ok(self.query_raw(keys, rest, start));
         }
         // 形码与拼音是两条平行的管线，在进切分之前分岔。放在这里是为了让 `?` 问字与

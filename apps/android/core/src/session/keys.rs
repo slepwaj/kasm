@@ -1,4 +1,4 @@
-﻿//! 打字：按键、选词、删词、回车、空格与补全。
+//! 打字：按键、选词、删词、回车、空格与补全。
 
 use super::Session;
 use crate::frame::{Frame, FrameCandidate};
@@ -125,6 +125,9 @@ impl Session {
     /// 组句中按空格：选第一个候选；切不出候选就原样上屏。第一个候选没吃完拼音时选的词留在组句里
     ///（见 [`kasm_core::Engine::take_held`]），接着选后面的。
     pub fn space(&mut self) -> Frame {
+        if self.engine.zhuyin_needs_tone() {
+            return self.push(' ');
+        }
         let selectable = match &self.kana {
             Some(kana) => !kana.candidates().is_empty(),
             None => !self.candidates.items.is_empty(),

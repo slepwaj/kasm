@@ -100,6 +100,16 @@ pub extern "system" fn Java_app_kasm_inputmethod_core_Native_setNineKey<'local>(
 }
 
 #[unsafe(no_mangle)]
+pub extern "system" fn Java_app_kasm_inputmethod_core_Native_setZhuyin<'local>(
+    env: JNIEnv<'local>,
+    _this: JObject<'local>,
+    handle: jlong,
+    on: jboolean,
+) -> jstring {
+    frame(env, handle, |session| session.set_zhuyin(on != 0))
+}
+
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_app_kasm_inputmethod_core_Native_pin<'local>(
     mut env: JNIEnv<'local>,
     _this: JObject<'local>,

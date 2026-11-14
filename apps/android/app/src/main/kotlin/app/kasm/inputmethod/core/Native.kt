@@ -36,6 +36,8 @@ internal object Native {
 
     external fun setNineKey(handle: Long, on: Boolean): String?
 
+    external fun setZhuyin(handle: Long, on: Boolean): String?
+
     external fun pin(handle: Long, alternative: String): String?
 
     external fun setEnglishMode(handle: Long, on: Boolean): String?

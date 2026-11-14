@@ -137,6 +137,32 @@ impl Engine {
         self.learner.set_disabled(!enabled);
     }
 
+    /// 注音（大千）方案：缓冲区里是大千键位的 ASCII，查词前先解成拼音。
+    pub fn set_zhuyin_mode(&mut self, on: bool) {
+        self.zhuyin = on;
+        self.forget_span_cache();
+    }
+
+    pub fn is_zhuyin_mode(&self) -> bool {
+        self.zhuyin
+    }
+
+    /// 注音模式下当前音节还缺声调（空格应作为一声进缓冲区，而不是选词）。
+    pub fn zhuyin_needs_tone(&self) -> bool {
+        if !self.zhuyin {
+            return false;
+        }
+        let raw = self.composition.text();
+        if raw.is_empty() {
+            return false;
+        }
+        let decoded = crate::zhuyin::decode(raw);
+        decoded
+            .units()
+            .last()
+            .is_some_and(|last| !last.complete && last.pinyin != "'")
+    }
+
     /// 九宫格方案开关（手机 9 键）。与双拼一样是输入方案，不是模式。
     pub fn set_nine_key(&mut self, on: bool) {
         self.nine_key = on;
@@ -401,9 +427,13 @@ impl Engine {
 
     /// 双拼开着时把一段键解成全拼；全拼下为 `None`，调用方原样用键。
     pub(super) fn decode(&self, keys: &str) -> Option<EngineDecoded> {
-        self.shuangpin
-            .as_deref()
-            .map(|layout| layout.decode_fuzzy(keys, self.fuzzy))
+        if self.zhuyin {
+            Some(EngineDecoded::Zhuyin(crate::zhuyin::decode(keys)))
+        } else {
+            self.shuangpin
+                .as_deref()
+                .map(|layout| EngineDecoded::Shuangpin(layout.decode_fuzzy(keys, self.fuzzy)))
+        }
     }
 
     /// 一段键的全部读法：纯双拼一条，开了混输时还有全拼与两种打法交替的读法。

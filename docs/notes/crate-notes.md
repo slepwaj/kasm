@@ -1,4 +1,4 @@
-﻿# 各 crate 的实现要点
+# 各 crate 的实现要点
 
 CLAUDE.md 只保留目录地图与规则，每个 crate / app / tool 的实现细节收在这里：入口类型、数据文件、常数、生成命令。
 改了实现要同步改这里；与代码冲突时以代码为准。
@@ -830,6 +830,8 @@ Xina 拼音（`core/src/xina/`）：Rime `xinapinin2` 的带调罗马字，420 �
 `tools/build-xina.py` 从 `tools/source/xina/xinapinin2.dict.yaml` 生成，文本转简体、词频借普通话词库。
 它同样走 `query_romanized`；`Engine::set_xina` 打开后 `display_reading` 把 `ling@` 显示成 `líng`。
 Android 用独立键盘 `Settings.Layout.XINA`：`KeyboardLayout.xina` 在 QWERTY 上方加五个声调键（`!@#$%`，键面写 1-5 与调名），数字页 1-5 也映射成声调；`Engine::set_xina` 打开带调词库。
+
+注音（`core/src/zhuyin/`）：从青简（qingjian）移植的大千注音。`layout::map_key` 把大千 ASCII 键解成声母 / 介音 / 韵母 / 声调，`ZhuyinSyllable::to_pinyin` 转成拼音，`EngineDecoded::Zhuyin` 与双拼共用查询管线；`tone.rs` 读 `data/tones.tsv`，当前只保留声调，候选排序尚未接。Android 用 `Layout.ZHUYIN` 的四排大千键盘，空格在缺声调时进组句作为一声。
 
 Xina 切拼（`core/src/xina_qiepin/`）：`常用字表_Xina切拼.xlsx` 的 27k 条单字中古音，
 `tools/build-xina-qiepin.py` 转成 `assets/lexicon/xina-qiepin.tsv` 与 3,735 个音节

@@ -124,7 +124,8 @@ impl Engine {
         };
         if self.english_mode
             || self.modes().is_expression(scope)
-            || (nine_key_pinyin.is_none() && is_raw(scope, self.modes(), self.shuangpin.as_deref()))
+            || (nine_key_pinyin.is_none()
+                && is_raw(scope, self.modes(), self.shuangpin.as_deref(), self.zhuyin))
         {
             return None;
         }

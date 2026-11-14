@@ -312,6 +312,7 @@ class KasmInputMethodService :
             // 常用语的输入码只收字母，九宫格打不出来，换成英文全键盘
             editor?.lettersOnly == true -> keyboard.setRows(KeyboardLayout.qwerty(chinese = false))
             composer.layout == Settings.Layout.IPA -> keyboard.setRows(KeyboardLayout.ipa(composer.ipaPage))
+            composer.layout == Settings.Layout.ZHUYIN -> keyboard.setRows(KeyboardLayout.zhuyin(fullWidth))
             composer.layout == Settings.Layout.XINA -> keyboard.setRows(KeyboardLayout.xina(composer.chinese, fullWidth))
             composer.layout == Settings.Layout.UNT -> keyboard.setRows(KeyboardLayout.unt())
             composer.layout == Settings.Layout.GCR -> keyboard.setRows(KeyboardLayout.gcr())

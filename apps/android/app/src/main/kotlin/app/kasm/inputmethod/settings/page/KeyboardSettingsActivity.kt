@@ -35,6 +35,9 @@ class KeyboardSettingsActivity : PageActivity() {
                 ui.choice(R.string.layout_nine, settings.layout == Settings.Layout.NINE_KEY) {
                     setLayout(Settings.Layout.NINE_KEY)
                 },
+                ui.choice(R.string.layout_zhuyin, settings.layout == Settings.Layout.ZHUYIN) {
+                    setLayout(Settings.Layout.ZHUYIN)
+                },
                 ui.choice(R.string.layout_shuangpin, settings.layout == Settings.Layout.SHUANGPIN) {
                     setLayout(Settings.Layout.SHUANGPIN)
                 },

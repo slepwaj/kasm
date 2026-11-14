@@ -34,6 +34,7 @@ mod tungdzih;
 mod xina;
 mod xina_qiepin;
 mod wugniu;
+mod zhuyin;
 mod umlaut;
 mod vocabulary;
 mod voice;
