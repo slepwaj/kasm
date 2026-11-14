@@ -31,6 +31,7 @@ mod spelling;
 mod traditional;
 mod traditional_script;
 mod tungdzih;
+mod xina;
 mod umlaut;
 mod vocabulary;
 mod voice;

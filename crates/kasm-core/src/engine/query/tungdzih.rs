@@ -77,7 +77,12 @@ impl Engine {
             .iter()
             .map(|item| {
                 let mut candidate = super::chinese_candidate(item, None);
-                candidate.reading = Some(item.hit.syllables().collect::<Vec<_>>().join(" "));
+                let reading = item.hit.syllables().collect::<Vec<_>>().join(" ");
+                candidate.reading = Some(if self.xina {
+                    crate::xina::display_reading(&reading)
+                } else {
+                    reading
+                });
                 candidate
             })
             .collect();
@@ -135,7 +140,11 @@ impl Engine {
                 Candidate {
                     text: conversion.text,
                     kind: CandidateKind::Sentence,
-                    reading: Some(conversion.syllables.join(" ")),
+                    reading: Some(if self.xina {
+                        crate::xina::display_reading(&conversion.syllables.join(" "))
+                    } else {
+                        conversion.syllables.join(" ")
+                    }),
                     syllables: conversion.syllables,
                     translation: None,
                     aux_code: None,

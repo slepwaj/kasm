@@ -291,6 +291,15 @@ impl Engine {
         self.gcr
     }
 
+    /// Xina 拼音（带声调，Rime xinapinin2）。
+    pub fn set_xina(&mut self, on: bool) {
+        self.xina = on;
+    }
+
+    pub fn is_xina(&self) -> bool {
+        self.xina
+    }
+
     /// 当前罗马字方案要用的音节表（通字 / unt / tupa），都没开为 `None`。
     pub(super) fn romanization_table(&self) -> Option<&'static crate::romanization::Table> {
         if self.tungdzih {
@@ -303,6 +312,8 @@ impl Engine {
             Some(crate::unt::table())
         } else if self.gcr {
             Some(crate::gcr::table())
+        } else if self.xina {
+            Some(crate::xina::table())
         } else {
             None
         }
@@ -343,7 +354,7 @@ impl Engine {
     pub(super) fn modes(&self) -> ModeKeys {
         // 粤拼 / 通字里字母都是音节的一部分（通字 `u` 本身就是「烏」，粤拼 `uk` 是「屋」）：
         // 字母模式键（缺省 u 问字、v 表达式）会把这些音抢走，只留 `?` 开头的问字
-        if self.jyutping || self.tungdzih || self.tupa || self.shanggu || self.unt || self.gcr {
+        if self.jyutping || self.tungdzih || self.tupa || self.shanggu || self.unt || self.gcr || self.xina {
             self.modes.letterless()
         } else if self.code_only() {
             self.modes.letterless()

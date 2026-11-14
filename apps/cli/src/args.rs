@@ -153,6 +153,10 @@ pub struct Args {
     #[arg(long)]
     pub shanggu: bool,
 
+    /// Xina 拼音（带声调）：Rime `xinapinin2`；不给 `--dict` 时用 `assets/lexicon/xina.tsv`
+    #[arg(long)]
+    pub xina: bool,
+
     /// 形码：码表 TSV（`词\t编码\t词频`，按 86 五笔记日志、按键规则全关）或方案目录（`scheme.toml` + 码表）。
     /// 给了就开着形码；`--wubi` 是旧写法
     #[arg(long, alias = "wubi", value_name = "码表或方案目录")]

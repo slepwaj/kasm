@@ -30,6 +30,7 @@ SCHEMES = {
     "unt": "unt.tsv",
     "gcr": "gcr.tsv",
     "jyutping": "jyutping.tsv",
+    "xina": "xina.tsv",
 }
 
 

@@ -1,4 +1,4 @@
-# 各 crate 的实现要点
+﻿# 各 crate 的实现要点
 
 CLAUDE.md 只保留目录地图与规则，每个 crate / app / tool 的实现细节收在这里：入口类型、数据文件、常数、生成命令。
 改了实现要同步改这里；与代码冲突时以代码为准。
@@ -824,3 +824,10 @@ unt 与中文通用羅馬字（`core/src/unt/`、`core/src/gcr/`）：同样走 
 `多音字` 表的 `字次`，没有就按表内顺序）。这两套符号不是 ASCII，`romanization::Table` 的输入校验
 只拒绝空白与 `/`，DP 切分改走 `char` 边界；Android 用 `Layout.UNT` / `Layout.GCR` 的符号键盘，
 `Composer` 把这些 `Key.Text` 逐字符 `push` 进引擎（不直接上屏），空格 / 候选照常出汉字。
+
+Xina 拼音（`core/src/xina/`）：Rime `xinapinin2` 的带调罗马字，420 个基础音节、声调数字 1-5 转成
+`!@#$%` 后共 1,694 个音节（`data/xina-syllables.txt`）；词库 `assets/lexicon/xina.tsv` 96k 条由
+`tools/build-xina.py` 从 `tools/source/xina/xinapinin2.dict.yaml` 生成，文本转简体、词频借普通话词库。
+它同样走 `query_romanized`；`Engine::set_xina` 打开后 `display_reading` 把 `ling@` 显示成 `líng`。
+Android 在 QWERTY 的拼音方案里选「Xina 拼音（带声调）」，组句时数字 1-5 映射成 `!@#$%`，
+符号面板的 `!@#$%` 也逐字符进引擎。

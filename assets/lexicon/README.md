@@ -84,6 +84,12 @@
 
 单字排序用 `tools/source/tungdzih-priority.tsv`：由《通字（以ABC排序）.xlsx》转简体生成，表内字按行序排在生僻字前。
 
+### Xina 拼音（xina.tsv）
+
+来自用户提供的 Rime `xinapinin2`（作者 Xina，说明见 <https://zhuanlan.zhihu.com/p/2092749558438744805>），
+`tools/build-xina.py` 把声调数字 1-5 转成 `!@#$%`、文本转简体后生成；音节表在
+`crates/kasm-core/data/xina-syllables.txt`。词频借用普通话词库。
+
 ### 中古音罗马字（tupa.tsv）
 
 来自 `D:\文言拼音\参考项目\古籍字頻統計_注音.xlsx` 的 tupa 列，23k 余条单字读音（含多音字），

@@ -1,4 +1,4 @@
-﻿package app.kasm.inputmethod.service.input
+package app.kasm.inputmethod.service.input
 
 import android.os.Handler
 import android.os.Looper
@@ -192,14 +192,21 @@ class Composer(private val engine: Engine, private val host: Host) {
 
             is Key.Digit -> when {
                 !engine.ready -> Unit
+                xina && key.digit in '1'..'5' ->
+                    apply(engine.push(XINA_TONES[key.digit - '1'].code))
                 key.digit != SEPARATOR_DIGIT -> apply(engine.push(key.digit.code))
                 // 分词键只在组句中有意义
                 composing -> apply(engine.push('\''.code))
             }
 
             is Key.Text -> {
+                // Xina 数字键盘上的 1-5 也是声调：和 Q 行上滑数字走同一条路。
+                if (xina && engine.ready && key.text.length == 1 && key.text[0] in '1'..'5') {
+                    apply(engine.push(XINA_TONES[key.text[0] - '1'].code))
+                    return
+                }
                 // unt / 通用羅馬字键盘：键值就是方案符号，逐字符进引擎组句，出汉字候选
-                if (compositionScheme && engine.ready && chinese && !directInput) {
+                if ((compositionScheme || xina) && engine.ready && chinese && !directInput) {
                     for (ch in key.text) apply(engine.push(ch.code))
                     return
                 }
@@ -468,6 +475,10 @@ class Composer(private val engine: Engine, private val host: Host) {
     private val compositionScheme: Boolean
         get() = layout == Settings.Layout.UNT || layout == Settings.Layout.GCR
 
+    /** Xina 拼音：数字 1-5 在组句时当声调符号 !@#$%。 */
+    private val xina: Boolean
+        get() = romanization == "xina"
+
     /**
      * 回车、挪光标时把组句落下：拼音原样落下敲的字母。
      */
@@ -545,6 +556,9 @@ class Composer(private val engine: Engine, private val host: Host) {
 
     private companion object {
         const val SEPARATOR_DIGIT = '1'
+
+        /** Xina 拼音的五个声调：数字 1-5 依次对应 !@#$%。 */
+        const val XINA_TONES = "!@#$%"
 
         /** 两次点 Shift 间隔在这以内算双击（锁定大写）。 */
         const val DOUBLE_TAP_MS = 350L

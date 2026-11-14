@@ -366,6 +366,9 @@ pub struct Engine {
     /// 中文通用羅馬字（古籍字頻統計「中文通用羅馬字」列）：走同一条罗马字管线。
     gcr: bool,
 
+    /// Xina 拼音（`[general] scheme = "xina"`）：Rime xinapinin2 的带调罗马字，走同一条罗马字管线。
+    xina: bool,
+
     /// emoji 表，没有就不出 emoji 候选。
     emoji: Option<EmojiTable>,
 
@@ -619,6 +622,7 @@ impl Engine {
             shanggu: false,
             unt: false,
             gcr: false,
+            xina: false,
             emoji: None,
             emoji_limit: EMOJI_TOTAL,
             kaomoji: None,

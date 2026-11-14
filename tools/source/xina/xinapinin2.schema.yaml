@@ -1,0 +1,175 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: xinapinin2
+  name: Xina拼音+
+  version: '2026.11.14'
+  author: Xina
+  description: |
+    Xina拼音的输入法，可通过!@#$%输入阴阳上去轻五声，按`和~启动汉语拼音和笔画反查。
+    https://zhuanlan.zhihu.com/p/2092749558438744805
+  dependencies:
+    - luna_pinyin
+    - stroke
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: simplification
+    states: [ 漢字, 汉字 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@luna_pinyin
+    - affix_segmentor@stroke
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+    - script_translator@luna_pinyin
+    - table_translator@stroke
+    - table_translator@custom_phrase
+  filters:
+    - simplifier
+    - uniquifier
+    - reverse_lookup_filter@reverse_lookup
+
+speller:
+  alphabet: 'zyxwvutsrqponmlkjihgfedcba!@#$%'
+  initials: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    - abbrev/^([a-z]).+$/$1/
+    - abbrev/^([zcs]h).+$/$1/
+    - derive/^([a-z]+)[0-9]$/$1/
+    - 'xlit 12345 !@#$%'
+
+translator:
+  dictionary: xinapinin2
+  preedit_format:
+    - 'xform ([aeiou])(e|i|u|ng?|h)([!@#\$%]) $1$3$2'
+    - 'xform a! a'
+    - 'xform a@ á'
+    - 'xform a# ǎ'
+    - 'xform a\$ à'
+    - 'xform a% ạ'
+    - 'xform e! e'
+    - 'xform e@ é'
+    - 'xform e# ě'
+    - 'xform e\$ è'
+    - 'xform e% ẹ'
+    - 'xform i! i'
+    - 'xform i@ í'
+    - 'xform i# ǐ'
+    - 'xform i\$ ì'
+    - 'xform i% ị'
+    - 'xform o! o'
+    - 'xform o@ ó'
+    - 'xform o# ǒ'
+    - 'xform o\$ ò'
+    - 'xform o% ọ'
+    - 'xform u! u'
+    - 'xform u@ ú'
+    - 'xform u# ǔ'
+    - 'xform u\$ ù'
+    - 'xform u% ụ'
+
+luna_pinyin:
+  tag: luna_pinyin
+  dictionary: luna_pinyin
+  enable_user_dict: false
+  prefix: "`"
+  suffix: ";"
+  tips: 〔汉语拼音〕
+  preedit_format:
+    - xform/([nl])v/$1ü/
+    - xform/([nl])ue/$1üe/
+    - xform/([jqxy])v/$1u/
+    - xform/eh/ê/
+
+stroke:
+  tag: stroke
+  dictionary: stroke
+  enable_user_dict: false
+  prefix: "~"
+  suffix: ";"
+  tips: 〔笔画〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+
+custom_phrase:
+  dictionary: ""
+  user_dict: custom_phrase
+  db_class: stabledb
+  enable_completion: false
+  enable_sentence: false
+  initial_quality: 1
+
+reverse_lookup:
+  tags:  [luna_pinyin, stroke]
+  overwrite_comment: false
+  dictionary: xinapinin2
+  comment_format:
+    - 'xform ([aeiou])(e|i|u|ng?|h)([12345]) $1$3$2'
+    - 'xform a1 a'
+    - 'xform a2 á'
+    - 'xform a3 ǎ'
+    - 'xform a4 à'
+    - 'xform a5 ạ'
+    - 'xform e1 e'
+    - 'xform e2 é'
+    - 'xform e3 ě'
+    - 'xform e4 è'
+    - 'xform e5 ẹ'
+    - 'xform i1 i'
+    - 'xform i2 í'
+    - 'xform i3 ǐ'
+    - 'xform i4 ì'
+    - 'xform i5 ị'
+    - 'xform o1 o'
+    - 'xform o2 ó'
+    - 'xform o3 ǒ'
+    - 'xform o4 ò'
+    - 'xform o5 ọ'
+    - 'xform u1 u'
+    - 'xform u2 ú'
+    - 'xform u3 ǔ'
+    - 'xform u4 ù'
+    - 'xform u5 ụ'
+
+punctuator:
+  import_preset: symbols
+  symbols:
+    '/iy': [ 𝄞, ♩, ♪, ♫, ♬, ♭, ♮, ♯ ]
+    '/pi': [ á, ǎ, à, ạ, ó, ǒ, ò, ọ, é, ě, è, ẹ, í, ǐ, ì, ị, ú, ǔ, ù, ụ, ḿ, m̌, m̀, ṃ, ń, ň, ǹ, ṇ ]
+    '/pid': [ Á, Ǎ, À, Ạ, Ó, Ǒ, Ò, Ọ, É, Ě, È, Ẹ, Í, Ǐ, Ì, Ị, Ú, Ǔ, Ù, Ụ, Ḿ, M̌, M̀, Ṃ, Ń, Ň, Ǹ, Ṇ ]
+    '/zi': [ ㄅ, ㄆ, ㄇ, ㄈ, ㄉ, ㄊ, ㄋ, ㄌ, ㄍ, ㄎ, ㄏ, ㄐ, ㄑ, ㄒ, ㄓ, ㄔ, ㄕ, ㄖ, ㄗ, ㄘ, ㄙ, ㄚ, ㄛ, ㄜ, ㄝ, ㄞ, ㄟ, ㄠ, ㄡ, ㄢ, ㄣ, ㄤ, ㄥ, ㄦ, ㄧ, ㄨ, ㄩ, ㄪ, ㄫ, ㄬ, ㄭ, ㄮ, ㄯ, ㆠ, ㆡ, ㆢ, ㆣ, ㆤ, ㆥ, ㆦ, ㆧ, ㆨ, ㆩ, ㆪ, ㆫ, ㆬ, ㆭ, ㆮ, ㆯ, ㆰ, ㆱ, ㆲ, ㆳ, ㆴ, ㆵ, ㆶ, ㆷ, ㆸ, ㆹ, ㆺ, ㆻ ]
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^/([0-9]0?|[A-Za-z]+)$"
+    luna_pinyin: "`[a-z]*'?$"
+    stroke: "~[hspnz]*'?$"

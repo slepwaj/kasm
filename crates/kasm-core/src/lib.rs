@@ -42,6 +42,7 @@ pub mod traditional;
 pub mod tungdzih;
 pub mod tupa;
 pub mod unt;
+pub mod xina;
 pub mod voice;
 
 pub use custom_phrase::CustomPhrase;
