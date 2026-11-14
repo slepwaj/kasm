@@ -99,6 +99,7 @@
 
 rime-wugniu-suwu（苏州/混合腔）的罗马字词库，`tools/build-wugniu.py` 去掉读音末尾的声调数字、
 文本转简体后生成；音节表在 `crates/kasm-core/data/wugniu-syllables.txt`。
+方案自己的等价拼写在 `tools/source/wugniu/fuzzy.tsv`，构建时展开进词库。
 
 ### 中古音罗马字（tupa.tsv）
 

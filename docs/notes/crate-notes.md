@@ -837,4 +837,5 @@ Xina 切拼（`core/src/xina_qiepin/`）：`常用字表_Xina切拼.xlsx` 的 27
 
 吳語（`core/src/wugniu/`）：rime-wugniu-suwu（苏州/混合腔）的罗马字，输入时按 Rime 方案去掉声调数字；
 `tools/build-wugniu.py` 从 `tools/source/wugniu/wugniu_suwu.dict.yaml` 生成 `assets/lexicon/wugniu.tsv`
-（8,956 条）与 559 个音节（`data/wugniu-syllables.txt`）；`Engine::set_wugniu` 打开。
+（26,092 条，含 `tools/source/wugniu/fuzzy.tsv` 展开的等价拼写）与 1,716 个音节
+（`data/wugniu-syllables.txt`）；`Engine::set_wugniu` 打开。模糊规则按方案各自一份，互不影响。

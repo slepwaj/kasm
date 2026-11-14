@@ -1,0 +1,24 @@
+# 吴语方案自己的模糊音 / 等价拼写。
+#
+# 每行「正则<TAB>替换」；构建时对词库里每个音节试一遍，把替换出的拼写也收进
+# wugniu.tsv 与音节表。规则来自 rime-wugniu-suwu 的 speller.algebra derive 段。
+# 这里只作用于吴语方案，不影响全拼 / 双拼的九条模糊音。
+
+^ts(h?)i$	c\1i
+^(s|z)i$	\1hi
+uoe	oe
+woe	ghoe
+aon	an
+an	aon
+ieu	eu
+(?<=[szhl])iu	i
+mu	mo
+ueq	oq
+weq	ghoq
+u	ou
+wu	ghou
+ae(?=[qh])	a
+(?<=[szh])yu	y
+uen	un
+^(c|j|gn|[csz]h)i(?=[aoue])$	\1
+^(.+)([iu])([aeou])([euonqh])$	\1\3\2\4
