@@ -153,7 +153,7 @@ pub struct Args {
     #[arg(long)]
     pub shanggu: bool,
 
-    /// Xina 拼音（带声调）：Rime `xinapinin2`；不给 `--dict` 时用 `assets/lexicon/xina.tsv`
+    /// Xina 拼音（传统派普通话方案）：不给 `--dict` 时用 `assets/lexicon/xina.tsv`
     #[arg(long)]
     pub xina: bool,
 

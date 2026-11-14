@@ -4,7 +4,6 @@ pub mod layout;
 pub mod syllable;
 pub mod tone;
 
-pub(crate) use decoded::decode_at;
 pub use decoded::{Decoded, decode};
 pub use layout::{Component, map_key};
 pub use syllable::ZhuyinSyllable;

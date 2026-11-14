@@ -5,6 +5,5 @@ mod result;
 mod unit;
 
 pub use parse::decode;
-pub(crate) use parse::decode_at;
 pub use result::Decoded;
 pub use unit::Unit;

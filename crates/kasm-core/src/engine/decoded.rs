@@ -27,7 +27,8 @@ impl EngineDecoded {
         }
     }
 
-    /// 每个音节敲的声调，只有注音有；双拼恒为空表（排序不看声调）。
+    /// 每音节敲的声调，只有注音有；双拼恒为空表（排序不看声调）。
+    #[allow(dead_code)]
     pub fn tones(&self) -> Vec<Option<u8>> {
         match self {
             Self::Shuangpin(_) => Vec::new(),

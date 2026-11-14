@@ -440,7 +440,11 @@ impl Engine {
     /// 第一条是主读法，拼音行、尾巴与上屏消耗都按它算；其余读法只参与候选与整句比分数。
     pub(super) fn decode_readings(&self, keys: &str) -> Vec<EngineDecoded> {
         match (self.shuangpin.as_deref(), self.shuangpin_full_pinyin) {
-            (Some(layout), true) => layout.decode_mixed(keys, self.fuzzy).into_iter().collect(),
+            (Some(layout), true) => layout
+                .decode_mixed(keys, self.fuzzy)
+                .into_iter()
+                .map(EngineDecoded::Shuangpin)
+                .collect(),
             _ => self.decode(keys).into_iter().collect(),
         }
     }
