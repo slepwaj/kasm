@@ -74,6 +74,28 @@ object KeyboardLayout {
     }
 
     /**
+     * Xina 拼音：全键盘上方多一排声调键。键面写「1 阴平」等，按下去传 `!@#$%`；
+     * 数字键盘里的 1-5 也仍然可用。
+     */
+    fun xina(chinese: Boolean, fullWidth: Boolean = true): List<List<Key>> {
+        if (!chinese) return qwerty(false, fullWidth = fullWidth)
+        val tones = listOf(
+            Key.Text("!", 2f, label = "1 阴平"),
+            Key.Text("@", 2f, label = "2 阳平"),
+            Key.Text("#", 2f, label = "3 上声"),
+            Key.Text("$", 2f, label = "4 去声"),
+            Key.Text("%", 2f, label = "5 轻声"),
+        )
+        return listOf(
+            tones,
+            letters("qwertyuiop", TOP_HINTS),
+            letters("asdfghjkl", MIDDLE_HINTS_ZH),
+            listOf(Key.Shift) + letters("zxcvbnm", BOTTOM_HINTS) + Key.Backspace,
+            lettersBottom(chinese, fullWidth),
+        )
+    }
+
+    /**
      * 日语罗马音：二排末尾补一个长音「ー」（敲罗马音的 `-`）占满十格；
      * 底排与拼音同宽，标点是「、」「。」。
      */

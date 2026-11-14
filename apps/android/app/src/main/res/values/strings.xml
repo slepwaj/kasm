@@ -113,11 +113,13 @@
     <string name="layout_shuangpin">双拼</string>
     <string name="section_romanization">拼音方案</string>
     <string name="romanization_scheme">方案</string>
-    <string name="romanization_note">全拼、粤拼、通字、tupa、上古音、Xina 拼音、Xina 切拼；选了这几套会暂时让开双拼与五笔。</string>
+    <string name="romanization_note">全拼、粤拼、通字、tupa、上古音、Xina 切拼；选了这几套会暂时让开双拼与五笔。</string>
     <string name="layout_wubi">五笔（86 版）</string>
     <string name="layout_ipa">IPA 音标</string>
     <string name="layout_unt">unt 方案</string>
     <string name="layout_gcr">中文通用羅馬字</string>
+    <string name="layout_xina">Xina 拼音（带声调）</string>
+    <string name="layout_xina_note">顶排五个键就是阴平、阳平、上声、去声、轻声；也可以继续用 123 页的数字。</string>
     <string name="layout_nine_note">九宫格左边一列点一下可以定下拼音；英文都用全键盘</string>
     <string name="section_shuangpin">双拼</string>
     <string name="shuangpin_scheme">双拼方案</string>

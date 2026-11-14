@@ -829,8 +829,7 @@ Xina 拼音（`core/src/xina/`）：Rime `xinapinin2` 的带调罗马字，420 �
 `!@#$%` 后共 1,694 个音节（`data/xina-syllables.txt`）；词库 `assets/lexicon/xina.tsv` 96k 条由
 `tools/build-xina.py` 从 `tools/source/xina/xinapinin2.dict.yaml` 生成，文本转简体、词频借普通话词库。
 它同样走 `query_romanized`；`Engine::set_xina` 打开后 `display_reading` 把 `ling@` 显示成 `líng`。
-Android 在 QWERTY 的拼音方案里选「Xina 拼音（带声调）」，组句时数字 1-5 映射成 `!@#$%`，
-符号面板的 `!@#$%` 也逐字符进引擎。
+Android 用独立键盘 `Settings.Layout.XINA`：`KeyboardLayout.xina` 在 QWERTY 上方加五个声调键（`!@#$%`，键面写 1-5 与调名），数字页 1-5 也映射成声调；`Engine::set_xina` 打开带调词库。
 
 Xina 切拼（`core/src/xina_qiepin/`）：`常用字表_Xina切拼.xlsx` 的 27k 条单字中古音，
 `tools/build-xina-qiepin.py` 转成 `assets/lexicon/xina-qiepin.tsv` 与 3,735 个音节

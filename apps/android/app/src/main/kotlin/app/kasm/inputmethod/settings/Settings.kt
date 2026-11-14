@@ -74,7 +74,7 @@ data class Settings(
     /** 工具栏中间那排放的工具，按勾的先后排（#777）。 */
     val toolbar: List<ToolbarTool>,
 ) {
-    enum class Layout { QWERTY, NINE_KEY, SHUANGPIN, WUBI, IPA, UNT, GCR }
+    enum class Layout { QWERTY, NINE_KEY, SHUANGPIN, WUBI, IPA, UNT, GCR, XINA }
 
     /**
      * 键位排法。改了按键位置的放进另一套，缺省那套一直不变（肌肉记忆）：
@@ -150,9 +150,17 @@ data class Settings(
 
         fun load(context: Context): Settings {
             val prefs = preferences(context)
+            val savedLayout = Layout.entries.firstOrNull { it.name == prefs.getString(KEY_LAYOUT, null) }
+                ?: Layout.QWERTY
+            val savedRomanization = prefs.getString(KEY_ROMANIZATION, null) ?: ""
+            // 旧版把 Xina 当全键盘的拼音方案；现在它是独立键盘，自动迁过去。
+            val layout = if (savedLayout == Layout.QWERTY && savedRomanization == "xina") {
+                Layout.XINA
+            } else {
+                savedLayout
+            }
             return Settings(
-                layout = Layout.entries.firstOrNull { it.name == prefs.getString(KEY_LAYOUT, null) }
-                    ?: Layout.QWERTY,
+                layout = layout,
                 heightPercent = prefs.getInt(KEY_HEIGHT, 100).coerceIn(HEIGHT_MIN, HEIGHT_MAX),
                 fullscreenAdapt = prefs.getBoolean(KEY_FULLSCREEN, true),
                 bottomLeft = BottomAction.of(prefs.getString(KEY_BOTTOM_LEFT, null), BottomAction.SWITCH_INPUT_METHOD),
@@ -174,7 +182,7 @@ data class Settings(
                 shuangpinScheme = prefs.getString(KEY_SHUANGPIN, null) ?: DEFAULT_SHUANGPIN,
                 shuangpinRawPreedit = prefs.getBoolean(KEY_SHUANGPIN_RAW, false),
                 shuangpinHints = prefs.getBoolean(KEY_SHUANGPIN_HINTS, true),
-                romanization = prefs.getString(KEY_ROMANIZATION, null) ?: "",
+                romanization = savedRomanization,
                 wubiMixed = prefs.getBoolean(KEY_WUBI_MIXED, false),
                 recordClipboard = prefs.getBoolean(KEY_RECORD_CLIPBOARD, true),
                 clipboardLimit = prefs.getInt(KEY_CLIPBOARD_LIMIT, SettingChoices.defaultClipboardLimit).coerceAtLeast(1),
