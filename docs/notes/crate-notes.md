@@ -834,3 +834,7 @@ Android 用独立键盘 `Settings.Layout.XINA`：`KeyboardLayout.xina` 在 QWERT
 Xina 切拼（`core/src/xina_qiepin/`）：`常用字表_Xina切拼.xlsx` 的 27k 条单字中古音，
 `tools/build-xina-qiepin.py` 转成 `assets/lexicon/xina-qiepin.tsv` 与 3,735 个音节
 （`data/xina-qiepin-syllables.txt`）；同样是罗马字管线，`Engine::set_xina_qiepin` 打开。
+
+吳語（`core/src/wugniu/`）：rime-wugniu-suwu（苏州/混合腔）的罗马字，输入时按 Rime 方案去掉声调数字；
+`tools/build-wugniu.py` 从 `tools/source/wugniu/wugniu_suwu.dict.yaml` 生成 `assets/lexicon/wugniu.tsv`
+（8,956 条）与 559 个音节（`data/wugniu-syllables.txt`）；`Engine::set_wugniu` 打开。

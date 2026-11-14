@@ -125,6 +125,7 @@ PC 上只对实体键盘有意义的项（Shift + 字母、切换键、翻页键
 - 打字练习（`PracticeActivity`）：首页入口；从 `assets/practice/readings.tsv` 按方案选语料（粤拼→粤语，tupa / shanggu / unt / gcr→文言，其余→现代文），随机抽几句拼段，只抽当前方案每个汉字都有读音的句子，避免空注音和打不出的字；EditText 接收当前输入法的上屏文本。每个字上方按当前键盘拼音方案（`Settings.romanization`）显示注音，练通字时显示通字；顶栏简 / 繁切换用 `readings.tsv` 的繁体列，并同步写 `KEY_TRADITIONAL` 让键盘输出跟着换。比较时去掉 composing span（组句中的拼音不算已打），按字染对 / 错 / 当前位置，算用时、速度、准确率与进度；换段、重开只重置状态，不重建整页。注音由 `tools/build-practice-readings.py` 从各方案词库生成，拼音用 pypinyin 带调，其他方案按词库最长词切分；`PracticeText` 用明黄色画读音，按读音宽度换行。
 - Xina 拼音：`Settings.Layout.XINA` 是独立键盘，`KeyboardLayout.xina` 在 QWERTY 上方加五个声调键（`!@#$%`，键面写 1-5 与调名）；数字键盘的 1-5 也映射成声调。`Composer` 在 `layout == XINA` 时走 `xina` 方案，符号面板里的 `!@#$%` 也走 `Key.Text` 进组句。Core 侧 `xina.tsv` 的音节本身带声调符号，`display_reading` 把 `ling@` 显示成 `líng`。
 - Xina 切拼：`xina-qiepin.tsv` 是 `常用字表_Xina切拼.xlsx` 的单字中古音，走同一条罗马字管线；练习页把它归到文言语料。
+- 吴语（苏州）：`wugniu.tsv` 来自 rime-wugniu-suwu 词库，输入码去掉声调数字；练习页用现代文语料。
 
 - 生词本页（`Native.vocabulary`）一次交 `{language, filter, level, change}`：Rust 侧先改（标认识 / 删除，写回 `user-vocab.tsv`）再按筛选与等级列，最多 500 条，另给符合的总数。
   输入法进程里的生词本落盘前会合并文件（`VocabularyBook::refresh`），App 这边的改动不会被盖掉。搜索同 PC（`search`：不分大小写，词、带它上屏的中文、例句里有就算），在 Rust 侧筛；搜索框常驻，打字停 250 ms 后只重填下面的词表，不丢焦点。PC 生词本的时间线、导出不做。

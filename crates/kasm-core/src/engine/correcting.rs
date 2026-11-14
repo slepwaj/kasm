@@ -9,7 +9,7 @@ impl Engine {
     pub(super) fn active_correction(&self, scope: &str) -> Option<Correction> {
         // 粤拼 / 通字的音节表与普通话音节表不同：拼音那套「一处编辑」的纠错会把 `keoi` 纠成 `kei`、
         // 把 `niixao` 纠短，上屏时按纠错后的长度吃键，剩下的字母又开一段组句
-        if self.jyutping || self.tungdzih || self.tupa || self.shanggu || self.unt || self.gcr || self.xina || self.xina_qiepin {
+        if self.jyutping || self.tungdzih || self.tupa || self.shanggu || self.unt || self.gcr || self.xina || self.xina_qiepin || self.wugniu {
             return None;
         }
         // 双拼敲错一个键换掉的是整个声母 / 韵母，全拼那套「一处编辑」的纠错模型不适用

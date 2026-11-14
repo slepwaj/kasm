@@ -66,7 +66,7 @@ class PracticeActivity : PageActivity() {
     /** 注音跟随键盘当前的拼音方案；练习通字时上面显示通字，练全拼时显示拼音。 */
     private val annotationScheme by lazy {
         when (Settings.load(this).romanization) {
-            "tungdzih", "tupa", "shanggu", "unt", "gcr", "jyutping", "xina", "xina-qiepin" ->
+            "tungdzih", "tupa", "shanggu", "unt", "gcr", "jyutping", "xina", "xina-qiepin", "wugniu" ->
                 Settings.load(this).romanization
             else -> "pinyin"
         }
@@ -457,6 +457,7 @@ class PracticeActivity : PageActivity() {
             "jyutping" -> R.string.practice_scheme_jyutping
             "xina" -> R.string.practice_scheme_xina
             "xina-qiepin" -> R.string.practice_scheme_xina_qiepin
+            "wugniu" -> R.string.practice_scheme_wugniu
             else -> R.string.practice_scheme_pinyin
         },
     )
@@ -517,6 +518,7 @@ class PracticeActivity : PageActivity() {
             "jyutping",
             "xina",
             "xina-qiepin",
+            "wugniu",
         )
     }
 }

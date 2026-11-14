@@ -372,6 +372,9 @@ pub struct Engine {
     /// Xina 切拼（`[general] scheme = "xina-qiepin"`）：中古音单字表，走同一条罗马字管线。
     xina_qiepin: bool,
 
+    /// 吳語（混合腔 / rime-wugniu-suwu）：苏州吴语罗马字，走同一条罗马字管线。
+    wugniu: bool,
+
     /// emoji 表，没有就不出 emoji 候选。
     emoji: Option<EmojiTable>,
 
@@ -627,6 +630,7 @@ impl Engine {
             gcr: false,
             xina: false,
             xina_qiepin: false,
+            wugniu: false,
             emoji: None,
             emoji_limit: EMOJI_TOTAL,
             kaomoji: None,

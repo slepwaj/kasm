@@ -95,6 +95,11 @@
 来自用户提供的 `常用字表_Xina切拼.xlsx`（字 / 中古音 / 來源），27k 条单字读音；
 `tools/build-xina-qiepin.py` 转简体后生成，音节表在 `crates/kasm-core/data/xina-qiepin-syllables.txt`。
 
+### 吳語（wugniu.tsv）
+
+rime-wugniu-suwu（苏州/混合腔）的罗马字词库，`tools/build-wugniu.py` 去掉读音末尾的声调数字、
+文本转简体后生成；音节表在 `crates/kasm-core/data/wugniu-syllables.txt`。
+
 ### 中古音罗马字（tupa.tsv）
 
 来自 `D:\文言拼音\参考项目\古籍字頻統計_注音.xlsx` 的 tupa 列，23k 余条单字读音（含多音字），

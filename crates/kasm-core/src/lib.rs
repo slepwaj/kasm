@@ -45,6 +45,7 @@ pub mod unt;
 pub mod xina;
 pub mod xina_qiepin;
 pub mod voice;
+pub mod wugniu;
 
 pub use custom_phrase::CustomPhrase;
 

@@ -161,6 +161,10 @@ pub struct Args {
     #[arg(long)]
     pub xina_qiepin: bool,
 
+    /// 吳語（混合腔 / rime-wugniu-suwu）：不给 `--dict` 时用 `assets/lexicon/wugniu.tsv`
+    #[arg(long)]
+    pub wugniu: bool,
+
     /// 形码：码表 TSV（`词\t编码\t词频`，按 86 五笔记日志、按键规则全关）或方案目录（`scheme.toml` + 码表）。
     /// 给了就开着形码；`--wubi` 是旧写法
     #[arg(long, alias = "wubi", value_name = "码表或方案目录")]

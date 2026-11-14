@@ -351,8 +351,8 @@ class KeyboardSettingsActivity : PageActivity() {
     /** 选了双拼才有方案与 preedit 写法，选了五笔才有混输；全键盘可以选粤拼 / 通字 / tupa / 上古音。 */
     private fun schemeOptions(settings: Settings): Array<View> = when (settings.layout) {
         Settings.Layout.QWERTY -> {
-            val keys = listOf("", "jyutping", "tungdzih", "tupa", "shanggu", "xina-qiepin")
-            val labels = listOf("全拼", "粤拼（Jyutping）", "通字", "tupa（中古音）", "上古音", "Xina 切拼（中古音）")
+            val keys = listOf("", "jyutping", "tungdzih", "tupa", "shanggu", "xina-qiepin", "wugniu")
+            val labels = listOf("全拼", "粤拼（Jyutping）", "通字", "tupa（中古音）", "上古音", "Xina 切拼（中古音）", "吴语（苏州）")
             val selected = keys.indexOf(settings.romanization).coerceAtLeast(0)
             arrayOf(
                 ui.sectionTitle(R.string.section_romanization),

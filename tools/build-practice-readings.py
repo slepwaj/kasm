@@ -32,6 +32,7 @@ SCHEMES = {
     "jyutping": "jyutping.tsv",
     "xina": "xina.tsv",
     "xina-qiepin": "xina-qiepin.tsv",
+    "wugniu": "wugniu.tsv",
 }
 
 

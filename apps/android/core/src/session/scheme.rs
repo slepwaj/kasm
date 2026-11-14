@@ -51,7 +51,7 @@ impl Session {
         let raw = self.engine.take_raw();
         let name = match scheme {
             "jyutping" | "tungdzih" | "tupa" | "shanggu" | "unt" | "gcr" | "xina"
-            | "xina-qiepin" => scheme,
+            | "xina-qiepin" | "wugniu" => scheme,
             _ => "",
         };
         let path = if name.is_empty() {
@@ -74,6 +74,7 @@ impl Session {
         self.engine.set_gcr(name == "gcr");
         self.engine.set_xina(name == "xina");
         self.engine.set_xina_qiepin(name == "xina-qiepin");
+        self.engine.set_wugniu(name == "wugniu");
         if !name.is_empty() {
             // 这几套方案与双拼 / 五笔互斥，否则两边都出候选
             self.engine.set_shuangpin(None);
