@@ -58,6 +58,7 @@ data class Settings(
     val codeHighlight: Boolean,
     /** 模糊音、中文标点全半角、打拼音时给不给英文词、学习语言、繁体字形、学习开关、附加词库（交给 Core）。 */
     val inputOptions: InputOptions,
+
     /** 英文键盘也组句给英文词候选；关了字母直接上屏。 */
     val englishCandidates: Boolean,
     /** 补充译词：随包释义表查不到译词的词上屏后问云端补写（缺省关，要先配好云端）。 */
@@ -74,6 +75,14 @@ data class Settings(
     /** 工具栏中间那排放的工具，按勾的先后排（#777）。 */
     val toolbar: List<ToolbarTool>,
 ) {
+    /** 当前方案的模糊音配置键：全拼/双拼/各罗马字方案各一份。 */
+    fun fuzzyProfileKey(): String = when {
+        layout == Layout.SHUANGPIN -> "sp:${shuangpinScheme}"
+        layout == Layout.QWERTY && romanization.isNotEmpty() -> romanization
+        layout == Layout.XINA -> "xina"
+        else -> layout.name.lowercase()
+    }
+
     enum class Layout { QWERTY, NINE_KEY, ZHUYIN, SHUANGPIN, WUBI, IPA, UNT, GCR, XINA }
 
     /**
@@ -160,6 +169,19 @@ data class Settings(
                 savedLayout
             }
             val romanization = if (layout == Layout.XINA) "xina" else savedRomanization
+            val fuzzyProfile = when {
+                layout == Layout.SHUANGPIN -> "sp:${prefs.getString(KEY_SHUANGPIN, null) ?: DEFAULT_SHUANGPIN}"
+                layout == Layout.QWERTY && romanization.isNotEmpty() -> romanization
+                layout == Layout.XINA -> "xina"
+                else -> layout.name.lowercase()
+            }
+            val profileFuzzy = prefs.getStringSet("fuzzy:$fuzzyProfile", null)
+                ?: prefs.getStringSet(KEY_FUZZY, null)
+                ?: emptySet()
+            val customRules = prefs.getString("fuzzy_custom:$fuzzyProfile", null)
+                .orEmpty()
+                .split(Regex("[\\s,]+"))
+                .filter { it.isNotBlank() }
             return Settings(
                 layout = layout,
                 heightPercent = prefs.getInt(KEY_HEIGHT, 100).coerceIn(HEIGHT_MIN, HEIGHT_MAX),
@@ -189,7 +211,8 @@ data class Settings(
                 clipboardLimit = prefs.getInt(KEY_CLIPBOARD_LIMIT, SettingChoices.defaultClipboardLimit).coerceAtLeast(1),
                 codeHighlight = prefs.getBoolean(KEY_CODE_HIGHLIGHT, true),
                 inputOptions = InputOptions(
-                    fuzzy = prefs.getStringSet(KEY_FUZZY, null).orEmpty().toSet(),
+                    fuzzy = profileFuzzy,
+                    custom = customRules,
                     fullWidthPunctuation = prefs.getBoolean(KEY_FULL_WIDTH, true),
                     englishInChinese = prefs.getBoolean(KEY_ENGLISH_IN_CHINESE, true),
                     chineseFirst = prefs.getBoolean(KEY_CHINESE_FIRST, false),

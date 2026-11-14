@@ -19,7 +19,7 @@ impl Layout {
     /// 混输解码：纯双拼、整段全拼、以及两者在音节边界上交替的读法，按这个顺序返回（都解不动的尾巴留在各自结果里）。
     /// 纯双拼那条与 `decode_fuzzy` 完全相同，混输关掉时行为不变。
     pub fn decode_mixed(&self, keys: &str, fuzzy: FuzzyRules) -> Vec<Decoded> {
-        let mut readings = vec![self.decode_fuzzy(keys, fuzzy)];
+        let mut readings = vec![self.decode_fuzzy(keys, fuzzy.clone())];
         if let Some(full) = full_pinyin(keys) {
             push_reading(&mut readings, full);
         }
@@ -48,7 +48,7 @@ impl Layout {
                 }
                 // 双拼：两键一个完整音节
                 if let Some(second) = chars.get(index + 1).copied().filter(|c| *c != '\'')
-                    && let Some(pinyin) = self.pair(first, second, fuzzy)
+                    && let Some(pinyin) = self.pair(first, second, fuzzy.clone())
                 {
                     let mut next = path.clone();
                     next.push(Unit {

@@ -10,6 +10,8 @@ import org.json.JSONObject
  */
 data class InputOptions(
     val fuzzy: Set<String> = emptySet(),
+    val custom: List<String> = emptyList(),
+    val customOff: List<String> = emptyList(),
     val fullWidthPunctuation: Boolean = true,
     val englishInChinese: Boolean = true,
     val chineseFirst: Boolean = false,
@@ -31,6 +33,8 @@ data class InputOptions(
 ) {
     fun toJson(): String = JSONObject()
         .put("fuzzy", JSONArray(SettingChoices.fuzzy.map { it.key }.filter { it in fuzzy }))
+        .put("custom", JSONArray(custom))
+        .put("custom_off", JSONArray(customOff))
         .put("full_width_punctuation", fullWidthPunctuation)
         .put("english_in_chinese", englishInChinese)
         .put("chinese_first", chineseFirst)

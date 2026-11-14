@@ -217,9 +217,10 @@
     <string name="learning_language_note">候选下面显示这门语言的译词，生词本也按它记；选「不显示」就都不记</string>
     <string name="section_input">输入</string>
     <string name="fuzzy_title">模糊音</string>
+    <string name="fuzzy_custom_title">自定义规则</string>
     <string name="fuzzy_off">不用</string>
     <string name="fuzzy_on">开了 %d 条</string>
-    <string name="fuzzy_note">z = zh 时打 zi 也出「知」；九宫格暂不支持</string>
+    <string name="fuzzy_note">模糊音按当前方案分别保存。自定义规则写成「音=音」，用空格隔开，例如 zh=j ian=iang；自定义规则目前用于全拼和双拼。</string>
     <string name="full_width_title">中文用全角标点</string>
     <string name="full_width_note">关掉中文键盘打半角标点</string>
     <string name="english_in_chinese_title">打拼音时也给英文词</string>

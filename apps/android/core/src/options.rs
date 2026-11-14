@@ -10,6 +10,12 @@ pub struct InputOptions {
     #[serde(default)]
     pub fuzzy: Vec<String>,
 
+    #[serde(default)]
+    pub custom: Vec<String>,
+
+    #[serde(default)]
+    pub custom_off: Vec<String>,
+
     /// 中文键盘的标点键出全角（，。）还是半角（,.）。
     pub full_width_punctuation: bool,
 
@@ -81,6 +87,8 @@ impl InputOptions {
                 tracing::warn!(name, "不认识的模糊音规则");
             }
         }
+        rules.custom = self.custom.clone();
+        rules.custom_off = self.custom_off.clone();
         rules
     }
 

@@ -45,7 +45,7 @@
 
 键盘设置「输入」一节与 PC 的同名项对应，整份 `InputOptions` 经 `Session::set_options` 交给 Core，名字同 PC 配置：
 
-- 模糊音：`[fuzzy]` 九条。
+- 模糊音：按当前方案分别保存在 `fuzzy:<方案>`，设置页可给全拼 / 各双拼方案分别选九条规则；`自定义规则` 写成 `音=音`，存 `fuzzy_custom:<方案>`，经 Core 的 `CustomRule` 参与全拼 / 双拼展开。
 - 拼写纠错：`spelling_correction`（同 PC 的 `[general]`），`Engine::set_spelling_correction`。
 - 中文用全角标点：中文键盘的逗号句号与拼音列 ，。？！： 键带着对应的半角字符，上屏前经 `Engine::punctuate` 转换（引号成对、数字后的点保持半角）；关了出半角并 `note_passthrough`。
   符号页里的标点是明确挑的字符，不转换。

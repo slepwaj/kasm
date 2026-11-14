@@ -187,7 +187,19 @@ class KeyboardSettingsActivity : PageActivity() {
                 if (count == 0) getString(R.string.fuzzy_off) else getString(R.string.fuzzy_on, count),
                 fuzzy.map { it.label }, checked,
             ) { picked ->
-                prefs.edit().putStringSet(Settings.KEY_FUZZY, fuzzy.filterIndexed { i, _ -> picked[i] }.map { it.key }.toSet()).apply()
+                prefs.edit().putStringSet(
+                    "fuzzy:${settings.fuzzyProfileKey()}",
+                    fuzzy.filterIndexed { i, _ -> picked[i] }.map { it.key }.toSet(),
+                ).apply()
+                rebuild()
+            },
+            ui.input(
+                R.string.fuzzy_custom_title,
+                options.custom.joinToString(" "),
+                options.custom.joinToString(" "),
+                secret = false,
+            ) {
+                prefs.edit().putString("fuzzy_custom:${settings.fuzzyProfileKey()}", it.trim()).apply()
                 rebuild()
             },
             ui.note(R.string.fuzzy_note),

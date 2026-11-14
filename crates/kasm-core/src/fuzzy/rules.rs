@@ -1,12 +1,12 @@
 use kasm_dictionary::{SyllablePattern, canonical_syllable};
 use serde::{Deserialize, Serialize};
 
-use super::Expanded;
+use super::{CustomRule, Expanded};
 use crate::parser;
 use crate::ranking::FUZZY_PENALTY;
 
 /// 模糊音开关，配置文件 `[fuzzy]` 分节；缺省全关。
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct FuzzyRules {
     /// z ↔ zh。
@@ -35,6 +35,12 @@ pub struct FuzzyRules {
 
     /// in ↔ ing。
     pub in_ing: bool,
+
+    /// 用户自己加的规则，每条 `音=音`（[`CustomRule`]），开着的关着的都在这里。
+    pub custom: Vec<String>,
+
+    /// `custom` 里暂时关掉的那些。
+    pub custom_off: Vec<String>,
 }
 
 impl FuzzyRules {
@@ -49,10 +55,22 @@ impl FuzzyRules {
         an_ang: true,
         en_eng: true,
         in_ing: true,
+        custom: Vec::new(),
+        custom_off: Vec::new(),
     };
 
+    /// 有没有开着的规则（内置的或自定义的）。
     pub fn any(&self) -> bool {
-        *self != Self::default()
+        Self::NAMES.iter().any(|name| self.is_on(name)) || !self.custom_rules().is_empty()
+    }
+
+    /// 开着的自定义规则（认不出的跳过）。
+    pub fn custom_rules(&self) -> Vec<CustomRule> {
+        self.custom
+            .iter()
+            .filter(|text| !self.custom_off.contains(text))
+            .filter_map(|text| CustomRule::parse(text))
+            .collect()
     }
 
     /// 全部规则的配置键名，与 `[fuzzy]` 分节的字段名一致；菜单按这个顺序列出。
@@ -62,7 +80,7 @@ impl FuzzyRules {
 
     /// 设置里显示的规则名：键名 `z_zh` 写成 `z = zh`。
     pub fn label(name: &str) -> String {
-        name.replace('_', " = ")
+        name.replace(['_', '='], " = ")
     }
 
     /// 按名字开一条规则（`z-zh` / `z_zh` / `zzh` 都认），CLI 参数用；不认识返回 `false`。
@@ -83,7 +101,7 @@ impl FuzzyRules {
 
     /// 按名字查一条规则是否开着；不认识返回 `false`。
     pub fn is_on(&self, name: &str) -> bool {
-        let mut copy = *self;
+        let mut copy = self.clone();
         copy.flag_mut(name).is_some_and(|flag| *flag)
     }
 
@@ -216,6 +234,9 @@ impl FuzzyRules {
                 swap_final("ing", "in");
             }
         }
+        for rule in self.custom_rules() {
+            rule.apply(form, complete, &mut out);
+        }
         out.retain(|f| {
             !f.is_empty()
                 && f != form
@@ -295,5 +316,13 @@ mod tests {
     fn labels_follow_names() {
         assert_eq!(FuzzyRules::label("z_zh"), "z = zh");
         assert_eq!(FuzzyRules::label("an_ang"), "an = ang");
+    }
+
+    #[test]
+    fn custom_rules_expand_after_builtin_ones() {
+        let mut rules = FuzzyRules::default();
+        rules.custom = vec!["zh=j".to_owned()];
+        let forms = forms(&rules, SyllablePattern::complete("ji"));
+        assert!(forms.iter().any(|form| form == "zhi"));
     }
 }

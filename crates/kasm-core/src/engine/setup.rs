@@ -384,7 +384,7 @@ impl Engine {
         self.shuangpin
             .as_deref()
             .filter(|layout| layout.uses_semicolon())
-            .is_some_and(|layout| layout.decode_fuzzy(body, self.fuzzy).pending_initial())
+            .is_some_and(|layout| layout.decode_fuzzy(body, self.fuzzy.clone()).pending_initial())
     }
 
     /// 只用形码：码表挂着、拼音侧关着。
@@ -432,7 +432,7 @@ impl Engine {
         } else {
             self.shuangpin
                 .as_deref()
-                .map(|layout| EngineDecoded::Shuangpin(layout.decode_fuzzy(keys, self.fuzzy)))
+                .map(|layout| EngineDecoded::Shuangpin(layout.decode_fuzzy(keys, self.fuzzy.clone())))
         }
     }
 
@@ -441,7 +441,7 @@ impl Engine {
     pub(super) fn decode_readings(&self, keys: &str) -> Vec<EngineDecoded> {
         match (self.shuangpin.as_deref(), self.shuangpin_full_pinyin) {
             (Some(layout), true) => layout
-                .decode_mixed(keys, self.fuzzy)
+                .decode_mixed(keys, self.fuzzy.clone())
                 .into_iter()
                 .map(EngineDecoded::Shuangpin)
                 .collect(),
@@ -503,7 +503,7 @@ impl Engine {
     }
 
     pub fn fuzzy(&self) -> FuzzyRules {
-        self.fuzzy
+        self.fuzzy.clone()
     }
 
     /// 设置显式选区翻译的提供方，独立于自动联想；取消后旧结果不会上屏。

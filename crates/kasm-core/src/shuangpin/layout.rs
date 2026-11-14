@@ -295,7 +295,7 @@ impl Layout {
             }
             let second = chars.get(index + 1).copied().filter(|c| *c != '\'');
             let unit = match second {
-                Some(second) => self.pair(first, second, fuzzy).map(|pinyin| Unit {
+                Some(second) => self.pair(first, second, fuzzy.clone()).map(|pinyin| Unit {
                     keys: [first, second].iter().collect(),
                     pinyin,
                     complete: true,
