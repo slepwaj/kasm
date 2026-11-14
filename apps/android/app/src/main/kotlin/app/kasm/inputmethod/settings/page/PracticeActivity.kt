@@ -430,6 +430,7 @@ class PracticeActivity : PageActivity() {
     private fun preferredCorpus(): String = when (annotationScheme) {
         "jyutping" -> "cantonese"
         "wugniu" -> "wugniu"
+        "tungdzih" -> "tungdzih"
         "tupa", "shanggu", "unt", "gcr", "xina-qiepin" -> "classical"
         else -> "modern"
     }

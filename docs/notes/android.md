@@ -122,7 +122,7 @@ PC 上只对实体键盘有意义的项（Shift + 字母、切换键、翻页键
 启动页底部 tab 切 首页 / 生词本 / 我的，配色 `AppColors` 与键盘分开。首页是没切到KASM时的切换卡、输入统计看板（`Native.statsDetail` 传 `off` 不读生词本：今天 / 近 7 天 / 累计、最近 30 天柱状图、四个比例）、常用功能与试打框；
 二级页「键盘设置」「输入统计」（点看板进，「我的」里不再单列入口）「关于」。「我的」页的累计卡仍用 `Native.usageStats`。
 
-- 打字练习（`PracticeActivity`）：首页入口；从 `assets/practice/readings.tsv` 按方案选语料（粤拼→粤语，tupa / shanggu / unt / gcr / xina-qiepin→文言，吴语→吴语，其余→现代文），随机抽几句拼段，只抽当前方案每个汉字都有读音的句子，避免空注音和打不出的字；EditText 接收当前输入法的上屏文本。每个字上方按当前键盘拼音方案（`Settings.romanization`）显示注音，练通字时显示通字；顶栏简 / 繁切换用 `readings.tsv` 的繁体列，并同步写 `KEY_TRADITIONAL` 让键盘输出跟着换。比较时去掉 composing span（组句中的拼音不算已打），按字染对 / 错 / 当前位置，算用时、速度、准确率与进度；换段、重开只重置状态，不重建整页。注音由 `tools/build-practice-readings.py` 从各方案词库生成，拼音用 pypinyin 带调，其他方案按词库最长词切分；`PracticeText` 用明黄色画读音，按读音宽度换行。
+- 打字练习（`PracticeActivity`）：首页入口；从 `assets/practice/readings.tsv` 按方案选语料（粤拼→粤语，通字→通字案例文，tupa / shanggu / unt / gcr / xina-qiepin→文言，吴语→吴语，其余→现代文），随机抽几句拼段，只抽当前方案每个汉字都有读音的句子，避免空注音和打不出的字；EditText 接收当前输入法的上屏文本。每个字上方按当前键盘拼音方案（`Settings.romanization`）显示注音，练通字时显示通字；顶栏简 / 繁切换用 `readings.tsv` 的繁体列，并同步写 `KEY_TRADITIONAL` 让键盘输出跟着换。比较时去掉 composing span（组句中的拼音不算已打），按字染对 / 错 / 当前位置，算用时、速度、准确率与进度；换段、重开只重置状态，不重建整页。注音由 `tools/build-practice-readings.py` 从各方案词库生成，拼音用 pypinyin 带调，其他方案按词库最长词切分；`PracticeText` 用明黄色画读音，按读音宽度换行。
 - 注音（大千）：`Settings.Layout.ZHUYIN` 使用 `KeyboardLayout.zhuyin` 的四排大千键位，键面是注音符号、进引擎的是 ASCII；Core `zhuyin::decode` 先解成拼音再查词，空格在缺声调时是一声，`Session::space` 调 `zhuyin_needs_tone`。当前声调只保留在组句里，尚未参与候选筛选。
 - Xina 拼音：回到全键盘的「拼音方案」；`xina.tsv` 是按《Xina传统派普通话拼音方案》生成的无调拼式，`Engine::set_xina` 打开后走罗马字管线。
 - Xina 切拼：`xina-qiepin.tsv` 是 `常用字表_Xina切拼.xlsx` 的单字中古音，走同一条罗马字管线；练习页把它归到文言语料。

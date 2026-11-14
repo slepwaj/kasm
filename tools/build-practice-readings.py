@@ -21,6 +21,7 @@ CORPORA = {
     "cantonese": ROOT / "assets/practice/sentences-cantonese.txt",
     "classical": ROOT / "assets/practice/sentences-classical.txt",
     "wugniu": ROOT / "assets/practice/sentences-wugniu.txt",
+    "tungdzih": ROOT / "tools/source/practice/tungdzih-annotated.txt",
 }
 OUT = ROOT / "assets/practice/readings.tsv"
 SCHEMES = {
@@ -99,15 +100,55 @@ def annotate(sentence: str, words, chars) -> list[str]:
     return result
 
 
+def parse_annotated(path: Path):
+    """解析「字(通字读音)」形式的文段，返回 (去掉注音的句子, 逐字读音)。"""
+    text = path.read_text(encoding="utf-8-sig")
+    pattern = re.compile(r"([\u4e00-\u9fff])\(([^)]+)\)")
+    clean: list[str] = []
+    readings: list[str] = []
+    position = 0
+    for match in pattern.finditer(text):
+        for ch in text[position : match.start()]:
+            if ch not in "\r\n":
+                clean.append(ch)
+                readings.append("")
+        clean.append(match.group(1))
+        readings.append(match.group(2))
+        position = match.end()
+    for ch in text[position:]:
+        if ch not in "\r\n":
+            clean.append(ch)
+            readings.append("")
+    sentences = []
+    current: list[str] = []
+    current_readings: list[str] = []
+    for ch, reading in zip(clean, readings):
+        current.append(ch)
+        current_readings.append(reading)
+        if ch in "。！？":
+            sentences.append(("".join(current), current_readings))
+            current = []
+            current_readings = []
+    if current:
+        sentences.append(("".join(current), current_readings))
+    for sentence, values in sentences:
+        for ch, reading in zip(sentence, values):
+            if "\u4e00" <= ch <= "\u9fff" and not reading:
+                raise ValueError(f"缺少通字注音：{ch} in {sentence}")
+    return sentences
+
+
 def main():
-    corpora = {
-        name: [
-            line.strip()
-            for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip() and not line.startswith("#")
-        ]
-        for name, path in CORPORA.items()
-    }
+    corpora = {}
+    for name, path in CORPORA.items():
+        if name == "tungdzih":
+            corpora[name] = parse_annotated(path)
+        else:
+            corpora[name] = [
+                (line.strip(), None)
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if line.strip() and not line.startswith("#")
+            ]
     dictionaries = {
         scheme: load_dictionary(
             ROOT / "assets/lexicon" / name,
@@ -119,9 +160,9 @@ def main():
     t2s = OpenCC("t2s")
     with OUT.open("w", encoding="utf-8", newline="\n") as output:
         output.write("# 练习文段逐字注音：语料\t简体\t繁体 + " + "".join(f"\t{scheme}" for scheme in SCHEMES) + "\n")
-        output.write("# 语料：modern / cantonese / classical；读音之间用 | 分隔，空串表示词库里没有这个字的读音。\n")
+        output.write("# 语料：modern / cantonese / classical / wugniu / tungdzih；读音之间用 | 分隔，空串表示词库里没有这个字的读音。\n")
         for corpus, sentences in corpora.items():
-            for source in sentences:
+            for source, overrides in sentences:
                 simplified = t2s.convert(source)
                 traditional = s2t.convert(simplified)
                 if len(simplified) != len(traditional):
@@ -132,11 +173,16 @@ def main():
                 for scheme, (words, chars) in dictionaries.items():
                     # 粤拼词库收的是传统字形（佢、哋、嘅），按原文注；其余方案按简体注。
                     annotation = source if scheme == "jyutping" else simplified
-                    readings = (
-                        annotate_pinyin(annotation)
-                        if scheme == "pinyin"
-                        else annotate(annotation, words, chars)
-                    )
+                    if scheme == "tungdzih" and overrides is not None:
+                        readings = overrides
+                    else:
+                        readings = (
+                            annotate_pinyin(annotation)
+                            if scheme == "pinyin"
+                            else annotate(annotation, words, chars)
+                        )
+                    if len(readings) != len(simplified):
+                        raise ValueError(f"注音长度不符：{scheme} {source}")
                     output.write("\t" + "|".join(readings))
                 output.write("\n")
     print("corpora", {name: len(lines) for name, lines in corpora.items()}, "wrote", OUT)
