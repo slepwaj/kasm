@@ -20,6 +20,7 @@ CORPORA = {
     "modern": SENTENCES,
     "cantonese": ROOT / "assets/practice/sentences-cantonese.txt",
     "classical": ROOT / "assets/practice/sentences-classical.txt",
+    "wugniu": ROOT / "assets/practice/sentences-wugniu.txt",
 }
 OUT = ROOT / "assets/practice/readings.tsv"
 SCHEMES = {
