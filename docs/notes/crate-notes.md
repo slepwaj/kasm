@@ -825,11 +825,9 @@ unt 与中文通用羅馬字（`core/src/unt/`、`core/src/gcr/`）：同样走 
 只拒绝空白与 `/`，DP 切分改走 `char` 边界；Android 用 `Layout.UNT` / `Layout.GCR` 的符号键盘，
 `Composer` 把这些 `Key.Text` 逐字符 `push` 进引擎（不直接上屏），空格 / 候选照常出汉字。
 
-Xina 拼音（`core/src/xina/`）：Rime `xinapinin2` 的带调罗马字，420 个基础音节、声调数字 1-5 转成
-`!@#$%` 后共 1,694 个音节（`data/xina-syllables.txt`）；词库 `assets/lexicon/xina.tsv` 96k 条由
-`tools/build-xina.py` 从 `tools/source/xina/xinapinin2.dict.yaml` 生成，文本转简体、词频借普通话词库。
-它同样走 `query_romanized`；`Engine::set_xina` 打开后 `display_reading` 把 `ling@` 显示成 `líng`。
-Android 用独立键盘 `Settings.Layout.XINA`：`KeyboardLayout.xina` 在 QWERTY 上方加五个声调键（`!@#$%`，键面写 1-5 与调名），数字页 1-5 也映射成声调；`Engine::set_xina` 打开带调词库。
+Xina 拼音（`core/src/xina/`）：按《Xina传统派普通话拼音方案》由普通话词库转出的无调拼式
+（`au`、`ung`、`ih`、`yu` 等），`tools/build-xina.py` 生成 `assets/lexicon/xina.tsv` 与
+`data/xina-syllables.txt`；`Engine::set_xina` 打开后走罗马字管线。输入不要求声调。
 
 注音（`core/src/zhuyin/`）：从青简（qingjian）移植的大千注音。`layout::map_key` 把大千 ASCII 键解成声母 / 介音 / 韵母 / 声调，`ZhuyinSyllable::to_pinyin` 转成拼音，`EngineDecoded::Zhuyin` 与双拼共用查询管线；`tone.rs` 读 `data/tones.tsv`，当前只保留声调，候选排序尚未接。Android 用 `Layout.ZHUYIN` 的四排大千键盘，空格在缺声调时进组句作为一声。
 

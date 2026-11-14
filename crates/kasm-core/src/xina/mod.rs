@@ -1,7 +1,7 @@
-//! Xina 拼音（带声调）：Rime `xinapinin2` 的罗马字，声调写在音节末尾（`!@#$%`）。
+//! Xina 拼音（传统派普通话方案）：无调拉丁拼式，由普通话词库转换而来。
 //!
-//! 音节表由 `data/xina-syllables.txt` 编译进二进制；音节字母可带声调符号，
-//! 与通字 / tupa / 上古音共用一条罗马字查询管线。
+//! 音节表由 `data/xina-syllables.txt` 编译进二进制；与通字 / tupa / 上古音共用一条罗马字查询管线。
+//!
 
 use std::sync::LazyLock;
 
@@ -27,7 +27,7 @@ pub fn segment(input: &str) -> Result<Vec<Segmentation>, ParseError> {
     TABLE.segment(input)
 }
 
-/// 候选行显示用：`ling@` -> `líng`，`ling#` -> `lǐng`；声调符号 1-5 仍是输入键。
+/// 候选行显示用；新方案无调，原样返回（保留旧声调符号的兼容处理）。
 pub fn display_reading(reading: &str) -> String {
     reading
         .split_whitespace()

@@ -32,6 +32,7 @@ class KeyboardPickerPanel(
         Choice(Mode.CHINESE, Settings.Layout.NINE_KEY, "拼", "9", "拼音 9 键"),
         Choice(Mode.CHINESE, Settings.Layout.QWERTY, "拼", "26", "拼音 26 键"),
         Choice(Mode.CHINESE, Settings.Layout.ZHUYIN, "ㄅ", "", "注音 大千"),
+        Choice(Mode.CHINESE, Settings.Layout.XINA, "X", "", "Xina 拼音"),
         Choice(Mode.CHINESE, Settings.Layout.SHUANGPIN, "双", "26", "双拼"),
         Choice(Mode.CHINESE, Settings.Layout.WUBI, "五", "86", "五笔 86 版"),
         Choice(Mode.CHINESE, Settings.Layout.IPA, "音", "IPA", "IPA 音标"),
