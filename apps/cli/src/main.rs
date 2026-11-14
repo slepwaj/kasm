@@ -63,6 +63,7 @@ fn run() -> Result<(), CliError> {
     engine.set_tupa(args.tupa);
     engine.set_shanggu(args.shanggu);
     engine.set_xina(args.xina);
+    engine.set_xina_qiepin(args.xina_qiepin);
     if args.jyutping {
         // 粤语 bigram：`assets/lexicon/jyutping-{unigram,bigram}.tsv`；没有就按一元词频
         let unigram = args::default_data_file("jyutping-unigram.tsv");
@@ -246,6 +247,8 @@ fn build_engine(args: &Args) -> Result<Engine, CliError> {
             args::default_data_file("shanggu.tsv")
         } else if args.xina {
             args::default_data_file("xina.tsv")
+        } else if args.xina_qiepin {
+            args::default_data_file("xina-qiepin.tsv")
         } else {
             args::default_data_file("dict.tsv")
         }

@@ -831,3 +831,7 @@ Xina 拼音（`core/src/xina/`）：Rime `xinapinin2` 的带调罗马字，420 �
 它同样走 `query_romanized`；`Engine::set_xina` 打开后 `display_reading` 把 `ling@` 显示成 `líng`。
 Android 在 QWERTY 的拼音方案里选「Xina 拼音（带声调）」，组句时数字 1-5 映射成 `!@#$%`，
 符号面板的 `!@#$%` 也逐字符进引擎。
+
+Xina 切拼（`core/src/xina_qiepin/`）：`常用字表_Xina切拼.xlsx` 的 27k 条单字中古音，
+`tools/build-xina-qiepin.py` 转成 `assets/lexicon/xina-qiepin.tsv` 与 3,735 个音节
+（`data/xina-qiepin-syllables.txt`）；同样是罗马字管线，`Engine::set_xina_qiepin` 打开。

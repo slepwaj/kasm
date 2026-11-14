@@ -66,7 +66,7 @@ class PracticeActivity : PageActivity() {
     /** 注音跟随键盘当前的拼音方案；练习通字时上面显示通字，练全拼时显示拼音。 */
     private val annotationScheme by lazy {
         when (Settings.load(this).romanization) {
-            "tungdzih", "tupa", "shanggu", "unt", "gcr", "jyutping", "xina" ->
+            "tungdzih", "tupa", "shanggu", "unt", "gcr", "jyutping", "xina", "xina-qiepin" ->
                 Settings.load(this).romanization
             else -> "pinyin"
         }
@@ -429,7 +429,7 @@ class PracticeActivity : PageActivity() {
     /** 粤拼用粤语语料；上古音 / 中古音等用文言文；全拼 / 通字用现代文。 */
     private fun preferredCorpus(): String = when (annotationScheme) {
         "jyutping" -> "cantonese"
-        "tupa", "shanggu", "unt", "gcr" -> "classical"
+        "tupa", "shanggu", "unt", "gcr", "xina-qiepin" -> "classical"
         else -> "modern"
     }
 
@@ -456,6 +456,7 @@ class PracticeActivity : PageActivity() {
             "gcr" -> R.string.practice_scheme_gcr
             "jyutping" -> R.string.practice_scheme_jyutping
             "xina" -> R.string.practice_scheme_xina
+            "xina-qiepin" -> R.string.practice_scheme_xina_qiepin
             else -> R.string.practice_scheme_pinyin
         },
     )
@@ -515,6 +516,7 @@ class PracticeActivity : PageActivity() {
             "gcr",
             "jyutping",
             "xina",
+            "xina-qiepin",
         )
     }
 }

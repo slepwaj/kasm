@@ -50,7 +50,8 @@ impl Session {
     pub fn set_romanization(&mut self, scheme: &str) -> Frame {
         let raw = self.engine.take_raw();
         let name = match scheme {
-            "jyutping" | "tungdzih" | "tupa" | "shanggu" | "unt" | "gcr" | "xina" => scheme,
+            "jyutping" | "tungdzih" | "tupa" | "shanggu" | "unt" | "gcr" | "xina"
+            | "xina-qiepin" => scheme,
             _ => "",
         };
         let path = if name.is_empty() {
@@ -72,6 +73,7 @@ impl Session {
         self.engine.set_unt(name == "unt");
         self.engine.set_gcr(name == "gcr");
         self.engine.set_xina(name == "xina");
+        self.engine.set_xina_qiepin(name == "xina-qiepin");
         if !name.is_empty() {
             // 这几套方案与双拼 / 五笔互斥，否则两边都出候选
             self.engine.set_shuangpin(None);

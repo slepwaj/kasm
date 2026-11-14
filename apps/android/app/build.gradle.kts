@@ -131,7 +131,7 @@ val stageData by tasks.registering(Sync::class) {
     }
     // 粤拼 / 通字 / tupa / 上古音：安卓的「拼音方案」选择用
     from(repoRoot.resolve("assets/lexicon")) {
-        include("jyutping.tsv", "tungdzih.tsv", "tupa.tsv", "shanggu.tsv", "unt.tsv", "gcr.tsv", "xina.tsv")
+        include("jyutping.tsv", "tungdzih.tsv", "tupa.tsv", "shanggu.tsv", "unt.tsv", "gcr.tsv", "xina.tsv", "xina-qiepin.tsv")
         into("lexicon")
     }
     // 词汇等级表（英语 CEFR、日语 JLPT），生词本按级筛与统计页按级分用

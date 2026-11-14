@@ -72,6 +72,7 @@
     <string name="practice_scheme_gcr">中文通用羅馬字</string>
     <string name="practice_scheme_jyutping">粤拼</string>
     <string name="practice_scheme_xina">Xina 拼音</string>
+    <string name="practice_scheme_xina_qiepin">Xina 切拼</string>
     <string name="practice_input_hint">在这里跟着上文打字</string>
     <string name="practice_time">用时</string>
     <string name="practice_speed">速度</string>
@@ -112,7 +113,7 @@
     <string name="layout_shuangpin">双拼</string>
     <string name="section_romanization">拼音方案</string>
     <string name="romanization_scheme">方案</string>
-    <string name="romanization_note">全拼、粤拼、通字、tupa、上古音、Xina 拼音；选了这几套会暂时让开双拼与五笔。</string>
+    <string name="romanization_note">全拼、粤拼、通字、tupa、上古音、Xina 拼音、Xina 切拼；选了这几套会暂时让开双拼与五笔。</string>
     <string name="layout_wubi">五笔（86 版）</string>
     <string name="layout_ipa">IPA 音标</string>
     <string name="layout_unt">unt 方案</string>

@@ -369,6 +369,9 @@ pub struct Engine {
     /// Xina 拼音（`[general] scheme = "xina"`）：Rime xinapinin2 的带调罗马字，走同一条罗马字管线。
     xina: bool,
 
+    /// Xina 切拼（`[general] scheme = "xina-qiepin"`）：中古音单字表，走同一条罗马字管线。
+    xina_qiepin: bool,
+
     /// emoji 表，没有就不出 emoji 候选。
     emoji: Option<EmojiTable>,
 
@@ -623,6 +626,7 @@ impl Engine {
             unt: false,
             gcr: false,
             xina: false,
+            xina_qiepin: false,
             emoji: None,
             emoji_limit: EMOJI_TOTAL,
             kaomoji: None,

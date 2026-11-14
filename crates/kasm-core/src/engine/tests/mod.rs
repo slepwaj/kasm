@@ -32,6 +32,7 @@ mod traditional;
 mod traditional_script;
 mod tungdzih;
 mod xina;
+mod xina_qiepin;
 mod umlaut;
 mod vocabulary;
 mod voice;

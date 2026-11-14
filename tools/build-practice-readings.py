@@ -31,6 +31,7 @@ SCHEMES = {
     "gcr": "gcr.tsv",
     "jyutping": "jyutping.tsv",
     "xina": "xina.tsv",
+    "xina-qiepin": "xina-qiepin.tsv",
 }
 
 

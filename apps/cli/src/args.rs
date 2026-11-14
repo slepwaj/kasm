@@ -157,6 +157,10 @@ pub struct Args {
     #[arg(long)]
     pub xina: bool,
 
+    /// Xina 切拼（中古音）：`常用字表_Xina切拼.xlsx`；不给 `--dict` 时用 `assets/lexicon/xina-qiepin.tsv`
+    #[arg(long)]
+    pub xina_qiepin: bool,
+
     /// 形码：码表 TSV（`词\t编码\t词频`，按 86 五笔记日志、按键规则全关）或方案目录（`scheme.toml` + 码表）。
     /// 给了就开着形码；`--wubi` 是旧写法
     #[arg(long, alias = "wubi", value_name = "码表或方案目录")]
