@@ -87,8 +87,8 @@
 ### Xina 拼音（xina.tsv）
 
 来自用户提供的《Xina传统派普通话拼音方案》（`tools/source/xina/Xina拼音.docx`）；
-`tools/build-xina.py` 把普通话词库的拼音转成无调 Xina 拼式，音节表在
-`crates/kasm-core/data/xina-syllables.txt`。
+`tools/build-xina.py` 把普通话词库的拼音转成 Xina 拼式，并生成带 `!@#$%` 的声调变体；
+音节表在 `crates/kasm-core/data/xina-syllables.txt`。
 
 ### Xina 切拼（xina-qiepin.tsv）
 

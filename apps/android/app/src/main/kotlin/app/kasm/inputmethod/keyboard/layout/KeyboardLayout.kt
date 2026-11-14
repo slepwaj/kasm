@@ -74,6 +74,27 @@ object KeyboardLayout {
     }
 
     /**
+     * Xina 拼音：全键盘上方多一排声调键，键面写数字与调名，按下传 `!@#$%`。
+     */
+    fun xina(chinese: Boolean, fullWidth: Boolean = true): List<List<Key>> {
+        if (!chinese) return qwerty(false, fullWidth = fullWidth)
+        val tones = listOf(
+            Key.Text("!", 2f, label = "1 阴平"),
+            Key.Text("@", 2f, label = "2 阳平"),
+            Key.Text("#", 2f, label = "3 上声"),
+            Key.Text("$", 2f, label = "4 去声"),
+            Key.Text("%", 2f, label = "5 轻声"),
+        )
+        return listOf(
+            tones,
+            letters("qwertyuiop", TOP_HINTS),
+            letters("asdfghjkl", MIDDLE_HINTS_ZH),
+            listOf(Key.Shift) + letters("zxcvbnm", BOTTOM_HINTS) + Key.Backspace,
+            lettersBottom(chinese, fullWidth),
+        )
+    }
+
+    /**
      * 注音大千：四排注音照电脑大千键位排，首排 11 个键（含声调）略窄，
      * 末排右边是删除；底排与拼音全键盘一样。空格是一声（还缺声调时）。
      */

@@ -153,6 +153,24 @@ impl Engine {
         }
         let rank = start.elapsed();
 
+        let typed_display = if self.xina {
+            Some(
+                segmentations
+                    .first()
+                    .map(|segmentation| {
+                        segmentation
+                            .syllables
+                            .iter()
+                            .map(|syllable| crate::xina::display_reading(&syllable.text))
+                            .collect::<Vec<_>>()
+                            .join("'")
+                    })
+                    .unwrap_or_else(|| crate::xina::display_reading(keys)),
+            )
+        } else {
+            None
+        };
+
         Ok(Query {
             segmentations,
             spelled: 0,
@@ -165,7 +183,7 @@ impl Engine {
             decoded_keys: false,
             shuangpin_raw_preedit: false,
             shuangpin_raw_window: false,
-            typed_display: None,
+            typed_display,
             typed_case: None,
             pinyin_choices: Vec::new(),
             correction: None,

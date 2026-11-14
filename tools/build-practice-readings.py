@@ -9,6 +9,7 @@
 
 from pathlib import Path
 
+import importlib.util
 import re
 
 from opencc import OpenCC
@@ -24,6 +25,7 @@ CORPORA = {
     "tungdzih": ROOT / "tools/source/practice/tungdzih-annotated.txt",
 }
 OUT = ROOT / "assets/practice/readings.tsv"
+TONES = ROOT / "crates/kasm-core/data/tones.tsv"
 SCHEMES = {
     "pinyin": "dict.tsv",
     "tungdzih": "tungdzih.tsv",
@@ -36,6 +38,79 @@ SCHEMES = {
     "xina-qiepin": "xina-qiepin.tsv",
     "wugniu": "wugniu.tsv",
 }
+
+
+def load_xina_converter():
+    spec = importlib.util.spec_from_file_location("build_xina", ROOT / "tools/build-xina.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.xina
+
+
+def load_tones():
+    table = {}
+    for line in TONES.read_text(encoding="utf-8").splitlines():
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        readings = []
+        for item in parts[1].split():
+            if item and item[-1].isdigit():
+                readings.append((item[:-1], int(item[-1])))
+        table[parts[0][0]] = readings
+    return table
+
+
+XINA = load_xina_converter()
+TONES = load_tones()
+XINA_TONE = {}
+for _char, _readings in TONES.items():
+    forms = {}
+    for _syllable, _tone in _readings:
+        forms.setdefault(XINA(_syllable), _tone)
+    XINA_TONE[_char] = forms
+
+TONE_MARKS = {
+    "a": ("a", "á", "ǎ", "à", "ạ"),
+    "e": ("e", "é", "ě", "è", "ẹ"),
+    "i": ("i", "í", "ǐ", "ì", "ị"),
+    "o": ("o", "ó", "ǒ", "ò", "ọ"),
+    "u": ("u", "ú", "ǔ", "ù", "ụ"),
+}
+
+
+def mark_xina(reading: str, char: str) -> str:
+    tone = XINA_TONE.get(char, {}).get(reading)
+    if not tone:
+        return reading
+    for index, character in enumerate(reading):
+        if character in TONE_MARKS:
+            marked = TONE_MARKS[character][tone - 1]
+            return reading[:index] + marked + reading[index + 1 :]
+    return reading
+
+    words: dict[str, tuple[str, int]] = {}
+    chars: dict[str, tuple[str, int]] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line or line.startswith("#"):
+            continue
+        fields = line.split("\t")
+        if len(fields) < 3:
+            continue
+        text, reading = fields[0], fields[1]
+        if strip_tones:
+            reading = re.sub(r"[0-5]", "", reading)
+        try:
+            frequency = int(fields[2])
+        except ValueError:
+            continue
+        target = chars if len(text) == 1 else words
+        previous = target.get(text)
+        if previous is None or frequency > previous[1]:
+            target[text] = (reading, frequency)
+    return words, chars
 
 
 def load_dictionary(path: Path, strip_tones: bool = False):
@@ -183,6 +258,11 @@ def main():
                         )
                     if len(readings) != len(simplified):
                         raise ValueError(f"注音长度不符：{scheme} {source}")
+                    if scheme == "xina":
+                        readings = [
+                            mark_xina(reading, char)
+                            for reading, char in zip(readings, simplified)
+                        ]
                     output.write("\t" + "|".join(readings))
                 output.write("\n")
     print("corpora", {name: len(lines) for name, lines in corpora.items()}, "wrote", OUT)

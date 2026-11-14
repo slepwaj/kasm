@@ -153,9 +153,13 @@ data class Settings(
             val savedLayout = Layout.entries.firstOrNull { it.name == prefs.getString(KEY_LAYOUT, null) }
                 ?: Layout.QWERTY
             val savedRomanization = prefs.getString(KEY_ROMANIZATION, null) ?: ""
-            // 旧版 Xina 曾是独立键盘；现在回到全键盘的拼音方案。
-            val layout = if (savedLayout == Layout.XINA) Layout.QWERTY else savedLayout
-            val romanization = if (savedLayout == Layout.XINA) "xina" else savedRomanization
+            // Xina 现在是独立键盘；旧的「全键盘 + xina」配置自动迁过去。
+            val layout = if (savedLayout == Layout.QWERTY && savedRomanization == "xina") {
+                Layout.XINA
+            } else {
+                savedLayout
+            }
+            val romanization = if (layout == Layout.XINA) "xina" else savedRomanization
             return Settings(
                 layout = layout,
                 heightPercent = prefs.getInt(KEY_HEIGHT, 100).coerceIn(HEIGHT_MIN, HEIGHT_MAX),

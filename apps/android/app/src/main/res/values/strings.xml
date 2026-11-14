@@ -120,6 +120,8 @@
     <string name="layout_ipa">IPA 音标</string>
     <string name="layout_unt">unt 方案</string>
     <string name="layout_gcr">中文通用羅馬字</string>
+    <string name="layout_xina">Xina 拼音（带声调）</string>
+    <string name="layout_xina_note">顶排五个键是阴平、阳平、上声、去声、轻声；候选和输入框显示符号声调。</string>
     <string name="layout_nine_note">九宫格左边一列点一下可以定下拼音；英文都用全键盘</string>
     <string name="section_shuangpin">双拼</string>
     <string name="shuangpin_scheme">双拼方案</string>

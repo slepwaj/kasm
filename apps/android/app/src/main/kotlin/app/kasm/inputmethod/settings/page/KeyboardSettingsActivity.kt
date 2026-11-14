@@ -21,6 +21,11 @@ class KeyboardSettingsActivity : PageActivity() {
 
     override fun content(): List<View> {
         val settings = Settings.load(this)
+        val layoutExtra = if (settings.layout == Settings.Layout.XINA) {
+            arrayOf<View>(ui.note(R.string.layout_xina_note))
+        } else {
+            emptyArray()
+        }
         return listOf(
             ui.sectionTitle(R.string.section_layout),
             ui.card(
@@ -48,7 +53,11 @@ class KeyboardSettingsActivity : PageActivity() {
                 ui.choice(R.string.layout_gcr, settings.layout == Settings.Layout.GCR) {
                     setLayout(Settings.Layout.GCR)
                 },
+                ui.choice(R.string.layout_xina, settings.layout == Settings.Layout.XINA) {
+                    setLayout(Settings.Layout.XINA)
+                },
                 ui.note(R.string.layout_nine_note),
+                *layoutExtra,
             ),
             *schemeOptions(settings),
             ui.sectionTitle(R.string.section_learning),
@@ -345,8 +354,8 @@ class KeyboardSettingsActivity : PageActivity() {
     /** 选了双拼才有方案与 preedit 写法，选了五笔才有混输；全键盘可以选粤拼 / 通字 / tupa / 上古音。 */
     private fun schemeOptions(settings: Settings): Array<View> = when (settings.layout) {
         Settings.Layout.QWERTY -> {
-            val keys = listOf("", "jyutping", "tungdzih", "tupa", "shanggu", "xina", "xina-qiepin", "wugniu")
-            val labels = listOf("全拼", "粤拼（Jyutping）", "通字", "tupa（中古音）", "上古音", "Xina 拼音", "Xina 切拼（中古音）", "吴语（苏州）")
+            val keys = listOf("", "jyutping", "tungdzih", "tupa", "shanggu", "xina-qiepin", "wugniu")
+            val labels = listOf("全拼", "粤拼（Jyutping）", "通字", "tupa（中古音）", "上古音", "Xina 切拼（中古音）", "吴语（苏州）")
             val selected = keys.indexOf(settings.romanization).coerceAtLeast(0)
             arrayOf(
                 ui.sectionTitle(R.string.section_romanization),
@@ -406,6 +415,9 @@ class KeyboardSettingsActivity : PageActivity() {
 
     private fun setLayout(layout: Settings.Layout) {
         prefs.edit().putString(Settings.KEY_LAYOUT, layout.name).apply()
+        if (layout == Settings.Layout.XINA) {
+            prefs.edit().putString(Settings.KEY_ROMANIZATION, "xina").apply()
+        }
         rebuild()
     }
 }

@@ -461,6 +461,7 @@ class Composer(private val engine: Engine, private val host: Host) {
         val wantedRomanization = when (layout) {
             Settings.Layout.UNT -> "unt"
             Settings.Layout.GCR -> "gcr"
+            Settings.Layout.XINA -> "xina"
             Settings.Layout.QWERTY -> romanization
             else -> ""
         }
@@ -476,9 +477,9 @@ class Composer(private val engine: Engine, private val host: Host) {
     private val compositionScheme: Boolean
         get() = layout == Settings.Layout.UNT || layout == Settings.Layout.GCR
 
-    /** Xina 拼音：走拼音方案，不再是独立键盘。 */
+    /** Xina 拼音：独立键盘，五个声调键 !@#$%。 */
     private val xina: Boolean
-        get() = romanization == "xina"
+        get() = layout == Settings.Layout.XINA || romanization == "xina"
 
     /**
      * 回车、挪光标时把组句落下：拼音原样落下敲的字母。
