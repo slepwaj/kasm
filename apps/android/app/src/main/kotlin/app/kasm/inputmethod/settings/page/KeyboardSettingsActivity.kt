@@ -426,9 +426,12 @@ class KeyboardSettingsActivity : PageActivity() {
     }
 
     private fun setLayout(layout: Settings.Layout) {
+        val leavingXina = Settings.load(this).layout == Settings.Layout.XINA && layout != Settings.Layout.XINA
         prefs.edit().putString(Settings.KEY_LAYOUT, layout.name).apply()
         if (layout == Settings.Layout.XINA) {
             prefs.edit().putString(Settings.KEY_ROMANIZATION, "xina").apply()
+        } else if (leavingXina) {
+            prefs.edit().putString(Settings.KEY_ROMANIZATION, "").apply()
         }
         rebuild()
     }

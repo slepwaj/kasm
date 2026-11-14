@@ -409,7 +409,14 @@ class KasmInputMethodService :
     override fun chooseLayout(layout: Settings.Layout) {
         closePanel()
         composer.chooseLanguage(Language.CHINESE)
-        Settings.preferences(this).edit().putString(Settings.KEY_LAYOUT, layout.name).apply()
+        val prefs = Settings.preferences(this)
+        val current = Settings.load(this)
+        prefs.edit().putString(Settings.KEY_LAYOUT, layout.name).apply()
+        if (layout == Settings.Layout.XINA) {
+            prefs.edit().putString(Settings.KEY_ROMANIZATION, "xina").apply()
+        } else if (current.layout == Settings.Layout.XINA) {
+            prefs.edit().putString(Settings.KEY_ROMANIZATION, "").apply()
+        }
     }
 
     override fun chooseEnglish() {
