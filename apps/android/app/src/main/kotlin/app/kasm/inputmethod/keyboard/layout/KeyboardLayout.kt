@@ -351,43 +351,46 @@ object KeyboardLayout {
      * 组合符 `̀ ́ ̥ ̧ ̱` 的键面画在示例字母上，键值只送组合符。
      */
     fun gcr(): List<List<Key>> {
-        fun key(main: String, hint: String = "", alternate: String? = null) =
-            Key.Text(main, hint = hint, alternates = listOfNotNull(alternate))
+        fun key(main: String, vararg alternates: String) = Key.Text(
+            main,
+            hint = alternates.firstOrNull().orEmpty(),
+            alternates = alternates.toList(),
+        )
         return listOf(
             listOf(
-                key("i", "ɏ", "ɏ"),
-                key("u", "w", "w"),
-                key("k", "g", "g"),
-                key("o", "œ", "œ"),
-                key("e"),
+                key("i", "ɨ", "ị", "ɏ"),
+                key("u"),
+                key("k"),
+                key("o", "œ", "ȝ"),
+                key("e", "ę"),
                 key("ŋ"),
-                key("h", "r", "r"),
-                key("n", "ņ", "ņ"),
-                key("j", "ʒ", "ʒ"),
-                key("a", "ḁ", "ḁ"),
+                key("h"),
+                key("n", "ņ"),
+                key("j", "ʒ"),
+                key("a", "ḁ"),
             ),
             listOf(
-                key("ꝩ", "v", "v"),
-                key("t", "ţ", "ţ"),
-                key("m", "ḑ", "ḑ"),
-                key("y", "ỵ", "ỵ"),
+                key("ꝩ"),
+                key("t", "ţ"),
+                key("m", "ḑ"),
+                key("y", "ỵ"),
                 key("p"),
-                key("l", "f", "f"),
+                key("l"),
                 key("q"),
-                key("c"),
-                key("ç"),
-                key("ȝ", "z", "z"),
+                key("c", "ç"),
+                key("w"),
+                key("f"),
             ),
             listOf(
-                key("ị"),
+                key("g"),
                 key("d"),
-                key("ę"),
+                key("v"),
                 key("s"),
                 key("x"),
                 key("ə"),
                 key("ş"),
                 key("æ"),
-                key("ɨ"),
+                key("r"),
                 key("b"),
             ),
             listOf(
