@@ -139,6 +139,9 @@ class Composer(private val engine: Engine, private val host: Host) {
     var ipaRounded: Boolean = false
     var ipaDiacritic: Int = 0
 
+    /** 上一个键是不是 GCR 声调键；再按声调键时先撤掉旧声调。 */
+    private var gcrTone: Char? = null
+
     /** 模糊音、中文标点全半角、打拼音时给不给英文词（键盘设置里的，交给 Core）；引擎没装好时先记着。 */
     var options = InputOptions()
         set(value) {
@@ -183,6 +186,7 @@ class Composer(private val engine: Engine, private val host: Host) {
     }
 
     fun onKey(key: Key) {
+        if (key !is Key.GcrTone) gcrTone = null
         when (key) {
             is Key.Letter -> when {
                 // 英文的大小写跟着敲的走（`Compa` 出 Company），验证码这类大小写混着的串也在组句里敲
@@ -209,6 +213,14 @@ class Composer(private val engine: Engine, private val host: Host) {
 
             is Key.Zhuyin -> {
                 if (engine.ready && !directInput) apply(engine.push(key.code.code))
+            }
+
+            is Key.GcrTone -> {
+                if (engine.ready && chinese && compositionScheme) {
+                    if (gcrTone != null) apply(engine.backspace())
+                    apply(engine.push(key.tone.code))
+                    gcrTone = key.tone
+                }
             }
 
             is Key.Text -> {
