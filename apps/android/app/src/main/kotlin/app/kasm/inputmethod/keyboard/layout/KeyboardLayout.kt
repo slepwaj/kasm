@@ -204,7 +204,7 @@ object KeyboardLayout {
         diacritic: Int,
     ): List<List<Key>> {
         fun symbols(values: List<String>, per: Int = 10): List<List<Key>> =
-            values.chunked(per).map { row -> row.map { Key.Text(it) } }
+            values.chunked(per).map { row -> row.map(::ipaKey) }
 
         val modes = listOf(
             Key.IpaAction("mode:0", if (mode == 0) "·肺" else "肺", 1.4f),
@@ -240,7 +240,7 @@ object KeyboardLayout {
                 rows += IPA_DIACRITICS[diacritic].chunked(8).map { row ->
                     row.map { value ->
                         val mark = value.replace("◌", "").replace("CGJ", "\u034F")
-                        Key.Text(mark, label = "a$mark")
+                        Key.Text(mark, label = "a${ipaDisplayText(mark)}")
                     }
                 }
             }
@@ -256,6 +256,37 @@ object KeyboardLayout {
     }
 
     private val IPA_MANNERS = listOf("鼻", "塞", "咝", "非咝", "近", "闪", "颤", "边擦", "边近", "边闪")
+
+    /**
+     * TIPA 和 Android 自带字体都没有 Latin Extended-G 里那批新字母，也没有全部组合符；
+     * 键值仍送原始 Unicode，键面换成一个能显示的近义符号，避免出现空白键。
+     */
+    private val IPA_DISPLAY = mapOf<String, String>(
+        "ꞎ" to "ɬ", "𝼆" to "ʟ", "𝼄" to "ʎ", "𝼅" to "ʟ", "𝼈" to "ɭ", "𝼊" to "ʡ",
+        "ǀ" to "|", "ǁ" to "||", "ǂ" to "‡", "ǃ" to "!",
+        "̪" to "", "̝" to "", "̮" to "", "̆" to "", "̊" to "", "̥" to "", "̠" to "",
+        "̟" to "", "̩" to "", "̯" to "", "̺" to "", "̻" to "", "̼" to "", "̽" to "",
+        "̾" to "", "̿" to "", "̃" to "", "ʰ" to "h", "ʲ" to "j", "ʷ" to "w",
+        "ˠ" to "ɣ", "ˤ" to "ʕ", "ˈ" to "'", "ˌ" to ",", "ˑ" to "·",
+        "˥" to "5", "˦" to "4", "˧" to "3", "˨" to "2", "˩" to "1",
+    )
+
+    private fun ipaDisplayText(value: String): String {
+        val out = StringBuilder()
+        var index = 0
+        while (index < value.length) {
+            val codePoint = value.codePointAt(index)
+            val piece = String(Character.toChars(codePoint))
+            out.append(IPA_DISPLAY[piece] ?: piece)
+            index += Character.charCount(codePoint)
+        }
+        return out.toString().ifEmpty { "?" }
+    }
+
+    private fun ipaKey(value: String): Key.Text {
+        val display = ipaDisplayText(value)
+        return if (display == value) Key.Text(value) else Key.Text(value, label = display)
+    }
 
     private val IPA_PULMONIC: List<Pair<List<String>, List<String>>> = listOf(
         listOf(
