@@ -25,3 +25,19 @@ pub fn is_syllable_prefix(text: &str) -> bool {
 pub fn segment(input: &str) -> Result<Vec<Segmentation>, ParseError> {
     TABLE.segment(input)
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn query_tone_suffix_candidate() {
+        let dictionary = kasm_dictionary::Dictionary::parse("已\tjiq\t1000000\n").unwrap();
+        let mut engine = crate::Engine::new(dictionary);
+        engine.set_gcr(true);
+        for ch in "jiq".chars() {
+            engine.push(ch);
+        }
+        let query = engine.query().unwrap();
+        assert_eq!(query.candidates.items[0].text, "已");
+        assert_eq!(query.candidates.items[0].reading.as_deref(), Some("jiq"));
+    }
+}

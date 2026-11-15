@@ -394,13 +394,13 @@ object KeyboardLayout {
                 key("b"),
             ),
             listOf(
-                Key.Text("á"),
+                Key.Text("q", label = "á"),
                 Key.Text("\u0300", label = "\u25CC\u0300"),
                 Key.Text("\u0301", label = "\u25CC\u0301"),
                 Key.Text("\u0325", label = "\u25CC\u0325"),
                 Key.Text("\u0327", label = "\u25CC\u0327"),
                 Key.Text("\u0331", label = "\u25CC\u0331"),
-                Key.Text("à"),
+                Key.Text("h", label = "à"),
             ),
             listOf<Key>(
                 Key.Letters("ABC", 1.7f),
