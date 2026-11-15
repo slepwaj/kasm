@@ -394,19 +394,19 @@ object KeyboardLayout {
                 key("b"),
             ),
             listOf(
-                Key.Text("\u0300", label = "a\u0300"),
-                Key.Text("\u0301", label = "a\u0301"),
-                Key.Text("\u0325", label = "a\u0325"),
-                Key.Text("\u0327", label = "a\u0327"),
-                Key.Text("\u0331", label = "a\u0331"),
+                Key.Text("á"),
+                Key.Text("\u0300", label = "\u25CC\u0300"),
+                Key.Text("\u0301", label = "\u25CC\u0301"),
+                Key.Text("\u0325", label = "\u25CC\u0325"),
+                Key.Text("\u0327", label = "\u25CC\u0327"),
+                Key.Text("\u0331", label = "\u25CC\u0331"),
+                Key.Text("à"),
             ),
             listOf<Key>(
-                Key.Text("á", 1.3f),
                 Key.Letters("ABC", 1.7f),
                 Key.Backspace,
-                Key.Space(3f),
+                Key.Space(4f),
                 Key.Enter(),
-                Key.Text("à", 1.3f),
             ),
         )
     }
