@@ -29,6 +29,8 @@ class Palette(
     val fresh: Int,
     /** 云联想的词与整句（主题的 `cloud`）。 */
     val cloud: Int,
+    /** 玻璃材质：键盘底色用渐变、键面不画投影。 */
+    val glass: Boolean,
 ) {
     companion object {
         /** 推过的配色，按（主题, 深浅）记着：键盘每次重建都要取，不必每次过 JNI。 */
@@ -42,10 +44,10 @@ class Palette(
 
         /** 主题 [theme] 在 [dark] 外观下的配色。 */
         fun of(theme: String, dark: Boolean): Palette = cache.getOrPut(theme to dark) {
-            parse(JSONObject(Native.keyboardPalette(theme, dark) ?: error("推不出键盘配色：$theme")))
+            parse(JSONObject(Native.keyboardPalette(theme, dark) ?: error("推不出键盘配色：$theme")), theme)
         }
 
-        private fun parse(json: JSONObject): Palette {
+        private fun parse(json: JSONObject, theme: String): Palette {
             fun color(name: String) = json.getLong(name).toInt()
             return Palette(
                 dark = json.getBoolean("dark"),
@@ -61,6 +63,7 @@ class Palette(
                 faint = color("faint"),
                 fresh = color("fresh"),
                 cloud = color("cloud"),
+                glass = theme == "glass" || theme == "mos-glass",
             )
         }
     }

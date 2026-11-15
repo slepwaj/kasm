@@ -51,13 +51,13 @@ mod tests {
     fn lists_every_builtin_theme_with_the_default_first() {
         let themes = themes();
         assert_eq!(themes.len(), Theme::builtins().len());
-        assert_eq!(themes[0].id, "kasm");
+        assert_eq!(themes[0].id, "mos-glass");
         assert!(themes.iter().any(|theme| theme.id == "sakura"));
     }
 
     #[test]
     fn unknown_theme_falls_back_to_the_default() {
-        assert_eq!(theme("nope", false).id(), "kasm");
+        assert_eq!(theme("nope", false).id(), "mos-glass");
         assert_eq!(theme("wechat", true).id(), "wechat");
     }
 

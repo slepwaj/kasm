@@ -167,7 +167,7 @@ mod tests {
         assert_eq!(ids.len(), builtin + 1);
         assert_eq!(ids[builtin], "peach");
         assert_eq!(library.resolve("peach", true).id(), "peach");
-        assert_eq!(library.resolve("nope", false).id(), "kasm");
+        assert_eq!(library.resolve("nope", false).id(), "mos-glass");
         assert!(!library.refresh());
 
         write_theme(&dir, "maple", "maple");

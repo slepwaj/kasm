@@ -174,7 +174,21 @@ class KeyboardView(
     val baseHeight: Float get() = metrics.baseHeight
 
     init {
-        setBackgroundColor(palette.board)
+        if (palette.glass) {
+            val radius = 24f * resources.displayMetrics.density
+            background = android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                if (palette.dark) {
+                    intArrayOf(0xFF18211F.toInt(), 0xFF1D222C.toInt(), 0xFF251F2B.toInt(), 0xFF192321.toInt())
+                } else {
+                    intArrayOf(0xFFEAF7F1.toInt(), 0xFFE9F0FB.toInt(), 0xFFF8EAF5.toInt(), 0xFFE7F7F2.toInt())
+                },
+            ).apply {
+                cornerRadii = floatArrayOf(radius, radius, radius, radius, 0f, 0f, 0f, 0f)
+            }
+        } else {
+            setBackgroundColor(palette.board)
+        }
     }
 
     fun setRows(rows: List<List<Key>>, side: Boolean = false) {

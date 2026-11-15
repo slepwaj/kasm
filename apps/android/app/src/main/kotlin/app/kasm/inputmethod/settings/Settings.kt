@@ -139,7 +139,7 @@ data class Settings(
         const val KEY_TOOLBAR = "toolbar"
 
         /** 没选过时的主题，同 PC 的缺省主题。 */
-        const val DEFAULT_THEME = "kasm"
+        const val DEFAULT_THEME = "mos-glass"
 
         /** 导入或删了词库就改它，键盘重建时交设置、会话按文件重挂。 */
         const val KEY_DICTIONARIES_STAMP = "dictionaries_stamp"

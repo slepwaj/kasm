@@ -6,7 +6,7 @@
 ## 主题文件
 
 - 一个主题一个目录：`theme.json`，加上它引用的 `images/…`（PNG、SVG）与 `fonts/…`（TTF / OTF / TTC）。包内路径一律相对 `theme.json`，拒绝 `..` 与绝对路径。
-- 内置主题八个，随 crate 编进来（`crates/kasm-render/themes/<id>/theme.json`）：`kasm` KASM绿（缺省）、`system-blue` 系统蓝、`wechat` 微信绿、`glass` 玻璃、`sakura` 樱花、`dafeiyu` 大肥鱼、`miku` 初音未来、`bocchi` 波奇酱；系统蓝、微信绿 `extends` KASM绿、只改颜色变量，玻璃 `extends` KASM绿、改了窗口与高亮组件并写了 `material`（照 macOS 26 自带简体拼音的胶囊条），后四个整套重写了窗口、组件与状态条（只有浅色）。
+- 内置主题九个，随 crate 编进来（`crates/kasm-render/themes/<id>/theme.json`）：`mos-glass` 琉璃玻璃（缺省，玻璃底 + 白键 + 绿色回车）、`kasm` KASM绿、`system-blue` 系统蓝、`wechat` 微信绿、`glass` 玻璃、`sakura` 樱花、`dafeiyu` 大肥鱼、`miku` 初音未来、`bocchi` 波奇酱；琉璃玻璃 `extends` 玻璃、KASM绿是底座；系统蓝、微信绿 `extends` KASM绿、只改颜色变量，玻璃 `extends` KASM绿、改了窗口与高亮组件并写了 `material`（照 macOS 26 自带简体拼音的胶囊条），后四个整套重写了窗口、组件与状态条（只有浅色）。
   内置主题的图片用 `include_bytes!` 编进程序（`theme/mod.rs` 的 `BUILTINS` 里每个主题一张「路径 → 内容」表，与用户主题走同一套解码），不带字体文件、只用系统字体；测试检查内置主题用到的图片都编进去了。用户主题 `extends` 内置主题时，主题目录里没有的图片到那个内置主题编进程序的文件里找（只看顶层 `extends` 那一层）。
 - 用户主题放在 `<用户数据目录>/themes/<id>/`，由 `ThemeLibrary` 与内置主题合成一个列表（内置在前、用户按 id 排）。目录名必须等于 `meta.id`，不能与内置主题重名，
   不能是 `system` / `light` / `dark`；读不进来的跳过并记警告。设置界面（mac 偏好设置、Windows 设置程序「候选窗口」页）按显示名列出，写回 `[general] theme` 的 id。
@@ -159,7 +159,7 @@ theme.json + Frame 数据
 - **容错**：加载时检查颜色变量、文字样式、组件引用，找不到的记警告；渲染时颜色退回透明、样式退回 16/19、组件不画。不认识的键直接忽略。
   读不进来的图片不画，读不进来的字体按回退链往后找。正在用的主题整个读不进来时用KASM绿。
 - **热加载**：目录戳（各 `theme.json` 的修改时间与大小）变了就重读。mac 在激活期间每秒的配置检查里 `refresh()`；Windows Server 在热加载轮询里比戳，变了把设置重发给 UI 线程重读。保存后约一秒生效。
-- **配置键**：`[general] appearance` 是外观（system / light / dark），`[general] theme` 是主题 id（缺省 `kasm`）。2026-09-18 之前外观写在 `theme` 里：
+- **配置键**：`[general] appearance` 是外观（system / light / dark），`[general] theme` 是主题 id（缺省 `mos-glass`）。2026-09-18 之前外观写在 `theme` 里：
   没写 `appearance` 且 `theme` 是这三个词之一时按外观读、主题用内置的，所以这三个词不能当主题 id。读取一律走 `GeneralConfig::appearance()` / `theme_id()`。
   Server ↔ DLL 帧协议里的字段在 Rust 里改名为 `appearance`，线上仍叫 `theme`，旧 DLL 照常能解析，协议版本不变。
 - **性能**（2026-09-18，mac、release、2 倍屏、字形缓存已热）：内置主题新帧约 6.6 ms；能力展示主题（九宫格 + 十几处阴影）新帧约 15.5 ms、过渡帧约 7.3 ms、

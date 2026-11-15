@@ -249,7 +249,7 @@ mod tests {
 
     #[test]
     fn kasm_keeps_its_look() {
-        let light = KeyboardColors::of(&Theme::light());
+        let light = KeyboardColors::of(&Theme::builtin("kasm", false).unwrap());
         assert!(!light.dark);
         assert_eq!(light.key, Color::rgb(255, 255, 255));
         // 半透明的高亮叠在白键上

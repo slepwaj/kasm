@@ -35,7 +35,12 @@ use file::{ColorRef, FontRef, LockedAppearance, SCHEMA, ThemeFile};
 type EmbeddedFiles = &'static [(&'static str, &'static [u8])];
 
 /// 内置主题：id、源文件与图片，按设置界面列出的顺序；第一个是缺省主题。
-const BUILTINS: [(&str, &str, EmbeddedFiles); 8] = [
+const BUILTINS: [(&str, &str, EmbeddedFiles); 9] = [
+    (
+        "mos-glass",
+        include_str!("../../themes/mos-glass/theme.json"),
+        &[],
+    ),
     ("kasm", include_str!("../../themes/kasm/theme.json"), &[]),
     (
         "system-blue",
@@ -588,16 +593,16 @@ mod tests {
         }
         assert_eq!(Theme::builtins().len(), BUILTINS.len());
         let theme = Theme::light();
-        assert_eq!(theme.id(), "kasm");
+        assert_eq!(theme.id(), "mos-glass");
         assert!(Theme::builtin("wechat", true).is_some());
         assert!(Theme::builtin("nope", false).is_none());
         assert_eq!(
             theme.color(&ColorRef::Variable("accent".to_owned())),
-            Color::rgba(148, 190, 82, 127)
+            Color::rgb(0x00, 0xb9, 0x6b)
         );
         assert_eq!(
             Theme::dark().color(&ColorRef::Variable("accent".to_owned())),
-            Color::rgb(51, 111, 51)
+            Color::rgb(0x00, 0xc9, 0x7a)
         );
     }
 
@@ -663,7 +668,10 @@ mod tests {
             theme.color(&ColorRef::Variable("accent".to_owned())),
             Color::rgb(255, 0, 0)
         );
-        assert_eq!(theme.font("candidate"), Theme::light().font("candidate"));
+        assert_eq!(
+            theme.font("candidate"),
+            Theme::builtin("kasm", false).unwrap().font("candidate")
+        );
     }
 
     #[test]

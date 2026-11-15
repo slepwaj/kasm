@@ -1,0 +1,40 @@
+{
+  "extends": "glass",
+  "schema": 1,
+  "meta": { "id": "mos-glass", "name": "琉璃玻璃", "author": "KASM", "license": "GPL-3.0-or-later" },
+
+  "variables": {
+    "text": { "light": "#1d1d1f", "dark": "#f5f5f7" },
+    "gloss": { "light": "#1d1d1f99", "dark": "#f5f5f7a6" },
+    "faint": { "light": "#1d1d1f73", "dark": "#f5f5f780" },
+    "dim": { "light": "#1d1d1f2e", "dark": "#f5f5f72e" },
+    "surface": { "light": "#ffffffeb", "dark": "#2b2b2ee6" },
+    "edge": { "light": "#ffffff80", "dark": "#ffffff1f" },
+    "divider": { "light": "#0000001f", "dark": "#ffffff26" },
+    "accent": { "light": "#00b96b", "dark": "#00c97a" },
+    "fresh": { "light": "#ff8d28", "dark": "#ff9230" },
+    "cloud": { "light": "#00a7b5", "dark": "#00c9d6" },
+
+    "hl_text": "#ffffff",
+    "hl_gloss": "#ffffffd9",
+    "hl_faint": "#ffffffcc",
+    "hl_fresh": "#ffe0b2",
+    "hl_cloud": "#ffffff"
+  },
+
+  "material": { "kind": "glass" },
+
+  "keyboard": {
+    "key_font": { "base": "candidate", "size": 13, "weight": "semibold" },
+    "label_font": { "base": "index", "size": 9.5, "line_height": 11 },
+    "root_font": { "base": "candidate", "size": 13 },
+    "key_width": 42, "key_height": 50, "root_key_width": 62, "root_key_height": 66,
+    "gap": 4, "padding": 8, "radius": 18, "key_radius": 10,
+    "background": "@surface", "key_fill": "@surface", "key_text": "@text",
+    "label": "@gloss", "initial": "@fresh",
+    "pressed_fill": "@accent", "pressed_text": "#ffffff",
+    "next_fill": "@accent", "next_text": "#ffffff",
+    "dimmed_text": "@dim",
+    "effects": []
+  }
+}

@@ -155,16 +155,19 @@ class KeyPainter(
         else -> key.label
     }
 
-    /** 带一像素底影的圆角面。 */
+    /** 带一像素底影的圆角面；玻璃材质不要投影，圆角也更大。 */
     private fun drawPlate(canvas: Canvas, bounds: RectF, color: Int) {
-        fill.color = palette.keyShadow
-        canvas.drawRoundRect(
-            bounds.left, bounds.top + metrics.shadowOffset,
-            bounds.right, bounds.bottom + metrics.shadowOffset,
-            metrics.radius, metrics.radius, fill,
-        )
+        val radius = if (palette.glass) 10f * density else metrics.radius
+        if (!palette.glass) {
+            fill.color = palette.keyShadow
+            canvas.drawRoundRect(
+                bounds.left, bounds.top + metrics.shadowOffset,
+                bounds.right, bounds.bottom + metrics.shadowOffset,
+                radius, radius, fill,
+            )
+        }
         fill.color = color
-        canvas.drawRoundRect(bounds, metrics.radius, metrics.radius, fill)
+        canvas.drawRoundRect(bounds, radius, radius, fill)
     }
 
     private fun text(canvas: Canvas, value: String, sp: Float, color: Int, cx: Float, cy: Float) {
