@@ -308,7 +308,7 @@ class KasmInputMethodService :
         )
         keyboard.setKeyTypeface(
             if (composer.chinese && composer.layout in listOf(Settings.Layout.IPA, Settings.Layout.UNT, Settings.Layout.GCR)) {
-                resources.getFont(R.font.tipa)
+                resources.getFont(R.font.doulos)
             } else {
                 null
             },

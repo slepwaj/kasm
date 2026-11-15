@@ -258,17 +258,11 @@ object KeyboardLayout {
     private val IPA_MANNERS = listOf("鼻", "塞", "咝", "非咝", "近", "闪", "颤", "边擦", "边近", "边闪")
 
     /**
-     * TIPA 和 Android 自带字体都没有 Latin Extended-G 里那批新字母，也没有全部组合符；
-     * 键值仍送原始 Unicode，键面换成一个能显示的近义符号，避免出现空白键。
+     * Doulos SIL 覆盖 IPA 与 Latin Extended-G；只有少数组合符没有字形。
+     * 键值仍送原始 Unicode，键面只把这些组合符从显示里去掉。
      */
     private val IPA_DISPLAY = mapOf<String, String>(
-        "ꞎ" to "ɬ", "𝼆" to "ʟ", "𝼄" to "ʎ", "𝼅" to "ʟ", "𝼈" to "ɭ", "𝼊" to "ʡ",
-        "ǀ" to "|", "ǁ" to "||", "ǂ" to "‡", "ǃ" to "!",
-        "̪" to "", "̝" to "", "̮" to "", "̆" to "", "̊" to "", "̥" to "", "̠" to "",
-        "̟" to "", "̩" to "", "̯" to "", "̺" to "", "̻" to "", "̼" to "", "̽" to "",
-        "̾" to "", "̿" to "", "̃" to "", "ʰ" to "h", "ʲ" to "j", "ʷ" to "w",
-        "ˠ" to "ɣ", "ˤ" to "ʕ", "ˈ" to "'", "ˌ" to ",", "ˑ" to "·",
-        "˥" to "5", "˦" to "4", "˧" to "3", "˨" to "2", "˩" to "1",
+        "̀" to "", "́" to "", "͂" to "", "̓" to "", "̈́" to "", "ͅ" to "",
     )
 
     private fun ipaDisplayText(value: String): String {
