@@ -117,6 +117,12 @@ class KeyboardView(
     /** 这一套键位能不能滑行（全键盘拼音与英文键盘，服务按当前键盘设）；还要设置里开着「滑行输入」。 */
     var swipeLayout = false
 
+    /** IPA / unt / 通用羅馬字键盘的键面字体。 */
+    fun setKeyTypeface(typeface: android.graphics.Typeface?) {
+        painter.typeface = typeface
+        invalidate()
+    }
+
     private val swipeOn: Boolean get() = swipeLayout && settings.swipeInput
 
     private val trail = SwipeTrail(palette, resources.displayMetrics.density)

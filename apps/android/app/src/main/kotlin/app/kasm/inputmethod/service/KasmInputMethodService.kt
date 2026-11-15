@@ -306,6 +306,13 @@ class KasmInputMethodService :
         keyboard.swipeLayout = composer.page == Composer.Page.LETTERS && (
             editor?.lettersOnly == true || (!composer.nineKey && !composer.shuangpin && !composer.wubi && !composer.japanese)
         )
+        keyboard.setKeyTypeface(
+            if (composer.chinese && composer.layout in listOf(Settings.Layout.IPA, Settings.Layout.UNT, Settings.Layout.GCR)) {
+                resources.getFont(R.font.tipa)
+            } else {
+                null
+            },
+        )
         when {
             composer.page == Composer.Page.NUMBERS -> keyboard.setRows(KeyboardLayout.numbers(), side = true)
             composer.page == Composer.Page.SYMBOLS -> keyboard.setRows(KeyboardLayout.symbols(composer.chinese, fullWidth))

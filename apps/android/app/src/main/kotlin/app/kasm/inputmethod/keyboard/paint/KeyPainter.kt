@@ -3,6 +3,7 @@ package app.kasm.inputmethod.keyboard.paint
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.Typeface
 import app.kasm.inputmethod.keyboard.ShiftState
 import app.kasm.inputmethod.keyboard.SideColumn
 import app.kasm.inputmethod.keyboard.layout.Key
@@ -22,6 +23,13 @@ class KeyPainter(
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
     private val bubble = RectF()
 
+    /** 符号键盘用 TIPA；普通键盘为 null，走系统字体。 */
+    var typeface: Typeface? = null
+        set(value) {
+            field = value
+            ink.typeface = value
+        }
+
     var shift = ShiftState.OFF
     var chinese = true
 
@@ -33,6 +41,7 @@ class KeyPainter(
     var enterLabel: String? = null
 
     fun drawKey(canvas: Canvas, slot: KeySlot, down: Boolean) {
+        ink.typeface = typeface
         val key = slot.key
         val bounds = slot.bounds
         val brand = key is Key.Enter

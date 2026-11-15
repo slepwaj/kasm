@@ -1,0 +1,1567 @@
+% \iffalse meta-comment
+% 
+% File: tipauni.dtx
+% ---------------------------------------------------------------------------
+% Package:      tipauni
+% Author:       निरंजन
+% Version:      v0.7a (13 February, 2023)
+% Description:  For producing Unicode characters with TIPA commands.
+% Repository:   https://git.gnu.org.ua/tipauni.git
+% Bug tracker:  https://puszcza.gnu.org.ua/bugs/?group=tipauni
+% License:      GPL v3.0+, GFDL v1.3+
+% ---------------------------------------------------------------------------
+% LaTeX Package tipauni v0.7a
+% Copyright © 2021, 2022, 2023 निरंजन
+% 
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program. If not, see <https://www.gnu.org/licenses/>.
+% 
+% The current maintainer of this work is निरंजन.
+% 
+% This work consists of the files tipauni.dtx
+%                                 tipauni.ins
+% and the derived file            tipauni.sty.
+% \fi
+% \iffalse
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+--------------------------------------------------------------------------
+Package:      tipauni
+Author:       निरंजन
+Version:      v0.7a (13 February, 2023)
+Description:  For producing Unicode characters with TIPA commands.
+Repository:   https://git.gnu.org.ua/tipauni.git
+Bug tracker:  https://puszcza.gnu.org.ua/bugs/?group=tipauni
+License:      GPL v3.0+, GFDL v1.3+
+--------------------------------------------------------------------------
+%</readme>
+%<*internal>
+\fi
+%</internal>
+%<*driver|package>
+\def\tipauniname{tipauni}
+\def\tipauniversion{0.7a}
+\def\tipaunidate{2023-02-13}
+\def\tipaunidescription{For producing Unicode characters with TIPA commands}
+%</driver|package>
+%<*driver>
+\documentclass{l3doc}
+\usepackage{gfdl}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[referable]{threeparttablex}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{hologo}
+\DeclareRobustCommand\XeLaTeX{\hologo{XeLaTeX}}
+\usepackage{fontspec}
+\newfontfamily{\ipa}[%
+  % Courtesy: https://topanswers.xyz/tex?q=3042#a3083
+  IgnoreFontspecFile,%
+  Color             = {blue},%
+  StylisticSet      = {5},%
+  Renderer          = {Harfbuzz},%
+  ItalicFont        = {NewCM10-Italic.otf},%
+  BoldFont          = {NewCM10-Bold.otf},%
+  SmallCapsFeatures = {%
+    % Courtesy: https://tex.stackexchange.com/a/107246
+    Numbers         =   {Lining,Monospaced},%
+    Letters         =   {SmallCaps}%
+  }%
+]{NewCM10-Regular.otf}
+\newfontfamily{\devtext}[%
+Script=Devanagari,%
+Renderer=Harfbuzz,%
+Scale=0.8%
+]{Shobhika}
+\setmonofont[%
+  IgnoreFontspecFile,%
+  Renderer          = {Harfbuzz},%
+  StylisticSet      = {5},%
+  ItalicFont        = {NewCMMono10-Italic.otf},%
+  BoldFont          = {NewCMMono10-Bold.otf}%
+]{NewCMMono10-Regular.otf}
+\usepackage{fontawesome5}
+\usepackage{hyperxmp}
+\hypersetup{%
+  unicode,%
+  colorlinks,%
+  urlcolor=blue!60!black,%
+  linkcolor=red!60!black,%
+  citecolor=green!60!black,%
+  pdftitle={The tipauni package},%
+  pdfauthor={निरंजन},%
+  pdfsubject={For producing Unicode characters with TIPA commands.},%
+  pdfcreator={निरंजन},%
+  pdfkeywords={Linguistics, Phonetics, IPA, TIPA, LaTeX}%
+}%
+\renewcommand{\arraystretch}{1.2}
+\gfdlcopyrightholders{%
+  \texorpdfstring
+  {{\devtext निरंजन}}%
+  {निरंजन}%
+}%
+\gfdlcopyrightableyears{2021, 2022, 2023}
+\gfdlcopyrightdescription{%
+  \texorpdfstring
+  {The \LaTeX\ package tipauni}%
+  {The LaTeX package tipauni}%
+}
+
+\begin{document}
+\DocInput{\tipauniname.dtx}
+\end{document}
+%</driver>
+% \fi
+% \title{The \pkg{\tipauniname} package}
+% \author{^^A
+%   {\devtext निरंजन}^^A
+%   \thanks{^^A
+%     \faIcon{envelope}\quad
+%     \href{mailto:hi.niranjan@pm.me}^^A
+%     {\ttfamily hi.niranjan@pm.me}^^A
+%   }^^A
+% }
+% \date^^A
+% {^^A
+%   Version \tipauniversion\ --- \tipaunidate\\[1ex]^^A
+%   {^^A
+%     \small\faIcon{link}\quad
+%     \url{https://ctan.org/pkg/tipauni}^^A
+%   }\\^^A
+%   {^^A
+%     \small\faIcon{bug}\quad
+%     \url{https://puszcza.gnu.org.ua/bugs/?group=tipauni}^^A
+%   }^^A
+% }^^A
+% \maketitle
+%   
+% \tableofcontents
+%
+% \clearpage\pagebreak
+% 
+% \begin{documentation}
+%   \begin{abstract}
+%     This package is the second step for \LaTeX-internally bridging the gap
+%     between the Unicode and the TIPA package. The first step was the package
+%     \href{https://www.ctan.org/pkg/unitipa}{\pkg{unitipa}}. Users can now use
+%     their beloved TIPA shortcuts with the benefits of Unicode i.e.\
+%     searchability, copy-pasting, changing the font and many more. As this
+%     package needs the package \pkg{fontspec} for loading an IPA font, it needs
+%     to be compiled with Lua/\XeLaTeX. This package can also be viewed as an
+%     ASCII-based input method for producing IPA characters in Unicode.
+%   \end{abstract}
+%   
+%   \section{Acknowledgements}
+%   
+%   This package is completed because of the rigorous help by Jairo A.\ del Rio,
+%   Jonathan P.\ Spratte, Phelype Oleinink \textit{\&} Ulrike Fischer. Their
+%   suggestions and contributions are extremely valuable for the development of
+%   this package.
+%   
+%   Jonathan P.\ Spratte has helped the package by building a parser based on
+%   \pkg{expl3}. Phelype Oleinik has helped the package by building a test-suit
+%   for regression-tests. The tests can be seen in the git-repository of the
+%   project.
+%
+%   Lemures Lemniscati pointed a few bugs in the documentation \& the code.
+%   Their details are as follows.
+%   are as follows:
+%   
+%   \begin{description}
+%   \item[2022-01-03]
+%     A typo '\cs{textsh}' in tipauni.dtx.
+%     \href{https://puszcza.gnu.org.ua/bugs/index.php?538}{(link)}
+%   \item[2022-01-09]
+%     Avoid unconditional loading of CharisSIL.
+%     \href{https://puszcza.gnu.org.ua/bugs/index.php?539}{(link)}
+%   \item[2022-01-09]
+%     Fix typos in Input B of Raised and Lowered.
+%     \href{https://puszcza.gnu.org.ua/bugs/index.php?540}{(link)}
+%   \item[2022-01-09]
+%     \cs{textcorner} should be defined by \cs{DeclareTextSymbol}.
+%     \href{https://puszcza.gnu.org.ua/bugs/index.php?541}{(link)}
+%   \item[2022-01-09]
+%     Fix a typo in Input B of Near-close near-front rounded.
+%     \href{https://puszcza.gnu.org.ua/bugs/index.php?542}{(link)}
+%   \item[2023-02-13]
+%     Changed the default font to New Computer Modern instead of Charis SIL.
+%   \end{description}
+%
+%   Anja Hasse pointed a bug in the package with an SE question\footnote{%
+%     URL: \url{https://tex.stackexchange.com/q/662466}%
+%   }. It got fixed in v0.6.1 of the package.
+%   
+%   All of these contributions are highly valuable for the development of this
+%   package.
+%   
+%   \section{Package options}
+%   
+%   \begin{function}{documentfont}
+%     \begin{syntax}
+%       documentfont=\meta{font-name}
+%     \end{syntax}
+%     
+%     The default font for the entire document set by this package used to be
+%     \href{https://ctan.org/pkg/charissil}{Charis SIL}. From |v0.7| the package
+%     has changed the default font to \href{https://ctan.org/pkg/newcm}{New
+%     Computer Modern}. The reason for this breaking change is that Charis SIL
+%     was just used because of it's good support for IPA which was absent with
+%     the default Latin Modern shape. New Computer Modern has developed all the
+%     support for IPA \& hence I am making this change. Users can easily change
+%     the default font with the package-option \verb|documentfont| as documented
+%     below.
+%     
+% \begin{verbatim}
+% \usepackage[documentfont=DoulosSIL]{tipauni}
+% \end{verbatim}
+%     
+%     Please note that you must provide a value to this key. If you pass it an
+%     empty value; i.e.,
+%     \enquote{\verb|documentfont=\{\}|}/\enquote{\verb|documentfont=|} or no
+%     value, i.e., \enquote{\verb|documentfont|}, you will be prompted with
+%     errors from package \pkg{tipauni}. If an empty/no-value
+%     \verb|documentfont| is used \& no other non-empty \verb|documentfont| has
+%     been used so far; then the document is typeset with the default
+%     font-family of Lua/\XeLaTeX, i.e., the Latin Modern family. If another
+%     \verb|documentfont| has a non-empty value, the value of that option will
+%     be used as the font of the document.
+%   \end{function}
+%   
+%   \begin{function}{fontspecoptions}
+%     \begin{syntax}
+%       fontspecoptions=\meta{font-options}
+%     \end{syntax}
+%     
+%     This option can be used to set options to the font set with
+%     \verb|documentfont| package option. If the \verb|recommendedfont| option
+%     is used \& has the highest priority; the options set with
+%     \verb|fontspecoptions| will be used with the default font. If the
+%     \verb|preservefont| option has the highest priority, this parameter will
+%     be ineffective \& throw a warning. In the argument of this option write as
+%     if you are writing in the optional parameter of the \cs{setmainfont}
+%     command, e.g.:
+%     
+% \begin{verbatim}
+% \usepackage[fontspecoptions={Scale=1.5}]{tipauni}
+% \end{verbatim}
+%     
+%     \noindent If this options is used with no value it will be ignored with a
+%     warning.
+%     
+%     \noindent E.g.\ Try \verb|\usepackage[fontspecoptions]{tipauni}|.
+%     
+%     \medskip
+%
+%     \noindent If it is used with an empty value it will reset the fontspec-options so
+%     far you have set, e.g., Try:
+%     
+% \begin{verbatim}
+% \usepackage[%
+%   fontspecoptions={Scale=1.5},%
+%   fontspecfontspecoptions={}%
+% ]{tipauni}
+% \end{verbatim}
+%   \end{function}
+%   
+%   Please note that the keys so far documented are the only keys which take
+%   values. Other than these the following keys \emph{don't} take any value. You
+%   will be prompted with an error from package \pkg{expkv} if you use values
+%   for the following keys.
+%   
+%   \begin{function}{preservefont}
+%     This option will omit executing the \cs{setmainfont} command with New
+%     Computer Modern. The typeset document will use the default font of
+%     Lua/\XeLaTeX, i.e., the Latin Modern.
+%   \end{function}
+%   
+%   \begin{function}{recommendedfont}
+%     This option is used to override other font definitions made with option
+%     \verb|documentfont|. New Computer Modern will be used as the main font of
+%     the document when this option is used.
+%   \end{function}
+%   
+%   Please note that every option so far mentioned can potentially override each
+%   other, e.g., If a \verb|documentfont| is added after a \verb|preservefont|,
+%   the former will override the latter (\& vice versa). It is true for all
+%   these three package options.
+%   
+%   \begin{function}{resetfontspecoptions}
+%     This option resets all the \pkg{fontspec}-options set with package option
+%     \verb|fontspecoptions|. As noted for the font-options, these two options
+%     which deal with the options of the loaded fonts also can override each
+%     other. The last one loaded will be considered of the highest priority.
+%   \end{function}
+%   
+%   \begin{function}{incompatible}
+%     By default \pkg{\tipauniname} will throw a warning if symbols not
+%     contained in the \pkg{tipa} package were used. Using this option you can
+%     switch this check off if you don't have to stay compatible with
+%     \pkg{tipa} to silence this warning.
+%   \end{function}
+%   
+%   \section{List of available commands}
+%   TIPA has two alternative methods for inputting IPA characters. In the
+%   following tables, \textbf{Input A} column lists all the long TIPA commands
+%   (e.g., \verb|\textrtailt|) \textit{\&} \textbf{Input B} column lists the
+%   short ones (e.g., \verb|\textipa{\:t}|)\footnote{All of these commands must
+%   be enclosed in the \texttt{\textbackslash textipa}
+%   command. (e.g., \texttt{\textbackslash textipa\{\textbackslash :tP\}} for
+%   {\ipa [ʈʔ]})}. This documentation lists down all the commands necessary for
+%   typing symbols in the IPA chart.
+%   
+%   \subsection{Pulmonic consonants}
+%   
+%   \begin{ThreePartTable}
+%     \begin{TableNotes}
+%     \item[\textcolor{red}{§}] These commands are also available without
+%       package \pkg{tipa}.
+%     \item[1] \label{1} A symbol for this sound was introduced in 2005. The
+%       last update of the package \pkg{tipa} was in 2004, so this character
+%       is missing in it. A command for it is provided by this package. Such
+%       \pkg{tipauni}-exclusive commands are written with red color in this
+%       documentation.
+%     \end{TableNotes}
+%     \small
+%     \begin{longtable}{%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       >{\ipa[}l<{]}%
+%     }%
+%       \toprule
+%       \endfirsthead
+%       \toprule
+%       \endhead
+%       \bottomrule
+%       \endfoot
+%       Description & Input A & Input B &
+%       \multicolumn{1}{l}{\kern-1.25ex Symbol}\\
+%       \midrule
+%       Retroflex voiceless stop & \verb|\textrtailt| & \verb|\:t| & ʈ \\
+%       Retroflex voiced stop & \verb|\textrtaild| & \verb|\:d| & ɖ \\
+%       Palatal voiced stop & \verb|\textbardotlessj| & \verb|\*j| & ɟ \\
+%       Uvular voiced stop & \verb|\textscg| & \verb|\;G| & ɢ \\
+%       Glottal voiceless stop & \verb|\textglotstop| & \verb|P| & ʔ \\
+%       Labiodental nasal & \verb|\textltailm| & \verb|M| & ɱ \\
+%       Retroflex nasal & \verb|\textrtailn| & \verb|\:n| & ɳ \\
+%       Palatal nasal & \verb|\textltailn| & \verb|\*n| & ɲ \\
+%       Velar nasal & \verb|\ng|\tnote{\textcolor{red}{§}} & \verb|N| & ŋ \\
+%       Uvular nasal & \verb|\textscn| & \verb|\;N| & ɴ \\
+%       Bilabial trill & \verb|\textscb| & \verb|\;B| & ʙ \\
+%       Uvular trill & \verb|\textscr| & \verb|\;R| & ʀ \\
+%       \multicolumn{1}{>{\color{red}}l@{\hspace{0.3cm}-\hspace{0.3cm}}}{Labiodental flap\tnotex{1}} &
+%       \color{red}\verb|\labdentflap| & \color{red}\verb|\*v| & ⱱ\\
+%       Alveolar tap & \verb|\textfishhookr| & \verb|R| & ɾ \\
+%       Retroflex flap & \verb|\textrtailr| & \verb|\:r| & ɽ \\
+%       Bilabial voiceless fricative & \verb|\textphi| & \verb|F| & ɸ \\
+%       Bilabial voiced fricative & \verb|\textbeta| & \verb|B| & β \\
+%       Dental voiceless fricative & \verb|\texttheta| & \verb|T| & θ \\
+%       Dental voiced fricative & \verb|\dh|\tnote{\textcolor{red}{§}} &
+%       \verb|D| & ð \\
+%       Palatal voiceless fricative & \verb|\textesh| & \verb|S| & ʃ \\
+%       Palatal voiced fricative & \verb|\textyogh| & \verb|Z| & ʒ \\
+%       Retroflex voiceless fricative & \verb|\textrtails| & \verb|\:s| & ʂ \\
+%       Retroflex voiceless fricative & \verb|\textrtailz| & \verb|\:z| & ʐ \\
+%       Palatal voiced fricative & \verb|\textctj| & \verb|J| & ʝ \\
+%       Velar voiced fricative & \verb|\textgamma| & \verb|G| & ɣ \\
+%       Uvular voiceless fricative & \verb|\textchi| & \verb|X| & χ \\
+%       Uvular voiced fricative & \verb|\textinvscr| & \verb|K| & ʁ \\
+%       Pharyngeal voiceless fricative & \verb|\textcrh| & \verb|\*h| & ħ \\
+%       Pharyngeal voiced fricative & \verb|\textrevglotstop| & \verb|Q| & ʕ
+%       \\
+%       Glottal voiced fricative & \verb|\texthth| & \verb|H| & ɦ \\
+%       Alveolar voiceless lateral fricative & \verb|\textbeltl| & \verb|\*l|
+%       & ɬ \\
+%       Alveolar voiced lateral fricative & \verb|\textlyoghlig| & \verb|\*z|
+%       & ɮ \\
+%       Labiodental approximant & \color{red}{\verb|\labdentapp|} & \verb|V| &
+%       ʋ \\
+%       Alveolar approximant & \verb|\textturnr| & \verb|\*r| & ɹ \\
+%       Retroflex approximant & \verb|\textturnrrtail| & \verb|\:R| & ɻ \\
+%       Velar approximant & \verb|\textturnmrleg| & \color{red}{\verb|\*m|} &
+%       ɰ \\
+%       Retroflex lateral approximant & \verb|\textrtaill| & \verb|\:l| & ɭ \\
+%       Palatal lateral approximant & \verb|\textturny| & \verb|L| & ʎ \\
+%       Velar lateral approximant & \verb|\textscl| & \verb|\;L| & ʟ \\
+%       \midrule
+%       \insertTableNotes
+%     \end{longtable}
+%   \end{ThreePartTable}
+%   
+%   \subsection{Non-Pulmonic consonants}
+%   
+%   \begin{longtable}{%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     >{\ipa[}l<{]}%
+%   }%
+%     \toprule
+%     \endfirsthead
+%     \toprule
+%     \endhead
+%     \bottomrule
+%     \endfoot
+%     Description & Input A & Input B &\multicolumn{1}{l}{Symbol}\\
+%     \midrule
+%     Bilabial click & \verb|\textbullseye| & \verb|\!o| & ʘ \\
+%     Postalveolar click & \color{red}{\verb|\pstalvclick|} &
+%     \color{red}{\verb|!|} & ǃ \\
+%     Palatoalveolar click & \verb|\textdoublebarpipe| &
+%     \color{red}{\verb|\!c|} & ǂ \\
+%     Alveolar lateral click & \verb|\textdoublepipe| & \verb+||+ & ǁ \\
+%     Bilabial implosive & \verb|\texthtb| & \verb|\!b| & ɓ \\
+%     Dental implosive & \verb|\texthtd| & \verb|\!d| & ɗ \\
+%     Palatal implosive & \verb|\texthtbardotlessj| & \verb|\!j| & ʄ \\
+%     Velar implosive & \verb|\texthtg| & \verb|\!g| & ɠ \\
+%     Uvular implosive & \verb|\texthtscg| & \verb|\!G| & ʛ \\
+%   \end{longtable}
+%   
+%   \subsection{Other symbols}
+%   {%
+%   \small
+%   \begin{longtable}{%
+%     >{\footnotesize}l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     >{\ipa[}l<{]}%
+%   }%
+%     \toprule
+%     \multicolumn{1}{l}{Description} & Input A & Input B
+%     &\multicolumn{1}{l}{Symbol}\\
+%     \midrule
+%     Labial-velar voiceless fricative & \verb|\textturnw| & \verb|\*w| & ʍ
+%     \\
+%     Labial-palatal voiced approximant & \verb|\textturnh| & \verb|4| & ɥ
+%     \\
+%     Epiglottal voiceless fricative & \verb|\textsch| & \verb|\;H| & ʜ \\
+%     Epiglottal voiced fricative/approximant & \verb|\textbarrevglotstop| &
+%     \color{red}{\verb|\*1|} & ʢ \\
+%     Alveolar voiced lateral flap & \verb|\textturnlonglegr| &
+%     \color{red}{\verb|\!r|} & ɺ \\
+%     Epiglottal plosive & \verb|\textbarglotstop| & \verb|\*2| & ʡ \\
+%     Alveolo-palatal voiceless fricative & \verb|\textctc| & \verb|C| & ɕ \\
+%     Alveolo-palatal voiced fricative & \verb|\textctz| &
+%     \color{red}{\verb|\*Z|} & ʑ \\
+%     Postalveolar-velar voiceless fricative & \verb|\texththeng| &
+%     \color{red}{\verb|\*3|} & ɧ \\
+%     \bottomrule
+%   \end{longtable}
+% }
+%     
+%   \subsection{Vowels}
+%   {%
+%   \small
+%   \begin{longtable}{%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     >{\ipa[}l<{]}%
+%   }%
+%     \toprule
+%     \endfirsthead
+%     \toprule
+%     \endhead
+%     \bottomrule
+%     \endfoot
+%     Description & Input A & Input B &\multicolumn{1}{l}{Symbol}\\
+%     \midrule
+%     Near-close near-front unrounded & \verb|\textsci| & \verb|I| & ɪ \\
+%     Near-close near-front rounded & \verb|\textscy| & \verb|Y| & ʏ \\
+%     Open-mid front unrounded & \verb|\textepsilon| & \verb|E| & ɛ \\
+%     Close central unrounded & \verb|\textbari| & \verb|1| & ɨ \\
+%     Close central rounded & \verb|\textbaru| & \verb|0| & ʉ \\
+%     Near-close near-back rounded & \verb|\textupsilon| & \verb|U| & ʊ \\
+%     Close-mid central unrounded & \verb|\textreve| & \verb|9| & ɘ \\
+%     Close-mid central rounded & \verb|\textbaro| & \verb|8| & ɵ \\
+%     Mid central vowel & \verb|\textschwa| & \verb|@| & ə \\
+%     Open-mid central unrounded & \verb|\textrevepsilon| & \verb|3| & ɜ \\
+%     Open-mid central rounded & \verb|\textcloserevepsilon| &
+%     \textcolor{red}{\texttt{\&}} & ɞ \\
+%     Near-open central & \verb|\textturna| & \verb|5| & ɐ \\
+%     Close back unrounded & \verb|\textturnm| & \verb|W| & ɯ \\
+%     Close-mid back unrounded & \verb|\textramshorns| & \verb|7| & ɤ \\
+%     Open-mid back unrounded & \verb|\textturnv| & \verb|2| & ʌ \\
+%     Open-mid back rounded & \verb|\textopeno| & \verb|O| & ɔ \\
+%     Open back unrounded & \verb|\textscripta| & \verb|A| & ɑ \\
+%     Open back rounded & \verb|\textturnscripta| & \verb|6| & ɒ \\
+%   \end{longtable}
+% }%
+%   
+%   \subsection{Independent diacritics}
+%   
+%   \begin{longtable}{%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%     >{\ipa[}l<{]}%
+%   }%
+%     \toprule
+%     Description & Input A & Input B & \multicolumn{1}{l}{Symbol}\\
+%     \midrule
+%     Rhoticity & \verb|ə\textrhoticity|\tnotex{1} & \color{red}{\verb|ə\tr|}
+%     & ə˞\\
+%     No audible release & \verb|n\textcorner| & \color{red}{\verb|n\tc|} & n̚\,
+%     \\
+%     Tie bar (standalone) & \color{red}{\verb|\stdlnetiebar{əi}|} &
+%     \color{red}{\verb|\ts{əi}|} & ə‿i \\
+%     \bottomrule
+%   \end{longtable}
+%   
+%   \subsection{Dependent diacritics}
+%   
+%   \begin{TableNotes}
+%   \item[1] The documentation of package the \pkg{tipa} on p.\ 53
+%   describes a shorthand command
+%   i.e.~\texttt{\textbackslash\textbar\~{}{\meta{arg}}} which is not
+%   functional. I haven't investigated the reasons, but instead provided a new
+%   shorthand command for this character.
+%   \end{TableNotes}
+%   
+%   \begin{ThreePartTable}
+%     {%
+%     \small
+%     \begin{longtable}{%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       l@{\hspace{0.3cm}-\hspace{0.3cm}}%
+%       >{\ipa[}l<{]}%
+%     }%
+%       \toprule
+%       \endfirsthead
+%       \toprule
+%       \endhead
+%       \bottomrule
+%       \endfoot
+%       Description & Input A & Input B & \multicolumn{1}{l}{Symbol}\\
+%       \midrule
+%       Voiceless & \verb|\textsubring{m}| & \verb|\r*m| & m̥\\
+%       Voiced & \verb|\textsubwedge{s}| & \verb|\v*s| & s̬\\
+%       More rounded & \verb|\textsubrhalfring{w}| & \verb+\|)w+ & w̹\\
+%       Less rounded & \verb|\textsublhalfring{w}| & \verb+\|(w+ & w̜\\
+%       Advanced & \verb|\textsubplus{ə}| & \verb-\|+e- & ə̟\\
+%       Retracted & \verb|\textsubbar{l}| & \verb+\=*l+ & l̠\\
+%       Mid-centralized & \verb|\textovercross{e}| & \verb+\|x{e}+ & e̽\\
+%       Syllabic & \verb|\textsyllabic{n}| & \verb|\s{n}| & n̩\\
+%       Non-syllabic & \verb|\textsubarch{a}| & \color{red}{\verb|\ns{a}|} & a̯
+%       \\
+%       Breathy voiced & \verb|\textsubumlaut{b}| & \verb|\"*b| & b̤ \\
+%       Creaky voiced & \verb|\textsubtilde{ə}| & \verb|\~*@| & ə̰ \\
+%       Linguolabial & \verb|\textseagull{l}| & \verb+\|ml+ & l̼ \\
+%       Velarized & \verb|\textsuperimposetilde{i}| & \verb+\vl{i}+\tnote{1} & i̴
+%       \\
+%       Raised & \verb|\textraising{ə}| & \verb+\|'@+ & ə̝ \\
+%       Lowered & \verb|\textlowering{ə}| & \verb+\|`@+ & ə̞ \\
+%       Advanced tongue root & \verb|\textadvancing{ə}| & \verb+\|<@+ & ə̘ \\
+%       Retracted tongue root & \verb|\textretracting{ə}| & \verb+\|>@+ & ə̙ \\
+%       Dental & \verb|\textsubbridge{t}| & \verb+\|[t+ & t̪ \\
+%       Apical & \verb|\textinvsubbridge{t}| & \verb+\|]t+ & t̺ \\
+%       Laminal & \verb|\textsubsquare{s}| & \color{red}{\verb|\lmn{s}|} & s̻ \\
+%       Tie bar (top) & \verb|\texttoptiebar{əi}| & \verb|\t{əi}| & ə͡i\\
+%       Tie bar (bottom) & \verb|\textbottomtiebar{əi}| & \verb|\t*{əi}| & ə͜i\\
+%       \midrule
+%       \insertTableNotes
+%     \end{longtable}
+%   }%
+%   \end{ThreePartTable}
+% \end{documentation}
+% 
+% \begin{implementation}
+%   \section{Implementation}
+%    \begin{macrocode}
+%<@@=tipauni>
+%<*package>
+%    \end{macrocode}
+% Provide the package with some description \textit{\&} version specifications.
+%    \begin{macrocode}
+\ProvidesPackage{tipauni}[2023/02/13 v0.7a
+Unicode characters with TIPA commands]
+%    \end{macrocode}
+% Load necessary packages.
+%    \begin{macrocode}
+\RequirePackage{xparse}
+\RequirePackage{fontspec}
+\RequirePackage{expkv-def,expkv-opt}
+%    \end{macrocode}
+% Package options are provided using the package \pkg{expkv}.
+%    \begin{macrocode}
+\newif\iftipauni@document@font
+\def\tipauni@bookorregular{regular}
+\def\tipauni@recommended@font{tipauni-newcm-\tipauni@bookorregular}
+\tipauni@document@fonttrue
+\let\tipauni@font@options\@empty
+\ekvdefinekeys{tipauni}{%
+  bool incompatible              = \iftipauni@nontipa@ignore,%
+  noval preservefont             = {%
+    \let\tipauni@font\tipauni@undefined
+    \tipauni@document@fontfalse
+  },%
+  estore fontspecoptions         = \tipauni@font@options,%
+  new noval fontspecoptions      = {%
+    \PackageWarningNoLine{tipauni}{%
+      As you haven't given any value to package option\MessageBreak
+      `fontspecoptions'; it will be ignored. Please\MessageBreak
+      provide a valid (list of) fontspec option(s)%
+    }%
+  },%
+  noval resetfontspecoptions     = {%
+    \let\tipauni@font@options\@empty
+  },%
+  noval documentfont             = {%
+    \PackageError{tipauni}{No value for the `documentfont' option}{%
+      The `documentfont' option has no value. Please provide a valid
+      font-name,\MessageBreak otherwise it will be ignored or
+      (if given) the value of another non-empty\MessageBreak
+      `documentfont' will be used.%
+    }%
+    \ifdefined\tipauni@font
+      \tipauni@document@fonttrue
+    \else
+      \tipauni@document@fontfalse
+    \fi
+  },%
+  new code documentfont          = {%
+    \edef\tipauni@temp{#1}%
+    \ifx\tipauni@temp\@empty
+      \PackageError{tipauni}{Empty `documentfont' option}{%
+        The `documentfont' option has an empty value. Please provide a valid%
+        \MessageBreak
+        font-name, otherwise it will be ignored or (if given) the value of%
+        \MessageBreak
+        another non-empty `documentfont' will be used.%
+      }%
+      \ifdefined\tipauni@font
+        \tipauni@document@fonttrue
+      \else
+        \tipauni@document@fontfalse
+      \fi
+    \else
+      \tipauni@document@fonttrue
+      \let\tipauni@font\tipauni@temp
+    \fi
+  },%
+  noval recommendedfont          = {%
+    \tipauni@document@fonttrue
+    \let\tipauni@font\tipauni@recommended@font
+  },%
+  noval newcmbook                = {%
+    \def\tipauni@bookorregular{book}%
+  }%
+}
+\ekvoProcessLocalOptions{tipauni}
+%    \end{macrocode}
+% The following code executes the \verb|\setmainfont| command \& issues a
+% warning in a special case.
+%    \begin{macrocode}
+\iftipauni@document@font
+  \ifdefined\tipauni@font
+  \else
+    \let\tipauni@font\tipauni@recommended@font
+  \fi
+  \expandafter\setmainfont\expandafter
+  [\expandafter{\tipauni@font@options}]{\tipauni@font}
+\else
+  \ifx\tipauni@font@options\@empty
+  \else
+    \PackageWarningNoLine{tipauni}{%
+      An active font loaded with package fontspec is\MessageBreak
+      necessary for `fontspecoptions' to take effect.\MessageBreak
+      Please use the `documentfont'/`recommendedfont'\MessageBreak
+      option or load a font outside package `tipauni'\MessageBreak
+      to make your options active. Currently ignoring:\MessageBreak
+      [\tipauni@font@options]%
+    }%
+  \fi
+\fi
+%    \end{macrocode}
+% The following commands were kindly suggested by Phelype Oleinik for developing
+% a conditional which is always global.
+%    \begin{macrocode}
+\newif\ifnontipa
+\protected\def\nontipatrue{\global\let\ifnontipa\iftrue}
+\protected\def\nontipafalse{\global\let\ifnontipa\iffalse}
+\iftipauni@nontipa@ignore
+  \protected\def\nontipatrue{}
+\fi
+%    \end{macrocode}
+% The following commands provide the command \verb|\tipaunicmd| for printing
+% characters that are missing in the \pkg{tipa} package.
+%    \begin{macrocode}
+\NewDocumentCommand\tipaunicmd{ m m }{%
+  \NewDocumentCommand#1{ }{\nontipatrue #2}%
+}%
+%    \end{macrocode}
+% As can be seen above, everytime when a command that is absent in the
+% \pkg{tipa} package is provided, it sets the conditional \verb|nontipa| to true
+% value. At the end of the document this package checks if there is any instance
+% of a non-TIPA command. If yes, it generates a warning in the .log file saying
+% that this code is now incompatible with the TIPA package and some characters
+% might be displayed with a different font. All of this is achieved with the
+% help of following commands. The discussion on
+% \href{https://topanswers.xyz/tex?q=1735}{this} question helped a lot for fine
+% tuning the warning message.
+%    \begin{macrocode}
+\AtEndDocument{%
+  \ifnontipa
+  \PackageWarningNoLine{tipauni}{%
+    You have used a command(s) that is (are) not\MessageBreak
+    supported by package TIPA. Thus your current code is\MessageBreak
+    incompatible with that package. These commands are\MessageBreak
+    printed with a different Unicode font. Refer to the\MessageBreak
+    documentation of package tipauni for a list of\MessageBreak
+    commands that are not supported in TIPA%
+  }%
+  \else
+  \fi
+}%
+%    \end{macrocode}
+% From here the code for obtaining Unicode characters with TIPA commands
+% starts.
+%    \begin{macrocode}
+\DeclareTextCommand{\tipaunistar}{TU}[1]{{#1}}
+\DeclareTextAccentDefault{\tipaunistar}{TU}
+\DeclareTextCommand{\tipaunisemicolon}{TU}[1]{{#1}}
+\DeclareTextAccentDefault{\tipaunisemicolon}{TU}
+\DeclareTextCommand{\tipaunicolon}{TU}[1]{{#1}}
+\DeclareTextAccentDefault{\tipaunicolon}{TU}
+\DeclareTextCommand{\tipaunibang}{TU}[1]{{#1}}
+\DeclareTextAccentDefault{\tipaunibang}{TU}
+\DeclareTextCommand{\tipaunipipe}{TU}[2]{\@pipeshorthands{#1}{#2}}
+\DeclareTextAccentDefault{\tipaunipipe}{TU}
+%% Pulmonic consonants
+%%-- Stops
+%%--** Retroflex
+\DeclareTextSymbol{\textrtailt}{TU}{"0288}%% ʈ
+\DeclareTextComposite{\tipaunicolon}{TU}{t}{"288}
+\DeclareTextSymbol{\textrtaild}{TU}{"0256}%% ɖ
+\DeclareTextComposite{\tipaunicolon}{TU}{d}{"256}
+%%--** Palatal
+\DeclareTextSymbol{\textbardotlessj}{TU}{"25F}%% ɟ
+\DeclareTextComposite{\tipaunistar}{TU}{j}{"25F}
+%%--** Uvular
+\DeclareTextSymbol{\textscg}{TU}{"262}%% ɢ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{G}{"262}
+%%--** Glottal
+\DeclareTextSymbol{\textglotstop}{TU}{"294}%% ʔ
+%%-- Nasals
+%%--** Labiodental
+\DeclareTextSymbol{\textltailm}{TU}{"271}%% ɱ
+%%--** Retroflex
+\DeclareTextSymbol{\textrtailn}{TU}{"273}%% ɳ
+\DeclareTextComposite{\tipaunicolon}{TU}{n}{"273}
+%%--** Palatal
+\DeclareTextSymbol{\textltailn}{TU}{"272}%% ɲ
+\DeclareTextComposite{\tipaunistar}{TU}{n}{"272}
+%%--** Uvular
+\DeclareTextSymbol{\textscn}{TU}{"274}%% ɴ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{N}{"274}
+%%-- Affricates
+\DeclareTextSymbol{\textdzlig}{TU}{"02A3}%% ʣ
+\DeclareTextSymbol{\textdyoghlig}{TU}{"02A4}%% ʤ
+\DeclareTextSymbol{\texttslig}{TU}{"02A6}%% ʦ
+\DeclareTextSymbol{\textteshlig}{TU}{"02A7}%% ʧ
+\DeclareTextSymbol{\textdblig}{TU}{"02A4}%% ȸ
+\DeclareTextSymbol{\textqplig}{TU}{"00239}%% ȹ
+\DeclareTextSymbol{\texthvlig}{TU}{"0195}%% ƕ
+\DeclareTextSymbol{\texttctclig}{TU}{"02A8}%% ʨ
+%%-- Trills
+%%--** Bilabial
+\DeclareTextSymbol{\textscb}{TU}{"299}%% ʙ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{B}{"299}
+%%--** Uvular
+\DeclareTextSymbol{\textscr}{TU}{"280}%% ʀ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{R}{"280}
+%%-- Taps or flaps
+%%-- Labiodental flap
+\tipaunicmd{\labdentflap}{ⱱ}%% tipauni-exclusive
+\DeclareTextComposite{\tipaunistar}{TU}{v}{"2C71}%% tipauni-exclusive
+%%--** Alveolar
+\DeclareTextSymbol{\textfishhookr}{TU}{"27E}%% ɾ
+%%--** Retroflex
+\DeclareTextSymbol{\textrtailr}{TU}{"27D}%% ɽ
+\DeclareTextComposite{\tipaunicolon}{TU}{r}{"27D}
+%%-- Fricatives
+%%--** Bilabial
+\DeclareTextSymbol{\textphi}{TU}{"278}%% ɸ
+\DeclareTextSymbol{\textbeta}{TU}{"3B2}%% β
+%%--** Dental
+\DeclareTextSymbol{\texttheta}{TU}{"3B8}%% θ
+%%--** Postalveolar
+\DeclareTextSymbol{\textesh}{TU}{"283}%% ʃ
+\DeclareTextSymbol{\textyogh}{TU}{"292}%% ʒ
+%%--** Retroflex
+\DeclareTextSymbol{\textrtails}{TU}{"282}%% ʂ
+\DeclareTextComposite{\tipaunicolon}{TU}{s}{"282}
+\DeclareTextSymbol{\textrtailz}{TU}{"290}%% ʐ
+\DeclareTextComposite{\tipaunicolon}{TU}{z}{"290}
+%%--** Palatal
+\DeclareTextSymbol{\textctj}{TU}{"29D}%% ʝ
+%%--** Velar
+\DeclareTextSymbol{\textgamma}{TU}{"263}%% ɣ
+%%--** Uvular
+\DeclareTextSymbol{\textchi}{TU}{"3C7}%% χ
+\DeclareTextSymbol{\textinvscr}{TU}{"281}%% ʁ
+%%--** Pharyngeal
+\DeclareTextSymbol{\textcrh}{TU}{"127}%% ħ
+\DeclareTextComposite{\tipaunistar}{TU}{h}{"127}
+\DeclareTextSymbol{\textrevglotstop}{TU}{"295}%% ʕ
+%%--** Glottal
+\DeclareTextSymbol{\texthth}{TU}{"266}%% ɦ
+%%-- Lateral fricatives
+%%--** Alveolar
+\DeclareTextSymbol{\textbeltl}{TU}{"26C}%% ɬ
+\DeclareTextComposite{\tipaunistar}{TU}{l}{"26C}
+\DeclareTextSymbol{\textlyoghlig}{TU}{"26E}%% ɮ
+\DeclareTextComposite{\tipaunistar}{TU}{z}{"26E}
+%%-- Approximants
+%%-- Labiodental approximant
+\tipaunicmd{\labdentapp}{ʋ}%% tipauni-exclusive
+%%--** Alveolar
+\DeclareTextSymbol{\textturnr}{TU}{"279}%% ɹ
+\DeclareTextComposite{\tipaunistar}{TU}{r}{"279}
+%%--** Retroflex
+\DeclareTextSymbol{\textturnrrtail}{TU}{"27B}%% ɻ
+\DeclareTextComposite{\tipaunicolon}{TU}{R}{"27B}
+%%--** Velar
+\DeclareTextSymbol{\textturnmrleg}{TU}{"270}%% ɰ
+\DeclareTextComposite{\tipaunistar}{TU}{m}{"270}
+%%-- Lateral approximants
+%%--** Retroflex
+\DeclareTextSymbol{\textrtaill}{TU}{"26D}%% ɭ
+\DeclareTextComposite{\tipaunicolon}{TU}{l}{"26D}
+\DeclareTextSymbol{\textturny}{TU}{"28E}%% ʎ
+\DeclareTextSymbol{\textscl}{TU}{"29F}%% ʟ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{L}{"29F}
+%% Non-pulmonic consonants
+%%-- Clicks
+%%--** Bilabial
+\DeclareTextSymbol{\textbullseye}{TU}{"298}%% ʘ
+\DeclareTextComposite{\tipaunibang}{TU}{o}{"298}
+%%-- Postalveolar click
+\tipaunicmd{\pstalvclick}{ǃ}%% tipauni-exclusive
+%%--** Palato-alveolar
+\DeclareTextSymbol{\textdoublebarpipe}{TU}{"1C2}%% ǂ
+\DeclareTextComposite{\tipaunibang}{TU}{c}{"1C2}%% tipauni-exclusive
+%%--** Alveolar lateral
+\DeclareTextSymbol{\textdoublepipe}{TU}{"1C1}% ǁ
+%%-- Implosives
+%%--** Bilabial
+\DeclareTextSymbol{\texthtb}{TU}{"253}%% ɓ
+\DeclareTextComposite{\tipaunibang}{TU}{b}{"253}
+%%--** Dental
+\DeclareTextSymbol{\texthtd}{TU}{"257}%% ɗ
+\DeclareTextComposite{\tipaunibang}{TU}{d}{"257}
+%%--** Palatal
+\DeclareTextSymbol{\texthtbardotlessj}{TU}{"284}%% ʄ
+\DeclareTextComposite{\tipaunibang}{TU}{j}{"284}
+%%--** Velar
+\DeclareTextSymbol{\texthtg}{TU}{"260}%% ɠ
+\DeclareTextComposite{\tipaunibang}{TU}{g}{"260}
+%%--** Uvular
+\DeclareTextSymbol{\texthtscg}{TU}{"29B}%% ʛ
+\DeclareTextComposite{\tipaunibang}{TU}{G}{"29B}
+%% Other consonants
+\DeclareTextSymbol{\textturnw}{TU}{"28D}%% ʍ
+\DeclareTextSymbol{\textturnh}{TU}{"265}%% ɥ
+\DeclareTextSymbol{\textsch}{TU}{"29C}%% ʜ
+\DeclareTextSymbol{\textbarrevglotstop}{TU}{"2A2}%% ʢ
+\DeclareTextComposite{\tipaunistar}{TU}{1}{"2A2}%% tipauni-exclusive
+\DeclareTextSymbol{\textbarglotstop}{TU}{"2A1}%% ʡ
+\DeclareTextComposite{\tipaunistar}{TU}{2}{"2A1}%% tipauni-exclusive
+\DeclareTextSymbol{\textctc}{TU}{"255}%% ɕ
+\DeclareTextSymbol{\textctz}{TU}{"291}%% ʑ
+\DeclareTextComposite{\tipaunistar}{TU}{Z}{"291}%% tipauni-exclusive
+\DeclareTextSymbol{\textturnlonglegr}{TU}{"27A}%% ɺ
+\DeclareTextComposite{\tipaunibang}{TU}{r}{"27A}%% tipauni-exclusive
+\DeclareTextSymbol{\texththeng}{TU}{"267}%% ɧ
+\DeclareTextComposite{\tipaunistar}{TU}{3}{"267}%% tipauni-exclusive
+\DeclareTextComposite{\tipaunistar}{TU}{k}{"029E}% ʞ
+\DeclareTextComposite{\tipaunistar}{TU}{t}{"287}% ʇ
+\DeclareTextComposite{\tipaunistar}{TU}{w}{"28D}% ʍ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{E}{"1D07}% ᴇ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{J}{"1D0A}% ᴊ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{A}{"1D00}% ᴀ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{H}{"29C}% ʜ
+\DeclareTextComposite{\tipaunisemicolon}{TU}{U}{"1D1C}% ᴜ
+%% Vowels
+\DeclareTextSymbol{\textsci}{TU}{"26A}%% ɪ
+\DeclareTextSymbol{\textscy}{TU}{"28F}%% ʏ
+\DeclareTextSymbol{\textepsilon}{TU}{"25B}%% ɛ
+\DeclareTextSymbol{\textbari}{TU}{"268}%% ɨ
+\DeclareTextSymbol{\textbaru}{TU}{"289}%% ʉ
+\DeclareTextSymbol{\textupsilon}{TU}{"28A}%% ʊ
+\DeclareTextSymbol{\textreve}{TU}{"258}%% ɘ
+\DeclareTextSymbol{\textbaro}{TU}{"275}%% ɵ
+\DeclareTextSymbol{\textschwa}{TU}{"259}%% ə
+\DeclareTextSymbol{\textrevepsilon}{TU}{"25C}%% ɜ
+\DeclareTextSymbol{\textcloserevepsilon}{TU}{"25E}%% ɞ
+\DeclareTextSymbol{\textturna}{TU}{"250}%% ɐ
+\DeclareTextSymbol{\textturnm}{TU}{"26F}%% ɯ
+\DeclareTextSymbol{\textramshorns}{TU}{"264}%% ɤ
+\DeclareTextSymbol{\textturnv}{TU}{"28C}%% ʌ
+\DeclareTextSymbol{\textopeno}{TU}{"254}%% ɔ
+\DeclareTextSymbol{\textscripta}{TU}{"251}%% ɑ
+\DeclareTextSymbol{\textturnscripta}{TU}{"252}%% ɒ
+%% Independent diacritic marks
+%%-- Rhoticity
+\DeclareTextSymbol{\textrhoticity}{TU}{"2DE}%% ˞
+\tipaunicmd{\tr}{˞}
+%%-- Tie bar (below)
+\DeclareTextCommand{\tipaunitextbottomtiebar}{TU}[2]{#1\symbol{"035C}#2}
+\NewDocumentCommand\textbottomtiebar{ m }{\tipaunitextbottomtiebar#1}
+%%-- Tie bar (below) - standalone character
+\DeclareTextCommand{\tipaunits}{TU}[2]{#1\symbol{"203F}#2}
+\NewDocumentCommand\stdlnetiebar{ m }{\tipaunits#1}
+\NewDocumentCommand\ts{ m }{\tipaunits#1}
+%    \end{macrocode}
+% The following commands redefine the TIPA shorthand input for dependent
+% diacritics.
+%    \begin{macrocode}
+%% No audible release
+\DeclareTextSymbol{\textcorner}{TU}{"31A}%% ̚
+\tipaunicmd{\tc}{̚}
+%% Syllabic
+\DeclareUnicodeAccent{\textsyllabic}{TU}{"0329}%% ̩
+\NewDocumentCommand\s{ m }{\textsyllabic{\textipa{#1}}\nontipatrue}
+%% Non-syllabic
+\DeclareUnicodeAccent{\textsubarch}{TU}{"032F}%% ̯
+\NewDocumentCommand\ns{ m }{\textsubarch{\textipa{#1}}}
+%% Laminal
+\DeclareUnicodeAccent{\textsubsquare}{TU}{"033B}%% ̻
+\NewDocumentCommand\lmn{ m }{\textsubsquare{\textipa{#1}}\nontipatrue}
+%% Other complex shorthand commands
+\DeclareTextCommand{\@pipeshorthands}{TU}[2]{%
+  \if #1[\tipaunisubbridge{\textipa{#2}}\else
+  \if #1]\tipauniinvsubbridge{\textipa{#2}}\else
+  \if #1(\tipaunisublhalfring{\textipa{#2}}\else
+  \if #1)\tipaunisubrhalfring{\textipa{#2}}\else
+  \if #1+\tipaunisubplus{\textipa{#2}}\else
+  \if #1'\tipauniraising{\textipa{#2}}\else
+  \if #1`\tipaunilowering{\textipa{#2}}\else
+  \if #1<\tipauniadvancing{\textipa{#2}}\else
+  \if #1>\tipauniretracting{\textipa{#2}}\else
+  \if #1x\tipauniovercross{\textipa{#2}}\else
+  \if #1m\tipauniseagull{\textipa{#2}}\else #1#2%
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+}%
+\DeclareTextAccentDefault{\@pipeshorthands}{TU}
+\ExplSyntaxOn
+\NewDocumentCommand \super { m }
+  {%
+    \str_case:nn {#1}
+      {
+        {h} {ʰ}
+        {w} {ʷ}
+        {j} {ʲ}
+        {ɣ} {ˠ}
+        {ʕ} {ˤ}
+        {n} {ⁿ}
+        {l} {ˡ}
+      }
+  }
+%    \end{macrocode}
+% We need a few variables.
+%    \begin{macrocode}
+\seq_new:N \l_@@_remove_from_accents_seq
+\tl_new:N \l_@@_textipa_tl
+%    \end{macrocode}
+% Since we have a non-standard syntax for some of the accent macros (having a
+% starred variant) we have to exclude them from the list of accents which get
+% special handling from \cs{text_expand:n} or else the stars will be surrounded
+% by braces and not found by \cs{@ifstar}. This sequence stores the problematic
+% accents which need to be excluded.
+%    \begin{macrocode}
+\seq_set_split:Nnn \l_@@_remove_from_accents_seq { , }
+  { \~, \=, \", \r, \v, \t }
+%    \end{macrocode}
+% We only search for the macros not contained in \pkg{tipa} if this is requested
+% by the user.
+%    \begin{macrocode}
+\iftipauni@nontipa@ignore
+  \cs_new_eq:NN \@@_nontipa_search: \prg_do_nothing:
+  \cs_new_eq:NN \@@_nontipa_search:n \use_none:n
+\else
+  \cs_new_protected:Npn \@@_nontipa_search:
+    {
+      \unless\ifnontipa
+        \exp_args:No \@@_nontipa_search:n \l_@@_textipa_tl
+      \fi
+    }
+%    \end{macrocode}
+% The warning thrown at the end of the run doesn't list which symbols were
+% incompatible, so we stop searching when we found one incompatible symbol. We
+% use \cs{str_if_in:nnT} so that groups don't affect the search. The alternative
+% would be the much slower \cs{regex_match:nnT}.
+%    \begin{macrocode}
+  \cs_new_protected:Npn \@@_nontipa_search:n #1
+    {
+      \str_if_in:nnT {#1} {ⱱ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ɞ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ɰ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ǃ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ǂ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ʢ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ɺ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ʑ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \str_if_in:nnT {#1} {ɧ} { \nontipatrue \use_none_delimit_by_s_stop:w }
+      \use_none:nnn \s_stop
+      \use:n { \cs_gset_eq:NN \@@_nontipa_search: \prg_do_nothing: }
+    }
+\fi
+%    \end{macrocode}
+% The user facing macro needs to make some local settings.
+%    \begin{macrocode}
+\NewDocumentCommand\textipa{ +m }%
+  {
+    \begingroup
+      \let\*\tipaunistar
+      \let\:\tipaunicolon
+      \let\;\tipaunisemicolon
+      \let\!\tipaunibang
+      \let\|\tipaunipipe
+      \let\t\tipaunit
+%    \end{macrocode}
+% Here we locally remove the accents which have a starred variant from the
+% exclusion list of \cs{text_expand:n}.
+%    \begin{macrocode}
+      \seq_map_inline:Nn \l_@@_remove_from_accents_seq
+      { \tl_remove_all:Nn \l_text_accents_tl {##1} }
+%    \end{macrocode}
+% Here is the real replacement. First we carefully expand the input using
+% \cs{text_expand:n}, then we'll loop over the token list with a construct
+% similar to the \pkg{expl3} internal \cs{__tl_act:NNNn} (hence the name
+% \cs{@@_act:n}). Since the replacement code depends on the correct string
+% representation of things we explicitly set the \cs{escapechar} to a backslash
+% and reset it afterwards.
+%    \begin{macrocode}
+      \tl_set:Nx \l_@@_textipa_tl { \text_expand:n {#1} }
+      \use:x
+        {
+          \exp_not:n
+            {
+              \escapechar = `\\
+              \tl_set:Nx \l_@@_textipa_tl
+                { \exp_args:No \@@_act:n \l_@@_textipa_tl }
+              \escapechar =
+            }
+          \int_use:N \escapechar
+        }
+      \exp_stop_f:
+      \l_@@_textipa_tl
+%    \end{macrocode}
+% Finally test for \pkg{tipa}-incompatible symbols.
+%    \begin{macrocode}
+      \@@_nontipa_search:
+    \endgroup
+  }
+%    \end{macrocode}
+% We'll need a scan mark for the |act| code, so we initialise it.
+%    \begin{macrocode}
+\scan_new:N \s_@@_act_stop
+\cs_new:Npn
+\@@_use_none_delimit_by_act_stop:w
+#1
+\s_@@_act_stop
+{}
+%    \end{macrocode}
+% The act macro uses a bit of low level coding to get good performance. It
+% implements a loop which does the replacement of single letters, bigraphs or
+% combinations of one macro and one letter (which might be separated from the
+% macro by multiple spaces, or contained in braces as an argument, or both).
+% \cs{_@@_act:n} should be used inside an |x|-expansion context. The only
+% token which is not allowed to be ever part of the argument for
+% \cs{_@@_act:n} is \cs{s_@@_act_stop}.
+%    \begin{macrocode}
+\cs_new:Npn
+\@@_act:n
+#1
+{ \@@_act_loop:w #1 {\s_@@_act_stop} . \s_@@_act_stop }
+%    \end{macrocode}
+% Just to have an easier to spot output we use a private copy of \cs{exp_not:n},
+% meaning we leave the output in the input stream (but since the whole loop
+% should be used in an |x|-expansion context this is fine, anything expecting
+% arguments will get those later).
+%    \begin{macrocode}
+\cs_new_eq:NN \@@_act_output:n \exp_not:n
+%    \end{macrocode}
+% The current loop status is indicated by one macro -- \cs{use_none:nn} for the
+% initial state; \cs{@@_act_macro:nn} if a macro being the start of a
+% bigraph was encountered; or \cs{@@_act_char:nn} if a character being
+% the start of a bigraph or a monograph was encountered -- followed by one
+% |n|-type argument containing information depending on the state. So for
+% \cs{@@_act_loop:Nnw} the arguments are: |#1| is the status macro, |#2|
+% more status information, |#3| the remainder of the argument list. It'll branch
+% off depending on the first token in |#3| being either a space, a group
+% (anything started by a character of category 1, typically an opening brace)
+% and anything else (a valid |N|-type argument).
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_loop:w { \@@_act_loop:Nnw \use_none:nn {} }
+\cs_new:Npn \@@_act_loop:Nnw #1#2#3 \s_@@_act_stop
+  {
+    \@@_act_if_head_is_space:nTF {#3}
+      { \@@_act_space:Nnw }
+      {
+        \tl_if_head_is_group:nTF {#3}
+          \@@_act_group:Nnn
+          \@@_act_normal:NnN
+      }
+      #1 {#2} #3 \s_@@_act_stop
+  }
+%    \end{macrocode}
+% We'll need a few explicit space tokens in the following definitions, so we use
+% a temporary macro to set this up.
+%    \begin{macrocode}
+\group_begin:
+  \cs_set:Npn \@@_tmp:n #1
+    {
+%    \end{macrocode}
+% Quick test for a leading space using the |stop|-marker.
+%    \begin{macrocode}
+      \cs_new:Npn \@@_act_if_head_is_space:nTF ##1
+        {
+          \@@_act_if_head_is_space:w
+            \s_@@_act_stop ##1 \s_@@_act_stop
+            \@@_act_if_head_is_space_true:w
+            \s_@@_act_stop #1 \s_@@_act_stop
+            \use_ii:nn
+        }
+      \cs_new:Npn \@@_act_if_head_is_space:w
+          ##1 \s_@@_act_stop #1 ##2 \s_@@_act_stop
+        {}
+      \cs_new:Npn \@@_act_if_head_is_space_true:w
+          \s_@@_act_stop #1 \s_@@_act_stop \use_ii:nn ##1 ##2
+        {##1}
+%    \end{macrocode}
+% The case with a space needs a bit of special treatment if the current state is
+% |macro|. In that case we defer the decision and save the space inside the
+% additional status |n|-type argument. That consists of two nested |n|-type
+% arguments, the first being the control sequence under test and the second
+% tokens which need to be reinserted should the replacement fail.
+%    \begin{macrocode}
+      \cs_new:Npn \@@_act_space:Nnw ##1 ##2 #1
+        {
+          \token_if_eq_meaning:NNTF ##1 \@@_act_macro:nn
+            { \@@_act_space_macro:nn ##2 }
+            {
+              \cs_if_exist_use:cTF {
+                @@_act_char_mono_
+                \tl_to_str:n { ##2 } :
+              }
+                { \@@_act_output:n {~} }
+                { \@@_act_output:n { ##2 ~ } }
+              \@@_act_loop:w
+            }
+        }
+    }
+  \@@_tmp:n {~}
+\group_end:
+%    \end{macrocode}
+% This macro just works as a helper to get the two separate arguments in the
+% status and append a space token to the deferred list.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_space_macro:nn #1#2
+  { \@@_act_loop:Nnw \@@_act_macro:nn { {#1} { #2 ~ } } }
+%    \end{macrocode}
+% The end marker is a single \cs{s_@@_act_stop} in a group, hence we need to
+% test for that. If this isn't the end we need to handle two different cases, if
+% the current state is a macro the group might actually be the correct argument
+% to that macro, else a bigraph shouldn't contain a group, so we output what
+% ever the current status deferred information was (either as a |mono|
+% replacement or just as is) and act on the group.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_group:Nnn #1#2#3
+  {
+    \@@_use_none_delimit_by_act_stop:w
+      #3 \@@_act_final:Nnw #1 {#2} \s_@@_act_stop
+    \token_if_eq_meaning:NNTF #1 \@@_act_macro:nn
+      { \@@_act_group_macro:nn {#2} {#3} }
+      {
+        \cs_if_exist_use:cF
+        { @@_act_char_mono_ \tl_to_str:n { #2 } : }
+        { \@@_act_output:n {#2} }
+        {
+          \@@_act_loop:w
+          #3
+          {\s_@@_act_stop}
+          .
+          \s_@@_act_stop
+        }
+      }
+    \@@_act_loop:w
+  }
+%    \end{macrocode}
+% The final code needs to remove the remainder of the loop and reinsert whatever
+% was deferred, unless that happens to be one of the single tokens to be
+% replaced in which case we do the replacement.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_final:Nnw
+    #1#2 \s_@@_act_stop #3 \@@_act_loop:w #4 \s_@@_act_stop
+  {
+    \cs_if_exist_use:cF { @@_act_char_mono_ \tl_to_str:n { #2 } : }
+      {
+        \token_if_eq_meaning:NNTF #1 \@@_act_macro:nn
+          { \exp_args:No \@@_act_output:n { \use:nn #2 } }
+          { \@@_act_output:n {#2} }
+      }
+  }
+%    \end{macrocode}
+% The normal case is pretty straight forward, if the current state is the
+% initial state, check whether the token under test is the start of one of the
+% replacement sequences (this would be stored inside a macro), if it isn't
+% directly output it. If it is the code in that macro will do the right thing.
+% If the current state is something else the state macro will handle things, so
+% we just call it with the arguments it should get.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_normal:NnN #1#2#3
+  {
+    \token_if_eq_meaning:NNTF #1 \use_none:nn
+      {
+        \cs_if_exist_use:cF { @@_act_normal_ \tl_to_str:n {#3} :nw }
+          { \@@_act_output:n }
+          {#3}
+      }
+      { #1 {#2} {#3} }
+    \@@_act_loop:w
+  }
+%    \end{macrocode}
+% The code that should handle a macro will test whether a replacement occurs
+% (stored inside a macro), if it does calls that macro, else outputs the
+% deferred information. Since the |macro| state will have two groups in the
+% deferred state we need to handle that using \cs{use_i:nn} to get the macro
+% name, and \cs{use:nn} to just unbrace the macro and the other deferred tokens
+% (which might be any number of spaces).
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_macro:nn #1#2
+  {
+    \cs_if_exist_use:cF
+    {
+      @@_act_macro_
+      \exp_args:No
+      \tl_to_str:n {
+        \use_i:nn #1 / #2
+      }
+      :
+    }
+    { \exp_args:No \@@_act_output:n { \use:nn #1 #2 } }
+  }
+%    \end{macrocode}
+% If the |macro| state was active when a group was encountered we need to check
+% whether that group was the correct argument for the replacement, if it was do
+% the replacement, else reinsert the macro and deferred tokens and loop through
+% the group.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_group_macro:nn #1#2
+  {
+    \cs_if_exist_use:cF
+    {
+      @@_act_macro_
+      \exp_args:No
+      \tl_to_str:n {
+        \use_i:nn #1 / #2
+      }
+      :
+    }
+    {
+      \exp_args:No
+      \@@_act_output:n {
+        \use:nn #1
+      }
+      {
+        \@@_act_loop:w
+        #2
+        {\s_@@_act_stop} . \s_@@_act_stop
+      }
+    }
+  }
+%    \end{macrocode}
+% If the |char| state is active we need to check whether a bigraph was found, if
+% so do that replacement, else test whether the single char is to be replaced
+% without being part of a bigraph, if not output it unchanged. If there was no
+% bigraph the newly found character might be the start of a mono- or bigraph so
+% we pass it back to the |N|-type act to evaluate that, in which case we need
+% to remove a trailing \cs{@@_act_loop:w} which would start the next loop which
+% we do using \cs{use_i:nn}.
+%    \begin{macrocode}
+\cs_new:Npn \@@_act_char:nn #1#2
+  {
+    \cs_if_exist_use:cF {
+      @@_act_char_bigraph_
+      \tl_to_str:n
+      { #1/#2 }
+      :
+    }
+    {
+      \cs_if_exist_use:cF {
+        @@_act_char_mono_
+        \tl_to_str:n { #1 }
+        :
+      }
+      { \@@_act_output:n {#1} }
+      \use_i:nn {
+        \@@_act_normal:NnN
+        \use_none:nn {} {#2}
+      }
+    }
+  }
+%    \end{macrocode}
+% To register new bigraphs we use the following functions. The information is
+% always stored inside two macros, the first is called
+% |@@_act_normal_|\meta{first token}|:nw| and will set the correct state, the
+% second is named dependent on the state it should be found in, either
+% |@@_act_macro_|\meta{first token}|/|\meta{second token}|:|,
+% |@@_act_char_bigraph_|\meta{first token}|/|\meta{second token}|:|, or
+% |@@_act_char_mono_|\meta{token}|:|. Those second macros contain the actual
+% replacement.
+%
+% \cs{@@_new_macro_bigraph:NNn} is input for the two macros in |#1| and |#2| by
+% the first macro which is a wrapper.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_new_macro_pair_bigraph:NNNn #1#2#3#4
+  {
+    \@@_new_macro_bigraph:NNn #1 #3 {#4}
+    \@@_new_macro_bigraph:NNn #2 #3 {#4}
+  }
+%    \end{macrocode}
+% A macro bigraph should consist of a control sequence followed by another
+% token. It'll switch the state to |macro|.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_new_macro_bigraph:NNn #1#2#3
+  {
+    \cs_gset:cpn {
+      @@_act_normal_
+      \tl_to_str:n
+      {#1}
+      :nw
+    }
+    ##1##2
+    \@@_act_loop:w
+    {
+      \@@_act_loop:Nnw
+      \@@_act_macro:nn
+      { {##1} {} }
+    }
+    \cs_gset:cpn
+    { @@_act_macro_ \tl_to_str:n { #1/#2 } : }
+    { \@@_act_output:n {#3} }
+  }
+%    \end{macrocode}
+% A character bigraph should consist of two characters. It'll switch the state
+% to |char|.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_new_char_bigraph:NNn #1#2#3
+  {
+    \cs_gset:cpn {
+      @@_act_normal_
+      \tl_to_str:n
+      {#1}
+      :nw
+    } ##1##2
+    \@@_act_loop:w
+    {
+      \@@_act_loop:Nnw
+      \@@_act_char:nn {##1}
+    }
+    \cs_gset:cpn {
+      @@_act_char_bigraph_
+      \tl_to_str:n { #1/#2 } :
+    }
+    { \@@_act_output:n {#3} }
+  }
+%    \end{macrocode}
+% And lastly the single replacements which should just be a single character.
+% These will also switch the state to |char| (as they might be also a start of
+% a bigraph).
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_new_char_mono:Nn #1#2
+  {
+    \cs_gset:cpn {
+      @@_act_normal_
+      \tl_to_str:n
+      {#1}
+      :nw
+    } ##1##2
+    \@@_act_loop:w
+    { \@@_act_loop:Nnw
+      \@@_act_char:nn
+      {##1}
+    }
+    \cs_gset:cpn
+    { @@_act_char_mono_
+      \tl_to_str:n {#1} :
+    }
+    { \@@_act_output:n {#2} }
+  }
+%    \end{macrocode}
+% Everything that's now missing is defining the macros storing the replacements
+% as described above.
+%    \begin{macrocode}
+\@@_new_macro_pair_bigraph:NNNn \! \tipaunibang      G {ʛ}
+\@@_new_macro_pair_bigraph:NNNn \! \tipaunibang      g {ɠ}
+\@@_new_macro_pair_bigraph:NNNn \* \tipaunistar      1 {ʢ}
+\@@_new_macro_pair_bigraph:NNNn \* \tipaunistar      2 {ʡ}
+\@@_new_macro_pair_bigraph:NNNn \* \tipaunistar      3 {ɧ}
+\@@_new_macro_pair_bigraph:NNNn \* \tipaunistar      Z {ʑ}
+\@@_new_macro_pair_bigraph:NNNn \: \tipaunicolon     R {ɻ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon A {ᴀ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon G {ɢ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon B {ʙ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon E {ᴇ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon H {ʜ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon J {ᴊ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon L {ʟ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon N {ɴ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon R {ʀ}
+\@@_new_macro_pair_bigraph:NNNn \; \tipaunisemicolon U {ᴜ}
+\@@_new_char_bigraph:NNn || {ǁ}
+\@@_new_char_bigraph:NNn "" {ˌ}
+\clist_map_inline:nn
+  {
+    {5}{ɐ}, {A}{ɑ}, {6}{ɒ}, {2}{ʌ}, {B}{β}, {C}{ɕ}, {D}{ð}, {9}{ɘ}, {E}{ɛ},
+    {3}{ɜ}, {g}{ɡ}, {G}{ɣ}, {7}{ɤ}, {H}{ɦ}, {L}{ʎ}, {4}{ɥ}, {1}{ɨ}, {I}{ɪ},
+    {J}{ʝ}, {M}{ɱ}, {W}{ɯ}, {N}{ŋ}, {8}{ɵ}, {O}{ɔ}, {F}{ɸ}, {R}{ɾ}, {K}{ʁ},
+    {S}{ʃ}, {T}{θ}, {0}{ʉ}, {U}{ʊ}, {V}{ʋ}, {X}{χ}, {Y}{ʏ}, {Z}{ʒ},
+    {P}{ʔ}, {Q}{ʕ},
+    {:}{ː}, {;}{ˑ}, {!}{ǃ}, {&}{ɞ}, {@}{ə}, {|}{ǀ}, {"}{ˈ}
+  }
+  { \@@_new_char_mono:Nn #1 }
+\ExplSyntaxOff
+%    \end{macrocode}
+% The following commands define the long commands for dependent diacritics.
+%    \begin{macrocode}
+%%-- Dependent diacritic marks
+%%--** Voiceless
+\DeclareUnicodeAccent{\textsupring}{TU}{"030A}%% ̊
+\DeclareUnicodeAccent{\textsubring}{TU}{"0325}%% ̥
+\DeclareTextCommand{\r}{TU}{\tipauniring}
+\protected\def\tipauniring{\@ifstar{\TipaUniSubRing}{\TipaUniSupRing}}
+\NewDocumentCommand\TipaUniSupRing{ m }{\textsupring{\textipa{#1}}}
+\NewDocumentCommand\TipaUniSubRing{ m }{\textsubring{\textipa{#1}}}
+%%--** Voiced
+\DeclareUnicodeAccent{\textsupwedge}{TU}{"030C}%% ̌
+\DeclareUnicodeAccent{\textsubwedge}{TU}{"032C}%% ̬
+\DeclareTextCommand{\v}{TU}{\tipauniwedge}
+\protected\def\tipauniwedge{\@ifstar{\TipaUniSubWedge}{\TipaUniSupWedge}}
+\NewDocumentCommand\TipaUniSupWedge{ m }{\textsupwedge{\textipa{#1}}}
+\NewDocumentCommand\TipaUniSubWedge{ m }{\textsubwedge{\textipa{#1}}}
+%%--** More rounded
+\DeclareUnicodeAccent{\textsubrhalfring}{TU}{"0339}%% ̹
+\NewDocumentCommand\tipaunisubrhalfring{ m }{\textsubrhalfring{\textipa{#1}}}
+%%--** Less rounded
+\DeclareUnicodeAccent{\textsublhalfring}{TU}{"031C}%% ̜
+\NewDocumentCommand\tipaunisublhalfring{ m }{\textsublhalfring{\textipa{#1}}}
+%%--** Advanced
+\DeclareUnicodeAccent{\textsubplus}{TU}{"031F}%% ̟
+\NewDocumentCommand\tipaunisubplus{ m }{\textsubplus{\textipa{#1}}}
+%%--** Retracted
+\DeclareUnicodeAccent{\textsupbar}{TU}{"0304}%% ̄
+\DeclareUnicodeAccent{\textsubbar}{TU}{"0320}%% ̠
+\DeclareTextCommand{\=}{TU}{\tipaunibar}
+\protected\def\tipaunibar{\@ifstar{\TipaUniSubBar}{\TipaUniSupBar}}
+\NewDocumentCommand\TipaUniSupBar{ m }{\textsupbar{\textipa{#1}}}
+\NewDocumentCommand\TipaUniSubBar{ m }{\textsubbar{\textipa{#1}}}
+%%--** Mid-centralized
+\DeclareUnicodeAccent{\textovercross}{TU}{"033D}%% ̽
+\NewDocumentCommand\tipauniovercross{ m }{\textovercross{\textipa{#1}}}
+%%--** Breathy voiced
+\DeclareUnicodeAccent{\textsupumlaut}{TU}{"0308}%% ̈
+\DeclareUnicodeAccent{\textsubumlaut}{TU}{"0324}%% ̤
+\DeclareTextCommand{\"}{TU}{\tipauniumlaut}
+\protected\def\tipauniumlaut{\@ifstar{\TipaUniSubUmlaut}{\TipaUniSupUmlaut}}
+\NewDocumentCommand\TipaUniSupUmlaut{ m }{\textsupumlaut{\textipa{#1}}}
+\NewDocumentCommand\TipaUniSubUmlaut{ m }{\textsubumlaut{\textipa{#1}}}
+%%--** Creaky voiced
+\DeclareUnicodeAccent{\textsuptilde}{TU}{"0303}%% ̃
+\DeclareUnicodeAccent{\textsubtilde}{TU}{"0330}%% ̰
+\DeclareTextCommand{\~}{TU}{\tipaunitilde}
+\protected\def\tipaunitilde{\@ifstar{\TipaUniSubTilde}{\TipaUniSupTilde}}
+\NewDocumentCommand\TipaUniSupTilde{ m }{\textsuptilde{\textipa{#1}}}
+\NewDocumentCommand\TipaUniSubTilde{ m }{\textsubtilde{\textipa{#1}}}
+%%--** Linguo-labialized
+\DeclareUnicodeAccent{\textseagull}{TU}{"033C}%% ̼
+\NewDocumentCommand\tipauniseagull{ m }{\textseagull{#1}}
+%%--** Velarized
+\DeclareUnicodeAccent{\textsuperimposetilde}{TU}{"0334}%% ̴
+\NewDocumentCommand\tipaunisuperimposetilde{ m }{\textsuperimposetilde{#1}}
+\NewDocumentCommand\vl{ m }{\textsuperimposetilde{\textipa{#1}}}
+%%--** Raised
+\DeclareUnicodeAccent{\textraising}{TU}{"031D}%% ̝
+\NewDocumentCommand{\tipauniraising}{m}{\textraising{#1}}
+%%--** Lowered
+\DeclareUnicodeAccent{\textlowering}{TU}{"031E}%% ̞
+\NewDocumentCommand{\tipaunilowering}{m}{\textlowering{#1}}
+%%%--** Advanced tongue root
+\DeclareUnicodeAccent{\textadvancing}{TU}{"0318}%% ̘
+\NewDocumentCommand{\tipauniadvancing}{m}{\textadvancing{#1}}
+%%--** Retracted tongue root
+\DeclareUnicodeAccent{\textretracting}{TU}{"0319}%% ̙
+\NewDocumentCommand{\tipauniretracting}{m}{\textretracting{#1}}
+%%--** Dental
+\DeclareUnicodeAccent{\textsubbridge}{TU}{"032A}%% ̪
+\NewDocumentCommand\tipaunisubbridge{ m }{\textsubbridge{#1}}
+%%--** Apical
+\DeclareUnicodeAccent{\textinvsubbridge}{TU}{"033A}%% ̺
+\NewDocumentCommand\tipauniinvsubbridge{ m }{\textinvsubbridge{#1}}
+%%--** Tie bar (above)
+\DeclareTextCommand{\tipaunitexttoptiebar}{TU}[2]{#1\symbol{"0361}#2}
+\NewDocumentCommand\texttoptiebar{ m }{\tipaunitexttoptiebar#1}
+\DeclareTextCommand{\tipaunit}{TU}{%
+  \@ifstar{\textbottomtiebar}{\texttoptiebar}%
+}
+%    \end{macrocode}
+% Lastly the code for environment \texttt{IPA} is provided by the following.
+%    \begin{macrocode}
+\NewDocumentEnvironment{IPA}{+b}{\textipa{#1}}{}
+%    \end{macrocode}
+%    \begin{macrocode}
+%</package>      
+%    \end{macrocode}
+% Since we want to add certain features to the |NewCM| font, we generate two
+% |.fontspec| files with this package. The following is the tag used for
+% generating the |.fontspec| file of the regular weight.
+%    \begin{macrocode}
+%<*regularfontspec>
+\defaultfontfeatures[tipauni-newcm-regular]{%
+  Renderer          = {Harfbuzz},%
+  Extension         = {.otf},%
+  UprightFont       = {NewCM10-Regular},%
+  ItalicFont        = {NewCM10-Italic},%
+  BoldFont          = {NewCM10-Bold},%
+  BoldItalicFont    = {NewCM10-BoldItalic},%
+  StylisticSet      = {5}%
+}
+%</regularfontspec>
+%    \end{macrocode}
+% With the following tag generates the |.fontspec| file for the book weight of
+% the font.
+%    \begin{macrocode}
+%<*bookfontspec>
+\defaultfontfeatures[tipauni-newcm-book]{%
+  Renderer          = {Harfbuzz},%
+  Extension         = {.otf},%
+  UprightFont       = {NewCM10-Book},%
+  ItalicFont        = {NewCM10-BookItalic},%
+  BoldFont          = {NewCM10-Bold},%
+  BoldItalicFont    = {NewCM10-BoldItalic},%
+  StylisticSet      = {5}%
+}
+%</bookfontspec>
+%    \end{macrocode}
+% \end{implementation}
+%
+% \Finale
