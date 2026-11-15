@@ -351,22 +351,53 @@ object KeyboardLayout {
      * 组合符 `̀ ́ ̥ ̧ ̱` 的键面画在示例字母上，键值只送组合符。
      */
     fun gcr(): List<List<Key>> {
-        fun row(chars: String): List<Key> = chars.split(' ').map { Key.Text(it) }
+        fun key(main: String, hint: String = "", vararg alternates: String) =
+            Key.Text(main, hint = hint, alternates = alternates.toList())
         return listOf(
-            row("i u k o e ŋ h n j a"),
-            row("ꝩ t m y p l q c ç ȝ"),
-            row("ị d ę s x ə ş æ ɨ b"),
-            row("g ţ w ḑ f r ʒ ḁ ỵ v"),
             listOf(
-                Key.Text("ɏ"), Key.Text("z"), Key.Text("œ"), Key.Text("ņ"),
+                key("i", "ɏ", "ɏ", "ỵ"),
+                key("u", "w", "w", "v"),
+                key("k", "g", "g"),
+                key("o", "œ", "œ", "ȝ"),
+                key("e", "ę", "ę", "ə"),
+                key("ŋ", "n", "n"),
+                key("h", "r", "r", "ţ"),
+                key("n", "ņ", "ņ"),
+                key("j", "ʒ", "ʒ", "ç"),
+                key("a", "ḁ", "ḁ", "æ", "á", "à"),
+            ),
+            listOf(
+                key("ꝩ", "w", "w", "v"),
+                key("t", "ţ", "ţ", "d"),
+                key("m", "ḑ", "ḑ"),
+                key("y", "ỵ", "ỵ"),
+                key("p", "b", "b"),
+                key("l", "r", "r", "f"),
+                key("q", "g", "g"),
+                key("c", "ç", "ç", "ʒ"),
+                key("ç", "c", "c"),
+                key("ȝ", "z", "z"),
+            ),
+            listOf(
+                key("ị", "i", "i"),
+                key("d", "ḑ", "ḑ", "g"),
+                key("ę", "e", "e"),
+                key("s", "ş", "ş"),
+                key("x", "g", "g"),
+                key("ə", "e", "e"),
+                key("ş", "s", "s"),
+                key("æ", "a", "a"),
+                key("ɨ", "i", "i"),
+                key("b", "p", "p"),
+            ),
+            listOf(
+                Key.Text("\u0300", label = "a\u0300"),
+                Key.Text("\u0301", label = "a\u0301"),
                 Key.Text("\u0325", label = "a\u0325"),
                 Key.Text("\u0327", label = "a\u0327"),
                 Key.Text("\u0331", label = "a\u0331"),
-                Key.Text("/"), Key.Text("·"),
-            ),
-            listOf(
-                Key.Text("q", label = "á"),
-                Key.Text("h", label = "à"),
+                Key.Text("/"),
+                Key.Text("·"),
             ),
             listOf<Key>(
                 Key.Letters("ABC", 2f),

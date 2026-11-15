@@ -55,7 +55,17 @@ sealed class Key(val label: String, val weight: Float = 1f) {
      * 直接上屏的标点、数字、符号。[punct] 不为空的是中文键盘的标点键：上屏前交 Core 按设置转全角或保持半角
      * （键上印的 [text] 只是样子，见 [KeyboardLayout.punct]）。
      */
-    class Text(val text: String, weight: Float = 1f, val punct: Char? = null, label: String = text) : Key(label, weight)
+    class Text(
+        val text: String,
+        weight: Float = 1f,
+        val punct: Char? = null,
+        label: String = text,
+        val hint: String = "",
+        val alternates: List<String> = emptyList(),
+    ) : Key(label, weight) {
+        /** 上划出 [alternates] 第一个，长按气泡列出全部。 */
+        override val choices: List<String> get() = alternates
+    }
 
     data object Shift : Key("", 1.5f)
 

@@ -95,6 +95,11 @@ class KeyPainter(
                 text(canvas, label, 21f, labelColor, bounds.centerX(), bounds.top + bounds.height() * belowHint)
             }
 
+            key is Key.Text && key.hint.isNotEmpty() -> {
+                text(canvas, key.hint, 9f, palette.gloss, bounds.centerX(), bounds.top + bounds.height() * 0.22f)
+                text(canvas, label, 21f, labelColor, bounds.centerX(), bounds.top + bounds.height() * belowHint)
+            }
+
             // 中英键：角上写按一下会切到哪种语言，长按换
             key == Key.Language && languageHint.isNotEmpty() -> {
                 text(canvas, languageHint, 10f, palette.gloss, bounds.right - bounds.width() * 0.22f, bounds.top + bounds.height() * 0.24f)

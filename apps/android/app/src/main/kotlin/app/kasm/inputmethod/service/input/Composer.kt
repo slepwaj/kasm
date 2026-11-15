@@ -38,6 +38,9 @@ class Composer(private val engine: Engine, private val host: Host) {
         /** 键位表变了（中英、符号页、九宫格）。 */
         fun showKeyboard()
 
+        /** 切到另一套键盘布局（符号键盘的 ABC 用它回全键盘）。 */
+        fun chooseLayout(layout: Settings.Layout)
+
         fun showSideItems(pinyinChoices: List<String>)
 
         /** 打开分类符号面板。 */
@@ -286,6 +289,12 @@ class Composer(private val engine: Engine, private val host: Host) {
             }
 
             is Key.SymbolPage, is Key.NumberPage, is Key.Letters -> {
+                // 符号键盘的 ABC 回全键盘；否则符号/数字页回字母
+                if (key is Key.Letters && layout in listOf(Settings.Layout.IPA, Settings.Layout.UNT, Settings.Layout.GCR)) {
+                    host.chooseLayout(Settings.Layout.QWERTY)
+                    host.showKeyboard()
+                    return
+                }
                 // 算式里换去数字键盘接着打，不顶首选
                 if (composing && !expression) selectFirst()
                 page = when (key) {
