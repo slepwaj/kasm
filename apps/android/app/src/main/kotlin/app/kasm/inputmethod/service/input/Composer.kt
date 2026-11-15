@@ -129,8 +129,12 @@ class Composer(private val engine: Engine, private val host: Host) {
     /** 拼音方案（"" 全拼 / jyutping / tungdzih / tupa / shanggu），只对全键盘中文生效。 */
     var romanization = ""
 
-    /** IPA 键盘当前页：0 基础音标、1 其他辅音/声调、2 附加符号。 */
-    var ipaPage: Int = 0
+    /** IPA 键盘当前状态：0 肺辅音 / 1 元音 / 2 非肺辅音 / 3 附加符号 / 4 符号。 */
+    var ipaMode: Int = 0
+    var ipaManner: Int = 0
+    var ipaVoiced: Boolean = false
+    var ipaRounded: Boolean = false
+    var ipaDiacritic: Int = 0
 
     /** 模糊音、中文标点全半角、打拼音时给不给英文词（键盘设置里的，交给 Core）；引擎没装好时先记着。 */
     var options = InputOptions()
@@ -261,7 +265,23 @@ class Composer(private val engine: Engine, private val host: Host) {
             }
 
             is Key.IpaPage -> {
-                ipaPage = (ipaPage + 1) % 3
+                ipaMode = (ipaMode + 1) % 5
+                host.showKeyboard()
+            }
+
+            is Key.IpaAction -> {
+                when {
+                    key.action.startsWith("mode:") -> {
+                        ipaMode = key.action.substringAfter("mode:").toIntOrNull() ?: ipaMode
+                        if (ipaMode == 2) ipaManner = 0
+                    }
+                    key.action.startsWith("manner:") ->
+                        ipaManner = key.action.substringAfter("manner:").toIntOrNull() ?: ipaManner
+                    key.action.startsWith("diacritic:") ->
+                        ipaDiacritic = key.action.substringAfter("diacritic:").toIntOrNull() ?: ipaDiacritic
+                    key.action == "voicing" -> ipaVoiced = !ipaVoiced
+                    key.action == "rounding" -> ipaRounded = !ipaRounded
+                }
                 host.showKeyboard()
             }
 

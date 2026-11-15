@@ -81,13 +81,16 @@ sealed class Key(val label: String, val weight: Float = 1f) {
     /** IPA 键盘翻页（基础 → 更多 → 附加符号 → 基础）。 */
     class IpaPage(label: String, weight: Float = 1f) : Key(label, weight)
 
+    /** IPA 键盘的模式 / 清浊 / 圆唇 / 附加组切换。 */ 
+    class IpaAction(val action: String, label: String, weight: Float = 1f) : Key(label, weight)
+
     /** 中 / 英切换。 */
     data object Language : Key("中", 1f)
 
     /** 功能键用深一档的底色。 */
     val functional: Boolean
         get() = this is Shift || this is Backspace || this is Symbols || this is SymbolPage ||
-            this is NumberPage || this is Letters || this is IpaPage || this is Language || this is Clear ||
+            this is NumberPage || this is Letters || this is IpaPage || this is IpaAction || this is Language || this is Clear ||
             (this is Digit && digit == '1')
 
     /** 按下时弹气泡的键。 */

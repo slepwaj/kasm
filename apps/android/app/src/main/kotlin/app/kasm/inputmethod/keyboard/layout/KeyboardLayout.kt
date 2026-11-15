@@ -193,49 +193,108 @@ object KeyboardLayout {
     }
 
     /**
-     * IPA 音标：键面就是音标符号，按下去原样上屏（不经拼音引擎）。
-     * 五排常用辅音/元音，底排留 ABC、空格、退格、回车。
+     * IPA 音标：按参考键盘分成肺辅音 / 元音 / 非肺辅音 / 附加符号 / 符号五组；
+     * 肺辅音再按发音方式、清浊筛选，元音按圆唇筛选，避免一屏塞满小键。
      */
-    fun ipa(page: Int = 0): List<List<Key>> {
-        fun symbols(row: String): List<Key> = row.split(' ').map { Key.Text(it) }
-        fun bottom(next: String) = listOf<Key>(
-            Key.IpaPage(next, 1.5f),
+    fun ipa(
+        mode: Int,
+        manner: Int,
+        voiced: Boolean,
+        rounded: Boolean,
+        diacritic: Int,
+    ): List<List<Key>> {
+        fun symbols(values: List<String>, per: Int = 10): List<List<Key>> =
+            values.chunked(per).map { row -> row.map { Key.Text(it) } }
+
+        val modes = listOf(
+            Key.IpaAction("mode:0", if (mode == 0) "·肺" else "肺", 1.4f),
+            Key.IpaAction("mode:1", if (mode == 1) "·元" else "元", 1.4f),
+            Key.IpaAction("mode:2", if (mode == 2) "·非" else "非", 1.4f),
+            Key.IpaAction("mode:3", if (mode == 3) "·附" else "附", 1.4f),
+            Key.IpaAction("mode:4", if (mode == 4) "·符" else "符", 1.4f),
+            Key.IpaAction("voicing", if (voiced) "浊" else "清", 1.5f),
+            Key.IpaAction("rounding", if (rounded) "圆" else "不圆", 1.5f),
+        )
+        val rows = mutableListOf<List<Key>>(modes)
+        when (mode) {
+            0 -> {
+                val names = IPA_MANNERS
+                rows += names.mapIndexed { index, name ->
+                    Key.IpaAction("manner:$index", if (index == manner) "·$name" else name)
+                }
+                val pair = IPA_PULMONIC[manner]
+                rows += symbols(if (voiced && pair.second.isNotEmpty()) pair.second else pair.first)
+            }
+            1 -> rows += symbols(if (rounded) IPA_VOWELS_ROUNDED else IPA_VOWELS_UNROUNDED)
+            2 -> {
+                rows += listOf(
+                    Key.IpaAction("manner:0", if (manner == 0) "·内爆" else "内爆", 3f),
+                    Key.IpaAction("manner:1", if (manner == 1) "·符号" else "符号", 3f),
+                )
+                rows += symbols(if (manner == 0) IPA_IMPLOSIVES else IPA_NONPULMONIC)
+            }
+            3 -> {
+                rows += (0..6).map { index ->
+                    Key.IpaAction("diacritic:$index", if (index == diacritic) "·${index + 1}" else "${index + 1}", 1.4f)
+                }
+                rows += IPA_DIACRITICS[diacritic].chunked(8).map { row ->
+                    row.map { value ->
+                        val mark = value.replace("◌", "").replace("CGJ", "\u034F")
+                        Key.Text(mark, label = "a$mark")
+                    }
+                }
+            }
+            else -> rows += symbols(IPA_SYMBOLS, per = 8)
+        }
+        rows += listOf<Key>(
             Key.Letters("ABC", 1.5f),
             Key.Backspace,
-            Key.Space(3.5f),
+            Key.Space(4f),
             Key.Enter(),
         )
-        return when (page) {
-            1 -> listOf(
-                symbols("ɸ β ʋ ɱ ɳ ɲ ɴ ʎ ɾ ʀ"),
-                symbols("ʈ ɖ ɽ ɭ ɬ ɮ ɺ ɫ ɰ ɥ"),
-                symbols("c ɟ ç ʝ ɣ χ ʁ ħ ʕ ɦ"),
-                symbols("ʘ ǀ ǃ ǂ ǁ ɓ ɗ ʄ ɠ ʛ"),
-                symbols("ɘ ɵ ɞ ɐ ɚ ɝ ɤ ɯ ɨ ʉ"),
-                symbols("˥ ˦ ˧ ˨ ˩ ↗ ↘ → ‖ ‿"),
-                bottom("附加"),
-            )
-            2 -> {
-                // 组合附加符号：键面画在示例字母上（虚线圆在手机字体里常缺字），键值只送组合符本身
-                fun d(mark: String): Key = Key.Text(mark, label = "a$mark")
-                listOf(
-                    listOf(d("\u0325"), d("\u030A"), d("\u0324"), d("\u0330"), d("\u032A"), d("\u033A"), d("\u033B"), d("\u033C"), d("\u0334"), d("\u031D")),
-                    listOf(d("\u031E"), d("\u0318"), d("\u0319"), d("\u0303"), d("\u0329"), d("\u032F"), Key.Text("ʷ"), Key.Text("ʲ"), Key.Text("ˠ"), Key.Text("ˤ")),
-                    listOf(d("\u031A"), Key.Text("ʰ"), Key.Text("ˀ"), Key.Text("ˈ"), Key.Text("ˌ"), Key.Text("ː"), Key.Text("ˑ"), Key.Text("."), Key.Text("‿"), Key.Text("‖")),
-                    bottom("基础"),
-                )
-            }
-            else -> listOf(
-                symbols("p b t d k g ʔ m n ŋ"),
-                symbols("f v θ ð s z ʃ ʒ h x"),
-                symbols("tʃ dʒ r l j w ɹ ɻ ʂ ʐ"),
-                symbols("i y ɨ ʉ ɯ u ɪ ʏ ʊ e"),
-                symbols("ø ɛ œ ɜ ɐ a ɶ ɑ ɒ ɔ"),
-                symbols("o ə ɤ ɚ ɝ æ ʌ ɑ̃ ɛ̃ ɔ̃"),
-                bottom("更多"),
-            )
-        }
+        return rows
     }
+
+    private val IPA_MANNERS = listOf("鼻", "塞", "咝", "非咝", "近", "闪", "颤", "边擦", "边近", "边闪")
+
+    private val IPA_PULMONIC: List<Pair<List<String>, List<String>>> = listOf(
+        listOf(
+            "m̥", "ɱ̊", "n̪̊", "n̥", "n̠̊", "ɳ̊", "ɲ̊", "ŋ̊", "ɴ̥",
+        ) to listOf("m", "ɱ", "n̼", "n̪", "n", "n̠", "ɳ", "ɲ", "ŋ", "ɴ"),
+        listOf("p", "p̪", "t̼", "t̪", "t", "ʈ", "c", "k", "q", "ʡ", "ʔ") to
+            listOf("b", "b̪", "d̼", "d̪", "d", "ɖ", "ɟ", "g", "ɢ"),
+        listOf("s̪", "s", "ʃ", "ʂ", "ɕ") to listOf("z̪", "z", "ʒ", "ʐ", "ʑ"),
+        listOf("ɸ", "f", "θ̼", "θ", "θ̠", "ɹ̠̊˔", "ɻ̊˔", "ç", "x", "χ", "ħ", "h") to
+            listOf("β", "v", "ð̼", "ð", "ð̠", "ɹ̠˔", "ɻ˔", "ʝ", "ɣ", "ʁ", "ʕ", "ɦ"),
+        listOf("β̞", "ʋ", "ð̞", "ɹ", "ɹ̠", "ɻ", "j", "ɰ", "ʁ̞", "ʔ̞") to emptyList(),
+        listOf("ⱱ̟", "ⱱ", "ɾ̼", "ɾ", "ɽ", "ɢ̆", "ʡ̮") to emptyList(),
+        listOf("ʙ̥", "r̥", "ɽ̊r̥", "ʀ̥", "ʜ") to listOf("ʙ", "r", "ɽr", "ʀ", "ʢ"),
+        listOf("ɬ̪", "ɬ", "ꞎ", "𝼆", "𝼄") to listOf("ɮ", "𝼅", "ʎ̝", "ʟ̝"),
+        listOf("l̥", "ɭ̊", "ʎ̥", "ʟ̥") to listOf("l̪", "l", "l̠", "ɭ", "ʎ", "ʟ", "ʟ̠"),
+        listOf("ɺ", "𝼈", "ʎ̮", "ʟ̆") to emptyList(),
+    )
+
+    private val IPA_VOWELS_UNROUNDED = listOf(
+        "i", "ɨ", "ɯ", "ɪ", "e", "ɘ", "ɤ", "e̞", "ə", "ɤ̞",
+        "ɛ", "ɜ", "ʌ", "æ", "ɐ", "a", "ä", "ɑ",
+    )
+    private val IPA_VOWELS_ROUNDED = listOf(
+        "y", "ʉ", "u", "ʏ", "ʊ", "ø", "ɵ", "o", "ø̞", "ə",
+        "o̞", "œ", "ɞ", "ɔ", "ɐ", "ɶ", "ɒ",
+    )
+    private val IPA_IMPLOSIVES = listOf("ɓ", "ɗ", "ʄ", "ɠ", "ʛ", "ɓ̥", "ɗ̥", "ᶑ̊", "ʄ̊", "ɠ̊", "ʛ̥")
+    private val IPA_NONPULMONIC = listOf("ʼ", "ʘ", "ǀ", "ǃ", "𝼊", "ǂ", "ǁ")
+    private val IPA_DIACRITICS = listOf(
+        listOf("◌̀", "◌́", "◌̂", "◌̃", "◌̄", "◌̅", "◌̆", "◌̇", "◌̈", "◌̉", "◌̊", "◌̋", "◌̌", "◌̍", "◌̎", "◌̏"),
+        listOf("◌̐", "◌̑", "◌̒", "◌̓", "◌̔", "◌̕", "◌̖", "◌̗", "◌̘", "◌̙", "◌̚", "◌̛", "◌̜", "◌̝", "◌̞", "◌̟"),
+        listOf("◌̠", "◌̡", "◌̢", "◌̣", "◌̤", "◌̥", "◌̦", "◌̧", "◌̨", "◌̩", "◌̪", "◌̫", "◌̬", "◌̭", "◌̮", "◌̯"),
+        listOf("◌̰", "◌̱", "◌̲", "◌̳", "◌̴", "◌̵", "◌̶", "◌̷", "◌̸", "◌̹", "◌̺", "◌̻", "◌̼", "◌̽", "◌̾", "◌̿"),
+        listOf("◌̀", "◌́", "◌͂", "◌̓", "◌̈́", "◌ͅ", "◌͆", "◌͇", "◌͈", "◌͉", "◌͊", "◌͋", "◌͌", "◌͍", "◌͎", "CGJ"),
+        listOf("◌͐", "◌͑", "◌͒", "◌͓", "◌͔", "◌͕", "◌͖", "◌͗", "◌͘", "◌͙", "◌͚", "◌͛", "◌͜◌", "◌͝◌", "◌͞◌", "◌͟◌"),
+        listOf("◌͠◌", "◌͡◌", "◌͢◌", "◌ͣ", "◌ͤ", "◌ͥ", "◌ͦ", "◌ͧ", "◌ͨ", "◌ͩ", "◌ͪ", "◌ͫ", "◌ͬ", "◌ͭ", "◌ͮ", "◌ͯ"),
+    )
+    private val IPA_SYMBOLS = listOf("[", "]", "/", "{", "}", "(", ")", "⸨", "⸩", "ː", "|", "꜒", "꜓", "꜔", "꜕", "꜖")
+
 
     /**
      * unt 方案（古籍字頻統計 unt 列）：键面就是该方案用到的符号，按下原样上屏。
