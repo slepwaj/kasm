@@ -8,6 +8,7 @@ pub use kasm_code as code;
 
 pub mod calculation;
 pub mod candidate;
+mod char_frequency;
 pub mod chaizi;
 pub mod code_scheme;
 pub mod composition;

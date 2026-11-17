@@ -2,6 +2,7 @@
 
 use kasm_dictionary::Dictionary;
 
+use crate::fuzzy::FuzzyRules;
 use crate::{CandidateKind, Engine};
 
 fn tungdzih() -> Engine {
@@ -39,6 +40,22 @@ fn commit_consumes_every_letter() {
     let candidate = engine.query().unwrap().candidates.items[0].clone();
     assert_eq!(engine.commit(&candidate), "你好");
     assert!(engine.composition().text().is_empty());
+}
+
+#[test]
+fn custom_romanized_fuzzy_matches_dj_to_zh() {
+    let mut engine = Engine::new(
+        Dictionary::parse("时\tzhi\t1000\n时\tdji\t100\n").unwrap(),
+    );
+    engine.set_tungdzih(true);
+    engine.set_fuzzy(FuzzyRules {
+        custom: vec!["dj=zh".to_owned()],
+        ..FuzzyRules::default()
+    });
+    engine.set_input("dji");
+    let query = engine.query().unwrap();
+    assert_eq!(query.candidates.items[0].text, "时");
+    assert_eq!(query.candidates.items[0].reading.as_deref(), Some("dji"));
 }
 
 #[test]

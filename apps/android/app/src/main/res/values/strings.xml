@@ -220,7 +220,7 @@
     <string name="fuzzy_custom_title">自定义规则</string>
     <string name="fuzzy_off">不用</string>
     <string name="fuzzy_on">开了 %d 条</string>
-    <string name="fuzzy_note">模糊音按当前方案分别保存。自定义规则写成「音=音」，用空格隔开，例如 zh=j ian=iang；自定义规则目前用于全拼和双拼。</string>
+    <string name="fuzzy_note">模糊音按当前方案分别保存。自定义规则写成「音=音」，用空格隔开，例如 zh=j、ian=iang；全拼、双拼和通字/unt/GCR 等罗马字方案都可使用，通字可写 dj=zh。</string>
     <string name="full_width_title">中文用全角标点</string>
     <string name="full_width_note">关掉中文键盘打半角标点</string>
     <string name="english_in_chinese_title">打拼音时也给英文词</string>

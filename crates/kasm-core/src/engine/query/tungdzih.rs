@@ -1,19 +1,60 @@
 //! 通字查询：Tungdzih 罗马字切分 + 词库前缀查询。
 //!
-//! 与粤拼一样，这是一条不经过普通话音节表的旁路：没有简拼、模糊音、拼写纠错与中英混输，
-//! 整句用普通话音模型。通字单字母音节多（`u` 烏、`a` 啊），同一串输入常有多种切法
+//! 与粤拼一样，这是一条不经过普通话音节表的旁路：没有简拼、拼写纠错与中英混输，
+//! 但有各方案自己的自定义模糊规则；整句用普通话音模型。通字单字母音节多（`u` 烏、`a` 啊），同一串输入常有多种切法
 //! （`uea` = `u ea` 烏鴉 或 `ue a` 委啊），所以词级候选与整句都遍历全部切法再排序，
 //! 不能只看第一种。
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::time::Instant;
 
 use crate::engine::{Learner, MAX_CANDIDATES, choice_key};
-use crate::ranking::Scored;
+use crate::ranking::{self, Scored, FUZZY_PENALTY};
 use crate::{
-    Candidate, CandidateKind, CandidateList, Engine, ParseError, Query, Timings, ranking,
-    romanization, sentence,
+    Candidate, CandidateKind, CandidateList, Engine, ParseError, Query, Timings, romanization,
+    sentence,
 };
+
+/// 通字 / unt / GCR 这类罗马字方案的自定义模糊规则：两边可以是声母、韵母或整音节。
+/// 与拼音的 `CustomRule` 分开，因为 `dj`、`ꝩ` 这些不是拼音声母，不能用拼音表验证。
+struct RomanRule {
+    from: String,
+    to: String,
+}
+
+impl RomanRule {
+    fn parse(text: &str) -> Option<Self> {
+        let (from, to) = text.split_once('=')?;
+        let from = from.trim();
+        let to = to.trim();
+        if from.is_empty() || to.is_empty() || from == to {
+            return None;
+        }
+        Some(Self {
+            from: from.to_owned(),
+            to: to.to_owned(),
+        })
+    }
+
+    fn alternatives(&self, table: &romanization::Table, syllable: &str) -> Vec<String> {
+        let mut out = Vec::new();
+        for (from, to) in [(&self.from, &self.to), (&self.to, &self.from)] {
+            if syllable == from {
+                out.push(to.clone());
+            }
+            if let Some(rest) = syllable.strip_prefix(from.as_str()) {
+                out.push(format!("{to}{rest}"));
+            }
+            if let Some(head) = syllable.strip_suffix(from.as_str()) {
+                out.push(format!("{head}{to}"));
+            }
+        }
+        out.retain(|candidate| candidate != syllable && table.is_syllable(candidate));
+        out.sort();
+        out.dedup();
+        out
+    }
+}
 
 impl Engine {
     /// 中古音罗马字（通字 / unt / tupa）候选。每种切法各自查词，合起来按词频、选择习惯与上下文排序；
@@ -30,27 +71,82 @@ impl Engine {
 
         let start = Instant::now();
         let log_total = (self.total_frequency() as f64).max(1.0).ln();
+        let rules: Vec<RomanRule> = self
+            .fuzzy
+            .custom
+            .iter()
+            .filter_map(|text| RomanRule::parse(text))
+            .collect();
         let mut scored: Vec<Scored<'_>> = Vec::new();
         let mut seen: HashSet<(String, String)> = HashSet::new();
+        let mut typed_for_hit: HashMap<(String, String), Vec<String>> = HashMap::new();
         for segmentation in &segmentations {
-            let patterns = segmentation.patterns();
+            let typed: Vec<String> = segmentation
+                .syllables
+                .iter()
+                .map(|syllable| syllable.text.clone())
+                .collect();
+            let mut forms: Vec<Vec<String>> = segmentation
+                .syllables
+                .iter()
+                .map(|syllable| vec![syllable.text.clone()])
+                .collect();
+            let mut fuzzy = false;
+            if !rules.is_empty() {
+                for (index, syllable) in segmentation.syllables.iter().enumerate() {
+                    if !syllable.complete {
+                        continue;
+                    }
+                    for rule in &rules {
+                        for alternative in
+                            rule.alternatives(table, &syllable.text)
+                        {
+                            if !forms[index].contains(&alternative) {
+                                forms[index].push(alternative);
+                                fuzzy = true;
+                            }
+                        }
+                    }
+                }
+            }
+            let patterns: Vec<Vec<kasm_dictionary::SyllablePattern<'_>>> = forms
+                .iter()
+                .zip(&segmentation.syllables)
+                .map(|(forms, syllable)| {
+                    forms
+                        .iter()
+                        .map(|text| kasm_dictionary::SyllablePattern {
+                            text,
+                            complete: syllable.complete,
+                        })
+                        .collect()
+                })
+                .collect();
             let coverage = segmentation.letters();
             let full_last = segmentation
                 .syllables
                 .last()
                 .is_some_and(|syllable| syllable.complete);
-            for hit in self.dictionary.lookup_pattern(&patterns) {
+            let hits = if fuzzy && full_last {
+                self.dictionary.lookup_exact_alt(&patterns)
+            } else {
+                self.dictionary.lookup_pattern(&segmentation.patterns())
+            };
+            for hit in hits {
                 let reading = hit.syllables().collect::<Vec<_>>().join(" ");
-                if !seen.insert((hit.text.to_owned(), reading)) {
+                if !seen.insert((hit.text.to_owned(), reading.clone())) {
                     continue;
                 }
+                typed_for_hit
+                    .entry((hit.text.to_owned(), reading))
+                    .or_insert_with(|| typed.clone());
                 scored.push(Scored {
                     hit,
                     full_last,
                     coverage,
                     abbreviated: 0,
                     weight: self.learner.weight(hit.text),
-                    penalty: 0.0,
+                    penalty: if fuzzy { FUZZY_PENALTY } else { 0.0 },
                     split: false,
                 });
             }
@@ -78,10 +174,22 @@ impl Engine {
             .map(|item| {
                 let mut candidate = super::chinese_candidate(item, None);
                 let reading = item.hit.syllables().collect::<Vec<_>>().join(" ");
+                let typed = typed_for_hit
+                    .get(&(item.hit.text.to_owned(), reading.clone()))
+                    .map(|typed| typed[..candidate.syllables.len().min(typed.len())].to_vec());
+                let display = typed.clone().unwrap_or_else(|| {
+                    item.hit.syllables().map(str::to_owned).collect::<Vec<_>>()
+                });
+                candidate.syllables = display
+                    .iter()
+                    .cloned()
+                    .chain(candidate.syllables.iter().skip(display.len()).cloned())
+                    .collect();
+                let display = candidate.syllables.join(" ");
                 candidate.reading = Some(if self.xina {
-                    crate::xina::display_reading(&reading)
+                    crate::xina::display_reading(&display)
                 } else {
-                    reading
+                    display
                 });
                 candidate
             })
@@ -111,6 +219,14 @@ impl Engine {
                 .map(|pattern| vec![*pattern])
                 .collect();
             let dictionaries = self.all_dictionaries();
+            let prior = |_: usize, word: &str, _: &[String]| {
+                if keys.len() > 16 {
+                    0.35 * crate::char_frequency::word_prior(word)
+                        + 0.4 * crate::char_frequency::word_probability(word)
+                } else {
+                    0.0
+                }
+            };
             let input = sentence::SearchInput::new(
                 &dictionaries,
                 &*self.language_model,
@@ -118,17 +234,32 @@ impl Engine {
                 |text| self.learner.weight(text),
                 |_, _| 0.0,
             )
+            .with_emission(&prior)
             .with_limits(self.search_limits);
             let conversion =
                 sentence::convert(&input, &positions, &mut self.span_cache.borrow_mut());
-            if let Some(conversion) = conversion
-                && conversion.word_count() >= 2
-                && !conversion.has_placeholder()
-                && best_conversion
-                    .as_ref()
-                    .is_none_or(|best| conversion.score > best.score)
-            {
-                best_conversion = Some(conversion);
+            if let Some(mut conversion) = conversion {
+                // 古音/通字词库里单字频率常压过多字词，长句会退化成逐字拼。
+                // 在整句同一条评分上给多字词一点“成词”加分，避免 `ta men` 被拆成
+                // `tam en` 这类切法抢走；只加在罗马字整句，不改普通话管线。
+                let multi_char = conversion
+                    .words
+                    .iter()
+                    .map(|word| word.text.chars().count().saturating_sub(1))
+                    .sum::<usize>();
+                conversion.score += if keys.len() > 16 {
+                    40.0 * multi_char as f64
+                } else {
+                    0.0
+                };
+                if conversion.word_count() >= 2
+                    && !conversion.has_placeholder()
+                    && best_conversion
+                        .as_ref()
+                        .is_none_or(|best| conversion.score > best.score)
+                {
+                    best_conversion = Some(conversion);
+                }
             }
         }
         if let Some(conversion) = best_conversion
